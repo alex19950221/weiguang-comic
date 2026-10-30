@@ -1,0 +1,35 @@
+node_modules/
+dist/
+prototype-dist/
+coverage/
+test-books/
+.env
+.env.*
+!.env.example
+*.local
+*.log
+.DS_Store
+
+# Android 签名材料（本地文件，绝不入库）
+android/keystore.properties
+*.keystore
+*.jks
+
+# 发布产物
+release/
+*.apk
+*.aab
+*.pem
+*.p12
+
+# 本项目独立的 Gradle 缓存（全局缓存损坏时使用）
+.gradle-home/
+
+# Swift / Xcode 本地构建与签名
+.build/
+.swiftpm/
+*.xcuserstate
+*.mobileprovision
+
+# Python 字节码缓存
+__pycache__/

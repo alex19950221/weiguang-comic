@@ -1,0 +1,147 @@
+.prototype-home {
+  max-width: 48rem;
+  margin: auto;
+  padding: calc(env(safe-area-inset-top) + 24px) 20px
+    calc(env(safe-area-inset-bottom) + 28px);
+  line-height: 1.6;
+}
+.prototype-home h1 {
+  font-size: 1.8rem;
+  margin: 4px 0 20px;
+}
+.prototype-home h2 {
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+.prototype-home section {
+  margin: 28px 0;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+.prototype-eyebrow {
+  color: var(--accent);
+  margin: 0;
+  font-size: 0.875rem;
+}
+.prototype-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+.prototype-encoding {
+  display: grid;
+  gap: 8px;
+}
+.prototype-encoding select,
+.prototype-jump input {
+  min-height: 44px;
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+.prototype-hash {
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+}
+.prototype-home progress {
+  width: 100%;
+  height: 16px;
+  accent-color: var(--accent);
+}
+.prototype-reader {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.prototype-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: none;
+  gap: 8px;
+  padding: 8px;
+}
+.prototype-toolbar button {
+  padding: 6px 10px;
+  flex-shrink: 0;
+}
+.prototype-book-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+}
+.prototype-viewport {
+  flex: 1;
+  min-height: 0;
+  background: #181818;
+  color: #eee;
+  overflow: auto;
+}
+.prototype-viewport.paged {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.prototype-viewport.paged img {
+  display: block;
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+.prototype-viewport.scroll section {
+  position: relative;
+  width: 100%;
+  margin: 0;
+}
+.prototype-viewport.scroll img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.prototype-page-error,
+.prototype-page-loading {
+  padding: 24px;
+  margin: 0;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.prototype-jump {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+}
+.prototype-jump input {
+  width: 4.5em;
+}
+.prototype-frame-details {
+  padding: 0 12px;
+  max-height: 28vh;
+  overflow: auto;
+  font-size: 0.8rem;
+}
+.prototype-frame-details summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.prototype-frame-details output {
+  display: block;
+  padding: 8px 0;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

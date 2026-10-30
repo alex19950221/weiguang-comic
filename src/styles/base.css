@@ -1,0 +1,152 @@
+:root {
+  font-family: var(--font-sans);
+  --line: var(--border);
+  color: var(--fg);
+  background: var(--bg);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  min-width: 280px;
+}
+button {
+  font: inherit;
+  color: inherit;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 6px 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.shelf {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: calc(env(safe-area-inset-top) + 12px) 16px
+    calc(env(safe-area-inset-bottom) + 16px);
+}
+.shelf-header h1 {
+  margin: 8px 0 0;
+  font-size: 1.5rem;
+}
+.shelf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.shelf-note,
+.shelf-count {
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+.shelf-note {
+  text-align: center;
+  margin: 20px auto;
+  max-width: 28rem;
+}
+.book-list,
+.import-status {
+  max-width: 48rem;
+  margin: 28px auto;
+}
+.book-list ul,
+.import-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.book-list li,
+.import-list li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.book-list li > div,
+.import-detail {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.book-list h2,
+.import-status h2 {
+  font-size: 1rem;
+  margin: 0 0 8px;
+}
+.book-list p,
+.import-detail p {
+  color: var(--fg-muted);
+  margin: 4px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.book-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 52px;
+  height: 64px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+.import-detail strong,
+.import-detail span,
+.import-detail progress {
+  display: block;
+}
+.import-detail span {
+  margin-top: 6px;
+  color: var(--fg-muted);
+  font-size: 0.875rem;
+}
+.import-detail progress {
+  width: 100%;
+  margin-top: 8px;
+  accent-color: var(--accent);
+}
+.import-error {
+  max-width: 48rem;
+  margin: 16px auto;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.shelf-empty {
+  max-width: 28rem;
+  margin: 20vh auto 0;
+  text-align: center;
+}
+.shelf-empty h2 {
+  margin: 0 0 8px;
+  font-size: 1.125rem;
+}
+.shelf-empty p {
+  margin: 0 0 20px;
+  color: var(--fg-muted);
+  line-height: 1.6;
+}

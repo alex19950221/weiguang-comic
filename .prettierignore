@@ -1,0 +1,9 @@
+dist
+prototype-dist
+release
+android
+ios
+node_modules
+test-books
+pnpm-lock.yaml
+.gradle-home

@@ -1,0 +1,100 @@
+:root {
+  --font-serif:
+    'Songti SC', 'STSong', 'Noto Serif CJK SC', 'Noto Serif SC', SimSun, serif;
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+  --font-body: var(--font-serif);
+  --reader-paper-fg: #313a32;
+  --reader-white-fg: #313a32;
+  --reader-dark-fg: #dedfd2;
+  --reader-dimming: #151b14;
+  --highlight-red: #efd4c9;
+  --highlight-blue: #cfdee2;
+  --highlight-yellow: #eadcaf;
+  --highlight-focus: #d5c6a9;
+}
+
+/*
+ * 语义颜色：正式 App 与交互原型共用。文字类颜色（--fg、--fg-muted、--accent、
+ * --danger）在 --bg、--surface、--surface-muted 上均不低于 4.5:1。
+ */
+:root,
+[data-theme='paper'] {
+  color-scheme: light;
+  --bg: #f8f7f3;
+  --surface: #fffefa;
+  --surface-muted: #eeeee7;
+  --fg: #313a32;
+  --fg-muted: #696d62;
+  --border: #e5e5dc;
+  --accent: #a2563e;
+  --accent-hover: #8a4934;
+  --accent-soft: #eadcd1;
+  --on-accent: #fff8ee;
+  --positive: #536549;
+  --banner: #e9eadc;
+  --danger: #b1452f;
+  --on-danger: #ffffff;
+  --progress: #c8865d;
+  --scrim: #1f2b2766;
+  --shadow: #353a3214;
+  /* 阅读背景与界面外观无关，由阅读设置单独选择。 */
+  --reader-paper: #e7e7dd;
+  --reader-white: #ffffff;
+  --reader-dark: #222722;
+}
+
+[data-theme='eink'] {
+  color-scheme: light;
+  --bg: #ededeb;
+  --fg: #262626;
+  --fg-muted: #646460;
+  --accent: #b5452f;
+}
+
+[data-theme='green'] {
+  color-scheme: light;
+  --bg: #dce8d6;
+  --fg: #2a332a;
+  --fg-muted: #596452;
+  /* 绿纸上略加深朱砂，达到小字号文字 4.5:1 对比度。 */
+  --accent: #ad402b;
+}
+
+[data-theme='night'] {
+  color-scheme: dark;
+  --bg: #222722;
+  --surface: #2d322c;
+  --surface-muted: #1e241f;
+  --fg: #dedfd2;
+  --fg-muted: #a0a496;
+  --border: #3c4339;
+  /* 同一朱砂色系提高亮度，保证深色背景下的焦点与文字可辨认。 */
+  --accent: #d09072;
+  --accent-hover: #dba084;
+  --accent-soft: #493c31;
+  --on-accent: #241a14;
+  --positive: #b6c3a4;
+  --banner: #363e31;
+  --danger: #e0806b;
+  --on-danger: #241a14;
+  --scrim: #0009;
+  --shadow: #0003;
+  --highlight-red: #35201a;
+  --highlight-blue: #1a2c38;
+  --highlight-yellow: #302919;
+  --highlight-focus: #353127;
+}
+
+[data-font='sans'] {
+  --font-body: var(--font-sans);
+}
+
+[data-font='serif'] {
+  --font-body: var(--font-serif);
+}
+
+[data-font='wenkai'] {
+  --font-body: 'JingyeWenkai', var(--font-serif);
+}
