@@ -9,6 +9,7 @@ import {
 import { useShelf } from '@/app/useShelf';
 import { importError, pickingFiles, pickComics } from '@/app/library';
 import { supportsImport } from '@/native/comicImport';
+import { setStatusBarTone } from '@/native/systemBars';
 import {
   buildShelf,
   selectShelf,
@@ -150,18 +151,22 @@ function ShelfContent() {
     const media = matchMedia('(prefers-color-scheme: dark)');
     const update = () => {
       setSystemDark(media.matches);
-      document.documentElement.dataset.appearance = appearance;
-      document.documentElement.dataset.theme =
+      const next =
         appearance === 'system'
           ? media.matches
             ? 'night'
             : 'paper'
           : appearance;
+      document.documentElement.dataset.appearance = appearance;
+      document.documentElement.dataset.theme = next;
+      // 阅读器按自己的背景设置状态栏，返回书架后再恢复。
+      if (reading === null)
+        setStatusBarTone(next === 'night' ? 'dark' : 'light');
     };
     update();
     media.addEventListener('change', update);
     return () => media.removeEventListener('change', update);
-  }, [appearance]);
+  }, [appearance, reading]);
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
       if (

@@ -41,6 +41,7 @@ import { ReaderContents } from './ReaderContents';
 import { useBookmarks } from './useBookmarks';
 import { readerBrightness, dimmingOpacity, folioHeight } from './appearance';
 import { useFullscreen } from './useFullscreen';
+import { setStatusBarTone } from '@/native/systemBars';
 import '@/styles/reader.css';
 
 interface ReaderProps {
@@ -719,6 +720,9 @@ function ReadingView({
       : prefs.background === 'white'
         ? 'white'
         : 'paper';
+  useEffect(() => {
+    setStatusBarTone(background === 'dark' ? 'dark' : 'light');
+  }, [background]);
   const brightness = readerBrightness(brightnessPreview ?? prefs.brightness);
   const fit = prefs.fit === 'width' ? 'width' : 'page';
   const baseFolioHeight = folioHeight(

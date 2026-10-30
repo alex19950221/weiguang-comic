@@ -149,9 +149,19 @@ assert.match(
   read('ios/App/App/ComicBridgeViewController.swift'),
   /override var prefersStatusBarHidden: Bool/,
 );
+// Capacitor 8 SystemBars 以 public 重写了该属性，App 模块的子类再重写会编译失败。
+const bridgeClass = read('ios/App/App/ComicBridgeViewController.swift').match(
+  /final class ComicBridgeViewController[\s\S]*?\r?\n}\r?\n/,
+)?.[0];
+assert.ok(bridgeClass, '桥控制器定义缺失');
+assert.ok(
+  !/override\s+var\s+prefersHomeIndicatorAutoHidden/.test(bridgeClass),
+  '桥控制器不能重写 prefersHomeIndicatorAutoHidden',
+);
 assert.match(
-  read('ios/App/App/ComicBridgeViewController.swift'),
-  /override var prefersHomeIndicatorAutoHidden: Bool/,
+  bridgeClass,
+  /override var childForHomeIndicatorAutoHidden: UIViewController\?/,
+  '全屏缺少 Home 指示条控制',
 );
 assert.equal(info.UIViewControllerBasedStatusBarAppearance, true);
 assert.ok(!info.NSAppTransportSecurity, '不应放宽网络访问');

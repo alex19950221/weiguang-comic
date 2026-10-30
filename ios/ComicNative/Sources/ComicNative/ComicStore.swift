@@ -21,12 +21,19 @@ final class ComicStore {
         return root
     }
 
+    /// 应用更新或从备份恢复后沙盒容器路径会变化；网页保存的旧绝对路径只取库目录名和 UUID 文件名，
+    /// 在当前容器的固定根目录中重新定位副本，不接受其他路径。
     func source(_ path: String) throws -> URL {
-        let roots = try [Self.libraryRoot(), Self.libraryRoot(prototype: false)]
-            .map { $0.resolvingSymlinksInPath().standardizedFileURL }
-        let url = URL(fileURLWithPath: path).resolvingSymlinksInPath().standardizedFileURL
-        guard roots.contains(url.deletingLastPathComponent()), url.pathExtension == "zip",
-              UUID(uuidString: url.deletingPathExtension().lastPathComponent) != nil else {
+        let stored = URL(fileURLWithPath: path)
+        let folder = stored.deletingLastPathComponent().lastPathComponent
+        guard folder == "ComicLibrary" || folder == "ComicPrototype", stored.pathExtension == "zip",
+              UUID(uuidString: stored.deletingPathExtension().lastPathComponent) != nil else {
+            throw ComicError.invalid("只能读取应用导入的漫画副本。")
+        }
+        let url = try Self.libraryRoot(prototype: folder == "ComicPrototype")
+            .appendingPathComponent(stored.lastPathComponent)
+        // 副本只由应用写入；仍拒绝符号链接，避免读到容器外的文件。
+        guard (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]))?.isSymbolicLink != true else {
             throw ComicError.invalid("只能读取应用导入的漫画副本。")
         }
         return url
@@ -100,7 +107,7 @@ final class ComicStore {
               !book.directory[index].directory else { throw ComicError.invalid("漫画页不存在。") }
         let item = book.entries[index]
         guard item.uncompressedSize <= 256 * 1024 * 1024 else {
-            throw ComicError.invalid("单张图片超过 256 MB，原型暂不支持。")
+            throw ComicError.invalid("单张图片超过 256 MB，暂不支持。")
         }
         // 随机临时路径，绝不使用压缩包内的路径写文件。
         let temporary = root.appendingPathComponent(UUID().uuidString + ".entry")

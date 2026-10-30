@@ -4,7 +4,7 @@
 
 ## 本轮收尾
 
-- 工具栏全屏按钮：浏览器使用 Fullscreen API，监听 fullscreenchange 同步真实状态；失败显示提示且能重试。iOS 新增 `ComicReader.getDisplayState()`、`setFullscreen({ enabled: boolean })`，均返回 `{ fullscreen: boolean }`；只操作承载 WebView 的控制器，控制状态栏和 Home 指示条自动隐藏。显示操作串行，跨卷保留，离开 Reader 等待迟到请求后恢复原状态。Swift 编译与系统栏效果未实测。
+- 工具栏全屏按钮：浏览器使用 Fullscreen API，监听 fullscreenchange 同步真实状态；失败显示提示且能重试。iOS 新增 `ComicReader.getDisplayState()`、`setFullscreen({ enabled: boolean })`，均返回 `{ fullscreen: boolean }`；只操作承载 WebView 的控制器，控制状态栏和 Home 指示条自动隐藏（指示条经 `childForHomeIndicatorAutoHidden` 交给子控制器，因为 Capacitor 8 SystemBars 已以非 open 方式重写 `prefersHomeIndicatorAutoHidden`）。显示操作串行，跨卷保留，离开 Reader 等待迟到请求后恢复原状态。Swift 编译与系统栏效果未实测。
 - “记住阅读位置”复用 reader.defaults.remember，可选字段缺省为 true，不升级表结构。关闭后不更新 progress/lastReadAt，保留原记录并可恢复旧页，不清空继续阅读；书签等主动操作仍可写。开启后在设置关闭且当前图片实际显示时继续保存。
 - 数据库进度事务同时读取 settings，阻止其他旧会话在关闭后继续写；写队列切换策略使未开始的保存失效，清除旧失败重试。已提交的旧记录保留，不回滚此前阅读。测试覆盖默认值、暂停/恢复、队列和失败、旧写入器、事务串行及书签独立性。
 - 全屏纯逻辑位于 `fullscreen.ts`，界面生命周期在 `useFullscreen.ts`，平台适配在 `src/native/comicReader.ts`；原生在 `ComicReaderPlugin.swift` 和 `ComicBridgeViewController.swift`。没有新增依赖或原生库，安装包增量未实测。退出显示恢复尽力执行，恢复失败不阻止返回；原来已全屏的浏览器恢复仍受浏览器权限限制。
@@ -78,7 +78,7 @@
 - 阅读背景文字颜色新增到 tokens；计算对比度：暖纸 9.47:1、纯白 11.79:1、深色 11.29:1。
 - 第一轮收尾的前台保存补查曾因连接超时未完成；本轮改用静态验证构建后，前台保存及完整刷新恢复已核对。实际前后台切换继续待真机验收。
 
-尚未验收：Swift 编译、6 个 XCTest、iOS 全屏系统栏/指示条和系统退出手势、真实文件渲染/缩略图/缓存淘汰、大目录内存、前后台与强杀恢复、触摸滑动/捏合、耗时/帧率、iPad 和旋转。安卓原生插件仍未实现。本轮未生成 APK/IPA；阶段提交状态见 Git 记录。
+尚未验收：Swift 编译、8 个 XCTest、iOS 全屏系统栏/指示条和系统退出手势、真实文件渲染/缩略图/缓存淘汰、大目录内存、前后台与强杀恢复、触摸滑动/捏合、耗时/帧率、iPad 和旋转。安卓原生插件仍未实现。本轮未生成 APK/IPA；阶段提交状态见 Git 记录。
 
 ## 下一轮
 

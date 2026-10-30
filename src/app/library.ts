@@ -2,6 +2,7 @@ import { signal } from '@preact/signals';
 import { database, openLibraryDatabase } from '@/db';
 import { ComicArchive } from '@/native/comicArchive';
 import { ComicImport, supportsImport } from '@/native/comicImport';
+import { resetNativeDisplay } from '@/native/comicReader';
 import type { ImportProgress } from '@/native/comicImport';
 import { ImportQueue } from '@/library/ImportQueue';
 
@@ -28,6 +29,7 @@ export async function initializeLibrary() {
   if (initialized) return;
   if (!initializing) {
     initializing = (async () => {
+      void resetNativeDisplay();
       await openLibraryDatabase();
       if (supportsImport()) await importQueue.recover();
       initialized = true;

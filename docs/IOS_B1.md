@@ -35,7 +35,7 @@
      -derivedDataPath ios/DerivedData CODE_SIGNING_ALLOWED=NO build
    ```
 
-5. 在 Xcode 打开 `ios/ComicNative/Package.swift`，选择 iOS 模拟器并运行 `ComicNativeTests`。现有 4 个 XCTest 覆盖普通 ZIP、ZIP64 标记与扩展字段、原始编码字节与加密、截断与越界。当前 Windows 没有执行这些测试。闸门一时还要执行全部 Vitest，当前共22例（页面列表4、调度6、视口中线1、数据库3、正式导入8）。
+5. 在 Xcode 打开 `ios/ComicNative/Package.swift`，选择 iOS 模拟器并运行 `ComicNativeTests`。现有 8 个 XCTest：ZIP 目录 4 个（普通 ZIP、ZIP64 标记与扩展字段、原始编码字节与加密、截断与越界）、副本删除 2 个、旧容器路径重新定位与拒绝越界/符号链接 2 个。当前 Windows 没有执行这些测试。闸门一时还要执行全部 Vitest，当前共 171 例。
 
 工程使用 SceneDelegate，在它和 Main.storyboard 中都指定 `ComicBridgeViewController`。若出现 “plugin is not implemented”，先检查是否误用了 `CAPBridgeViewController`，以及原型网页是否通过专用命令构建。
 

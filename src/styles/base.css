@@ -21,6 +21,10 @@ body {
   margin: 0;
   min-width: 280px;
 }
+img {
+  /* iOS WebView 长按图片会弹出存储、拷贝菜单；封面与漫画页都不提供。 */
+  -webkit-touch-callout: none;
+}
 button {
   font: inherit;
   color: inherit;

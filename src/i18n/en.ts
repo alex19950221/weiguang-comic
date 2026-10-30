@@ -1,5 +1,6 @@
 import { shelfEn } from './shelf.en';
 import { readerEn } from './reader.en';
+import { nativeEn } from './native.en';
 /** 中文原文 → 英文。界面文案以中文为键，缺失时回退到中文。 */
 export const en: Record<string, string> = {
   微光漫画: 'LumiComic',
@@ -54,4 +55,5 @@ export const en: Record<string, string> = {
   '导入失败，请重新选择文件。': 'Import failed. Please select the file again.',
   ...shelfEn,
   ...readerEn,
+  ...nativeEn,
 };

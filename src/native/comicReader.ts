@@ -15,6 +15,17 @@ function nativeDisplay<T>(operation: () => Promise<T>): Promise<T> {
   displayQueue = task;
   return task;
 }
+/** WebContent 进程被系统回收后网页会重新载入，原生全屏标记仍会保留；打开书架前先恢复系统栏。 */
+export function resetNativeDisplay(): Promise<void> {
+  if (
+    !Capacitor.isNativePlatform() ||
+    !Capacitor.isPluginAvailable('ComicReader')
+  )
+    return Promise.resolve();
+  return nativeDisplay(async () => {
+    await ComicReader.setFullscreen({ enabled: false });
+  }).catch(() => undefined);
+}
 export function createFullscreenPort(): FullscreenPort {
   if (Capacitor.isNativePlatform())
     return {

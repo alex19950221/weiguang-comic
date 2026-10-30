@@ -1,5 +1,19 @@
 # 开发进度检查点
 
+## 最新检查点：iOS 代码验收与缺陷修复（2026-10-30）
+
+- 范围：在 Windows 上对照 Capacitor 8.5.3（`node_modules/@capacitor/ios` 源码）与 ZIPFoundation 0.9.20 源码逐项核对 Swift 接口与 iOS 平台行为，并审查网页层导入、书架与阅读器。没有 Mac，Swift 未编译、XCTest 未运行。
+- 代码修复：
+  - **编译阻断**：Capacitor 8 的 `SystemBars.swift` 在 `CAPBridgeViewController` 扩展中以 `override public`（非 open）重写 `prefersHomeIndicatorAutoHidden`，App 模块的 `ComicBridgeViewController` 再重写会报 “Overriding non-open property outside of its defining module”。改为重写 UIKit 的 `childForHomeIndicatorAutoHidden`：全屏时指向只返回 true 的子控制器，平时交回 Capacitor 默认逻辑；状态栏仍用可重写的 `prefersStatusBarHidden`。`check:ios` 改为禁止该重写并要求 child 接管（兼容 CRLF 检出）。
+  - **应用更新后书架失效**：书籍记录保存的是导入时的沙盒绝对路径，iOS 更新或从备份恢复后容器 UUID 会变，旧实现的根目录比对会拒绝所有副本。`ComicStore.source` 改为只取库目录名（ComicLibrary/ComicPrototype）与 UUID 文件名，在当前容器根目录重新定位，仍拒绝其他目录与符号链接。不改数据库、v1/v2 或网页接口。新增 2 个 XCTest，现共 8 个。
+  - **网页进程被回收后状态栏残留隐藏**：WebContent 进程终止时 Capacitor 只重载网页，原生全屏标记保留。打开书架前先调用 `setFullscreen(false)` 恢复。
+  - **状态栏文字看不清**：应用外观或阅读背景与系统深浅色不一致时状态栏仍跟随系统。书架按应用主题、阅读器按阅读背景调用 Capacitor 内置 SystemBars 设置文字颜色；无新依赖。
+  - **英文界面显示中文错误**：原生错误原文写入导入记录后由 `t()` 显示，但没有英文翻译。新增 `src/i18n/native.en.ts`，并加 Vitest 扫描正式插件 Swift 源码，防止新增文案漏翻。顺带去掉正式渲染错误里的“原型”字样。
+  - 封面与页面图片加 `-webkit-touch-callout: none`，避免长按弹出系统“存储/拷贝”菜单。
+- 自动检查：`pnpm build`、`pnpm build:ios`、`pnpm check:ios --release` 通过；全量 `pnpm test` 21 个文件 / 171 个 Vitest 通过；改动文件 Prettier、ESLint 通过（未跑全量 lint）。用旧版控制器验证 `check:ios` 能正确拦截。
+- 已审未改的风险（需真机数据再定）：页面缓存用 PNG 编码，4 MP 页面编码耗时和缓存体积可能影响翻页 ≤100ms 与 500 MiB 缓存命中；`trimCache` 每次新渲染都会遍历缓存目录；书架数据完全在 WebView IndexedDB，系统存储紧张时的清理行为未验证；文件复制没有后台任务保护，切到后台会被挂起；ZIP 内 Deflate64/LZMA 条目会导入成功但该页无法显示。
+- 真机验收：本轮全部未做。Swift 编译、8 个 XCTest、全屏状态栏/Home 指示条、应用更新后打开旧书、状态栏颜色、长按菜单均需在 Mac/iPhone 上确认。
+
 ## 最新检查点：M1 阅读器收尾，全屏、记住位置与提交前全量检查（2026-10-30）
 
 - 用户授权收尾后做阶段提交；分支 `m0`，本轮开始时仓库没有任何提交、作者未配置。不伪造身份，检查完成后再取得作者姓名与邮箱。首次阶段提交会包含已有 M0/M1 工程、独立原型和本轮实现，提交状态以 Git 记录为准。
