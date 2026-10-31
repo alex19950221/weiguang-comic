@@ -1,6 +1,15 @@
 # 开发进度检查点
 
-## 最新检查点：iOS 代码验收与缺陷修复（2026-10-30）
+## 最新检查点：TestFlight 首个内部测试构建上传（2026-10-31）
+
+- 范围：在 macOS（Xcode 26.6, macOS 26.6.2）从基线提交 `d8400b1`（分支 `devin/ios-testflight-20261031`）完成依赖安装、正式 Web 构建与 iOS 同步、Swift 首次真实编译、真机 Release 归档、App Store 发行签名与 TestFlight 上传。不含 App Store 送审与新增外部测试。
+- 实际执行：`pnpm install --frozen-lockfile`（pnpm 11.21.0、Node 24.21.0）、`pnpm build:ios`、`pnpm check:ios --release` 全部通过；`xcodebuild -resolvePackageDependencies` 解析 CapacitorApp/ZIPFoundation 0.9.20/capacitor-swift-pm 8.5.3/CapApp-SPM/ComicNative；Release 模拟器构建成功；`xcodebuild archive`（Team `7R5Z28YJZ9`）成功；`xcodebuild -exportArchive`（app-store-connect 上传）成功。
+- 凭据与记录：ASC API Key `N23VM7F87M`；Team `7R5Z28YJZ9`；新建并注册 Bundle ID `dev.weiguang.comic`（名称 LumiComic）；用户在 App Store Connect 新建 App「微光漫画」（app id 6829142764），上传前该 App 无历史构建，构建号取 1、营销版本 0.0.1，与工程一致。
+- Apple 处理结果：build `1` processingState=VALID（build id `20221f4a-a705-486d-b20b-3ad6d42c8feb`），上传时间 2026-10-30T23:03:08-07:00。未分配测试组，内部测试由用户在 TestFlight 分配；真机验收由用户完成。
+- 未执行：8 个 XCTest、lint/全量 Vitest 复跑、性能/浏览器回归、模拟器与真机功能验收。本次仅做构建上传所必需的检查。
+- 构建制品（未入库）：`release/LumiComic.xcarchive`（含 dSYM）、`release/export/App.ipa`、`release/upload/` 上传产物、`release/ios-derived/` 模拟器构建目录。
+
+## 上一检查点：iOS 代码验收与缺陷修复（2026-10-30）
 
 - 范围：在 Windows 上对照 Capacitor 8.5.3（`node_modules/@capacitor/ios` 源码）与 ZIPFoundation 0.9.20 源码逐项核对 Swift 接口与 iOS 平台行为，并审查网页层导入、书架与阅读器。没有 Mac，Swift 未编译、XCTest 未运行。
 - 代码修复：

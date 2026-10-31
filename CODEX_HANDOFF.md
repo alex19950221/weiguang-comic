@@ -1,10 +1,15 @@
 # 微光漫画最新交接摘要
 
-更新：2026-10-30｜工程：`D:\微光漫画`｜分支：`m0`｜版本：`0.0.1`
+更新：2026-10-31｜工程：`D:\微光漫画`｜分支：`m0`｜版本：`0.0.1`
 
-**正式书架与阅读器阶段收尾：全屏、记住阅读位置已接入，前三轮阅读/目录/书签/外观保留。全量 lint、170 个 Vitest、正式/iOS/独立原型构建和 release 静态检查通过。用户授权首个阶段提交并提供作者 alex；本次临时指定身份，不修改 Git 身份配置，提交记录以 `git log` 为准。Swift、触屏与性能未验收，闸门一未通过，不把自动检查记为 M1-06～09 全部验收。**
+**首个 TestFlight 内部测试构建已上传并通过 Apple 处理：macOS/Xcode 26.6 从基线 d8400b1 完成 Web 构建、Swift 首次编译、归档签名与上传；build `1`（0.0.1）状态 VALID，App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`。未分配测试组、未送审；Swift 的 8 个 XCTest、触屏与性能仍未真机验收。**
 
-## 0. 最新：iOS 代码验收与缺陷修复（2026-10-30）
+## -1. 最新：TestFlight 上传（2026-10-31）
+
+- `pnpm install --frozen-lockfile` → `pnpm build:ios` → `pnpm check:ios --release` → SPM 解析 → Release 模拟器编译 → `xcodebuild archive` → `-exportArchive` 上传，全链路通过。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。
+- 上传前在 App Store Connect 新建 App（用户操作）、API 注册 Bundle ID；构建制品在 `release/`（已忽略，未入库）。
+
+## 0. iOS 代码验收与缺陷修复（2026-10-30，原有记录）
 
 - 修复会导致 Xcode 编译失败的 `prefersHomeIndicatorAutoHidden` 重写冲突（Capacitor 8 SystemBars 扩展为 public 非 open），改由 `childForHomeIndicatorAutoHidden` 接管全屏时的 Home 指示条。
 - 修复应用更新/恢复后容器路径变化导致全部书籍无法打开：原生按库目录名 + UUID 文件名在当前容器重新定位副本。
