@@ -199,6 +199,71 @@ describe('M1-03 ZIP/CBZ 导入作业', () => {
     ).toEqual([0, 1]);
   });
 
+  it('EPUB 按 spine 页序入库，右翻写入方向，格式记为 epub', async () => {
+    const { queue, copy, inspect } = fixture();
+    copy.mockImplementationOnce(async ({ bookId }) => ({
+      path: `/library/${bookId}.epub`,
+      size: 123,
+    }));
+    inspect.mockResolvedValueOnce({
+      format: 'epub',
+      encrypted: false,
+      entries: [
+        { index: 0, name: 'META-INF/container.xml', size: 10 },
+        { index: 1, name: 'content.opf', size: 10 },
+        { index: 2, name: '1.jpg', size: 10 },
+        { index: 3, name: '2.jpg', size: 10 },
+      ],
+      texts: [
+        {
+          index: 0,
+          text: '<container><rootfile full-path="content.opf"/></container>',
+        },
+        {
+          index: 1,
+          text: `<package><manifest>
+            <item id="a" href="1.jpg" media-type="image/jpeg"/>
+            <item id="b" href="2.jpg" media-type="image/jpeg"/>
+          </manifest><spine page-progression-direction="rtl">
+            <itemref idref="b"/><itemref idref="a"/></spine></package>`,
+        },
+      ],
+    });
+    await queue.enqueue([source('测试系列 第05卷.epub')]);
+    await queue.idle();
+    const book = (await db.books.toArray())[0]!;
+    expect(book).toMatchObject({
+      title: '测试系列',
+      volume: 5,
+      format: 'epub',
+      pageCount: 2,
+      direction: 'rtl',
+    });
+    expect(
+      (await db.pageLists.get(book.id))?.pages.map((page) => page.entry),
+    ).toEqual([3, 2]);
+  });
+
+  it('受版权保护的 EPUB 不入库并清理副本', async () => {
+    const { queue, inspect, removeCopy } = fixture();
+    inspect.mockResolvedValueOnce({
+      format: 'epub',
+      encrypted: false,
+      entries: [
+        { index: 0, name: 'META-INF/sinf.xml', size: 10 },
+        { index: 1, name: '1.jpg', size: 10 },
+      ],
+      texts: [],
+    });
+    await queue.enqueue([source('受保护.epub')]);
+    await queue.idle();
+    expect(await db.books.count()).toBe(0);
+    expect((await db.imports.toArray())[0]?.error).toBe(
+      '暂不支持加密或受版权保护的 EPUB，请选择未加密的自有文件。',
+    );
+    expect(removeCopy).toHaveBeenCalledTimes(1);
+  });
+
   it('需要密码或没有页面的 PDF 不入库并清理副本', async () => {
     const { queue, inspect, removeCopy } = fixture();
     inspect

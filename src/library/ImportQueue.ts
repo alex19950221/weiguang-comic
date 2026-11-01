@@ -1,3 +1,4 @@
+import { epubBook } from '@/archive/epub';
 import { pageList, pdfPageList } from '@/archive/pageList';
 import { parseComicName } from './series';
 import { ensureSeries } from './seriesRepository';
@@ -17,6 +18,7 @@ export const isImportFinished = (job: ImportJob) =>
   finishedImportStates.some((state) => state === job.state);
 
 class ImportCancelled extends Error {}
+const UNSUPPORTED = '目前支持导入 ZIP、CBZ、PDF 和 EPUB 文件。';
 
 /** 单文件逐个复制与检查；文件、解压和指纹计算始终留在原生层。 */
 export class ImportQueue {
@@ -174,8 +176,11 @@ export class ImportQueue {
   private async process(job: ImportJob) {
     try {
       this.checkCancelled(job);
-      if (job.source.isDirectory || !/\.(zip|cbz|pdf)$/i.test(job.source.name))
-        throw new Error('目前支持导入 ZIP、CBZ 和 PDF 文件。');
+      if (
+        job.source.isDirectory ||
+        !/\.(zip|cbz|pdf|epub)$/i.test(job.source.name)
+      )
+        throw new Error(UNSUPPORTED);
       await this.patch(job, { state: 'copying' });
       this.checkCancelled(job);
       const copy = await this.files.copyToLibrary({
@@ -201,23 +206,31 @@ export class ImportQueue {
       this.checkCancelled(job);
       const inspection = await this.archive.inspect({ path: copy.path });
       const format = inspection.format;
-      if (format !== 'zip' && format !== 'pdf')
-        throw new Error('目前支持导入 ZIP、CBZ 和 PDF 文件。');
-      if (inspection.encrypted)
+      if (format !== 'zip' && format !== 'pdf' && format !== 'epub')
+        throw new Error(UNSUPPORTED);
+      const epub = format === 'epub' ? epubBook(inspection) : null;
+      if (inspection.encrypted || epub?.protectedContent)
         throw new Error(
           format === 'pdf'
             ? '暂不支持需要密码的 PDF，请选择未加密的自有文件。'
-            : '暂不支持加密压缩包，请选择未加密的自有文件。',
+            : epub
+              ? '暂不支持加密或受版权保护的 EPUB，请选择未加密的自有文件。'
+              : '暂不支持加密压缩包，请选择未加密的自有文件。',
         );
-      const pages =
-        format === 'pdf'
+      if (epub?.textHeavy && !epub.pages.length)
+        throw new Error('这本 EPUB 以文字为主，目前只支持图片漫画 EPUB。');
+      const pages = epub
+        ? epub.pages
+        : format === 'pdf'
           ? pdfPageList(inspection.entries)
           : pageList(inspection.entries);
       if (!pages.length)
         throw new Error(
           format === 'pdf'
             ? 'PDF 中没有可读取的页面。'
-            : '压缩包中没有可读取的图片。',
+            : epub
+              ? 'EPUB 中没有可读取的漫画图片。'
+              : '压缩包中没有可读取的图片。',
         );
       this.checkCancelled(job);
       // 此后原子提交，取消不能把已入库文件作为临时副本清理。
@@ -266,7 +279,7 @@ export class ImportQueue {
             nameEncoding: inspection.entries.some((entry) => entry.rawName)
               ? 'gb18030'
               : 'utf-8',
-            direction: inspection.manga === 'rtl' ? 'rtl' : null,
+            direction: inspection.manga === 'rtl' || epub?.rtl ? 'rtl' : null,
             mode: null,
             spreadOffset: 0,
             cropBorders: false,

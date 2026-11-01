@@ -29,7 +29,7 @@ final class ComicStore {
     func source(_ path: String) throws -> URL {
         let stored = URL(fileURLWithPath: path)
         let folder = stored.deletingLastPathComponent().lastPathComponent
-        guard folder == "ComicLibrary" || folder == "ComicPrototype", ["zip", "pdf"].contains(stored.pathExtension),
+        guard folder == "ComicLibrary" || folder == "ComicPrototype", ["zip", "pdf", "epub"].contains(stored.pathExtension),
               UUID(uuidString: stored.deletingPathExtension().lastPathComponent) != nil else {
             throw ComicError.invalid("只能读取应用导入的漫画副本。")
         }
@@ -86,10 +86,41 @@ final class ComicStore {
         }
         let directory = try ZipDirectory.read(url)
         let encrypted = directory.contains(where: { $0.encrypted })
+        if url.pathExtension == "epub" {
+            var result: [String: Any] = ["format": "epub", "encrypted": encrypted,
+                                         "entries": directory.map(\.json)]
+            if !encrypted { result["texts"] = try epubTexts(url.path, directory: directory) }
+            return result
+        }
         var result: [String: Any] = ["format": "zip", "encrypted": encrypted,
                                      "entries": directory.map(\.json)]
         if !encrypted, let manga = mangaDirection(url) { result["manga"] = manga }
         return result
+    }
+
+    /// EPUB 的阅读顺序在网页层纯逻辑中解析：这里只交出容器、OPF 与页面文档等小文本，
+    /// 单个不超过 1 MiB、合计不超过 16 MiB；图片等文件体始终不跨桥。
+    private func epubTexts(_ path: String, directory: [ZipItem]) throws -> [[String: Any]] {
+        let book = try open(path)
+        let textTypes: Set<String> = ["xml", "opf", "xhtml", "html", "htm", "svg"]
+        var total: UInt64 = 0
+        var texts: [[String: Any]] = []
+        for item in directory where !item.directory && !item.symlink && item.size > 0 && item.size <= 1_048_576 {
+            let name = String(decoding: item.rawName, as: UTF8.self)
+            guard textTypes.contains(URL(fileURLWithPath: name).pathExtension.lowercased()),
+                  total + item.size <= 16 * 1_048_576, book.entries.indices.contains(item.index),
+                  book.entries[item.index].type == .file else { continue }
+            let entry = book.entries[item.index]
+            var data = Data()
+            let crc = try book.archive.extract(entry, bufferSize: 64 * 1024) { chunk in
+                guard data.count + chunk.count <= 1_048_576 else { throw ComicError.invalid("EPUB 文档大小异常。") }
+                data.append(chunk)
+            }
+            guard crc == entry.checksum else { throw ComicError.invalid("EPUB 文档校验失败，文件可能已损坏。") }
+            total += UInt64(data.count)
+            texts.append(["index": item.index, "text": String(decoding: data, as: UTF8.self)])
+        }
+        return texts
     }
 
     /// 根目录 ComicInfo.xml 的 <Manga> 标记（ComicInfo 规范）：YesAndRightToLeft/Yes 视为右翻书。
@@ -293,7 +324,7 @@ final class ComicStore {
         try clearCache(bookId: bookId)
         guard deleteCopy else { return }
         let root = try Self.libraryRoot(prototype: false).resolvingSymlinksInPath().standardizedFileURL
-        for suffix in ["zip", "pdf", "part"] {
+        for suffix in ["zip", "pdf", "epub", "part"] {
             let file = root.appendingPathComponent(bookId + "." + suffix)
             // 不跟随外部符号链接；不存在的副本视为已经完成，允许断电后重试。
             if fm.fileExists(atPath: file.path) {

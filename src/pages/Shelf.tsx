@@ -634,7 +634,7 @@ function ShelfContent() {
                                 <b>{t('从“文件”导入')}</b>
                                 <span>
                                   {t(
-                                    '选择自己的 ZIP、CBZ 或 PDF 文件，可以一次多选。',
+                                    '选择自己的 ZIP、CBZ、PDF 或 EPUB 文件，可以一次多选。',
                                   )}
                                 </span>
                               </li>

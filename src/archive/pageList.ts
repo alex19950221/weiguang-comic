@@ -7,7 +7,10 @@ export interface ComicPage {
 
 export type LegacyEncoding = 'gb18030' | 'big5' | 'shift_jis';
 
-function decodedName(entry: ArchiveEntry, encoding: LegacyEncoding): string {
+export function decodedName(
+  entry: ArchiveEntry,
+  encoding: LegacyEncoding = 'gb18030',
+): string {
   if (entry.name !== undefined) return entry.name;
   if (!entry.rawName) return '';
   const bytes = Uint8Array.from(atob(entry.rawName), (value) =>

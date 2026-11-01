@@ -48,6 +48,14 @@ export const en: Record<string, string> = {
   '目前支持导入 ZIP、CBZ 和 PDF 文件。':
     'ZIP, CBZ and PDF files are currently supported.',
   'PDF 中没有可读取的页面。': 'No readable pages were found in the PDF.',
+  '目前支持导入 ZIP、CBZ、PDF 和 EPUB 文件。':
+    'ZIP, CBZ, PDF and EPUB files are currently supported.',
+  '暂不支持加密或受版权保护的 EPUB，请选择未加密的自有文件。':
+    'Encrypted or DRM-protected EPUBs are not supported. Please choose an unencrypted file you own.',
+  '这本 EPUB 以文字为主，目前只支持图片漫画 EPUB。':
+    'This EPUB is mostly text. Only image-based comic EPUBs are supported.',
+  'EPUB 中没有可读取的漫画图片。':
+    'No readable comic images were found in the EPUB.',
   '复制结果无效，请重新选择文件。':
     'The copy is invalid. Please select the file again.',
   '文件校验失败，请重新选择文件。':

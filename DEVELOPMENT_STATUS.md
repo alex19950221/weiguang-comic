@@ -1,6 +1,16 @@
 # 开发进度检查点
 
-## 最新检查点：ComicInfo 右翻识别修复与 TestFlight 构建 4 上传（2026-11-01）
+## 最新检查点：EPUB（图片漫画）导入与阅读（2026-11-01）
+
+- 范围：在 Linux 云端容器从 m0 `d36bacf`（M1-14）继续，正式导入支持 EPUB。只支持以图片为页面的漫画 EPUB；文字为主的书、加密或受版权保护（DRM）的 EPUB 拒绝导入。没有 Mac，Swift 未编译、XCTest 未运行、真机未验收。
+- iOS 原生：文件选择器增加 `.epub`；副本存为 `ComicLibrary/<UUID>.epub`，`source`/`disposeBook`/`removeCopy` 一并支持。EPUB 本质是 ZIP，图片页沿用现有 ZIP 读取、降采样与缓存，无新依赖、安装包无增量。`inspect` 返回 `format: "epub"`、ZIP 条目，并附 `texts`：扩展名为 xml/opf/xhtml/html/htm/svg 的文本（单个 ≤1 MiB、合计 ≤16 MiB，校验 CRC）；图片不跨桥。新增 `EpubTests`（2 个），XCTest 现共 14 个，未运行。
+- 网页层纯逻辑 `src/archive/epub.ts`：解析 `META-INF/container.xml` → OPF manifest/spine → 页面文档中的 `<img src>` 与 SVG `<image xlink:href>`，按 spine 顺序生成页目录（去重、拒绝外链与越界路径）；`page-progression-direction="rtl"` 写入每书方向；`encryption.xml` 中非字体资源加密或存在 `META-INF/rights.xml`/`sinf.xml` 视为受保护；过半 spine 文档为纯文字时判定为文字书。解析不到 OPF 时退回按文件名自然排序的全部图片。
+- `ImportQueue` 接受 .epub，书籍 `format` 记为 `epub`（模型已有该值，不改表/v1/v2）；新增中英文提示；书名解析去掉 `.epub`；书架导入说明改为 ZIP、CBZ、PDF 或 EPUB。
+- 自动检查（实际执行）：`pnpm test` 22 文件 / 183 用例通过（新增 8：EPUB 解析 6、导入 2）；`pnpm lint`、`pnpm build`、`pnpm build:ios`、`pnpm check:ios --release` 通过。
+- 未测：Swift 编译、14 个 XCTest、模拟器/真机导入与阅读真实 EPUB（固定版式日漫、Kindle Comic Creator 导出等）、大 EPUB 性能、安卓。
+- 已知边界：只认 `<img>`/`<image>` 引用，CSS 背景图页面不识别（会退回全部图片）；EPUB 中的 SVG 图片本身不支持渲染；文字书不支持。
+
+## 上一检查点：ComicInfo 右翻识别修复与 TestFlight 构建 4 上传（2026-11-01）
 
 - 范围：修复上一轮验收发现的 ComicInfo `<Manga>` 标记未识别问题，复验后以构建号 4 上传 TestFlight。
 - 代码修复：`ComicStore.inspect` 读根目录 `ComicInfo.xml` 的 `<Manga>` 标记，`YesAndRightToLeft`/`Yes` 在返回里带 `manga: "rtl"`（文件缺失或解析失败不阻断导入，不返回该字段）；`Inspection` 增加可选 `manga`，`ImportQueue` 据此把新书 `direction` 置为 `rtl`（仍是每书偏好，用户可在阅读设置覆盖）。未标记的书仍为全局默认。

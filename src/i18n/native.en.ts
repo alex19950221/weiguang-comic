@@ -13,6 +13,11 @@ export const nativeEn: Record<string, string> = {
   '暂不支持需要密码的 PDF，请选择未加密的自有文件。':
     'Password-protected PDFs are not supported. Please choose an unencrypted file you own.',
   'PDF 页面尺寸无效。': 'The PDF page size is invalid.',
+  '请选择 ZIP、CBZ、PDF 或 EPUB 文件。':
+    'Please choose a ZIP, CBZ, PDF or EPUB file.',
+  'EPUB 文档大小异常。': 'An EPUB document has an unexpected size.',
+  'EPUB 文档校验失败，文件可能已损坏。':
+    'An EPUB document failed verification. The file may be damaged.',
   '文件大小无效。': 'The file size is invalid.',
   '已取消导入。': 'Import cancelled.',
   '文件在导入时发生变化，请重试。':

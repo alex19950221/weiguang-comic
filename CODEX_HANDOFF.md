@@ -4,7 +4,12 @@
 
 **第四个 TestFlight 内部测试构建已上传并通过 Apple 处理：修复了验收发现的 ComicInfo `<Manga>` 右翻标记未识别问题（原生 inspect 解析 ComicInfo.xml，新书自动 RTL），模拟器复验通过；build `4`（0.0.1）状态 VALID，build id `69633c88-3c45-45db-b232-fb3d26cfe7c1`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机验收由用户通过 TestFlight 完成。**
 
-## -5. 最新：ComicInfo 右翻修复与 TestFlight 构建 4（2026-11-01）
+## -6. 最新：EPUB（图片漫画）导入与阅读（2026-11-01）
+
+- 正式导入新增 EPUB：原生按 ZIP 读取并只交出 XML/XHTML 文本，网页层 `src/archive/epub.ts` 按 OPF spine 与页面图片引用生成页序、识别右翻、拒绝 DRM 与文字书；图片渲染沿用 ZIP 路径。副本为 `<UUID>.epub`。
+- 183 个 Vitest、lint、构建、iOS 同步与 release 静态检查通过；Swift 未编译，新增 2 个 XCTest（共 14 个）未运行，模拟器/真机未验收。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。
+
+## -5. ComicInfo 右翻修复与 TestFlight 构建 4（2026-11-01）
 
 - `ComicStore.inspect` 读根目录 ComicInfo.xml 的 `<Manga>`（YesAndRightToLeft/Yes → manga="rtl"）；`ImportQueue` 据此给新书 `direction='rtl'`（每书偏好，可手动覆盖）。
 - 新增 2 个 XCTest + 1 个 Vitest：XCTest 12/12、Vitest 175、lint/构建/同步/静态检查全通过。

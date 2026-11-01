@@ -10,9 +10,11 @@ export interface ArchiveEntry {
 }
 
 export interface Inspection {
-  format: 'zip' | 'pdf' | 'rar' | '7z' | 'tar';
+  format: 'zip' | 'pdf' | 'epub' | 'rar' | '7z' | 'tar';
   encrypted: boolean;
   entries: ArchiveEntry[];
+  /** 仅 EPUB：容器、OPF 与页面文档的文本，供网页层解析阅读顺序；不含图片。 */
+  texts?: { index: number; text: string }[];
   /** 原生读到根目录 ComicInfo.xml 的 <Manga> 右翻标记时为 'rtl'，否则缺省。 */
   manga?: 'rtl';
 }
