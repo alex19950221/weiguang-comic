@@ -1,17 +1,27 @@
 # 开发进度检查点
 
-## 最新检查点：TestFlight 第二个内部测试构建上传（2026-11-01）
+## 最新检查点：模拟器功能验收与 TestFlight 构建 3 上传（2026-11-01）
+
+- 范围：在 macOS（Xcode 26.6, macOS 26.6.2）先对 m0 最新代码（含 PDF 导入）做 iPhone 17 模拟器功能验收，再以构建号 3 归档上传 TestFlight。
+- 模拟器验收（Debug 构建实际执行）：空书架正常；文件选择器导入 ZIP、CBZ、PDF 各一均入库出封面；ZIP 书页图渲染、LTR 点按翻页、页数正确（23 页含跨页）、目录缩略图与跳转可用；CBZ 37 页打开正常；PDF 以 PDFKit 白底位图渲染、5 页翻页到底；阅读器菜单/设置/进度条可用；全屏进出状态栏正确；杀进程重启后书籍、导入记录、进度与「继续阅读」均保留；横竖屏旋转无崩溃（无 .ips 记录）；无网络请求。
+- 验收发现（中）：CBZ 的 ComicInfo `<Manga>YesAndRightToLeft</Manga>` 未被识别，书仍以 LTR 打开；手动在阅读设置切换 RTL 后点按方向正确。代码中没有 ComicInfo 解析，`direction` 只是每书偏好——属于未实现功能，不阻断本次上传，留待后续里程碑。
+- 构建与上传：`CURRENT_PROJECT_VERSION` 2→3，营销版本 0.0.1。`xcodebuild archive`（Team `7R5Z28YJZ9`）成功；`-exportArchive`（app-store-connect/upload，API Key `N23VM7F87M`）成功。
+- Apple 处理结果：build `3` 状态 VALID（build id `dd913370-02af-4e96-a31a-3124e1bad908`，上传时间 2026-11-01T04:55:11-08:00）。未分配测试组，真机验收由用户完成。
+- 未执行：性能回归（大书/大 PDF 内存与翻页耗时）、ComicInfo 元数据识别（上述发现）、安卓验证。
+- 构建制品（未入库）：`release/LumiComic.xcarchive`（含 dSYM）、`release/upload/`、`release/ios-derived/`（Debug 模拟器构建）。
+
+## 上一检查点：TestFlight 第二个内部测试构建上传（2026-11-01）
 
 - 范围：在 macOS（Xcode 26.6, macOS 26.6.2）从 m0 最新提交 `a0fe039`（M1-11: PDF 导入与阅读）完成依赖安装、正式 Web 构建与 iOS 同步、ComicNative 全部 XCTest、真机 Release 归档、App Store 发行签名与 TestFlight 上传。不含 App Store 送审与新增外部测试。
 - 实际执行：`pnpm install --frozen-lockfile`（pnpm 11.21.0、Node 24.21.0）、`pnpm build:ios`、`pnpm check:ios --release` 全部通过；`xcodebuild -resolvePackageDependencies` 正常。
-- XCTest：ComicNative 包在 iPhone 17 模拟器上 `xcodebuild -scheme ComicNative test` 执行 **10/10 通过**（含新增 2 个 PDFPageTests）。运行前做了一处必要修复：`ios/ComicNative/Package.swift` 目标补 `.product(name: "Cordova", package: "capacitor-swift-pm")`——App 构建时 Cordova 经 CapApp-SPM 传递可得，独立跑包测试缺少它会报 `module 'Cordova' not found`。
+- XCTest：ComicNative 包在 iPhone 17 模拟器上 `xcodebuild -scheme ComicNative test` 执行 **10/10 通过**（含新增 2 个 PDFPageTests）。运行前做了一处必要修复（已随 M1-12 提交入库）：`ios/ComicNative/Package.swift` 目标补 `.product(name: "Cordova", package: "capacitor-swift-pm")`——App 构建时 Cordova 经 CapApp-SPM 传递可得，独立跑包测试缺少它会报 `module 'Cordova' not found`。
 - 提交审核检查：`pnpm lint` 与全量 `pnpm test` 通过，21 文件 / 174 用例。
 - 归档与上传：`CURRENT_PROJECT_VERSION` 由 1 改为 2（build 1 已存在于 ASC），营销版本仍为 0.0.1。`xcodebuild archive`（Team `7R5Z28YJZ9`）成功；`xcodebuild -exportArchive`（app-store-connect/upload，API Key `N23VM7F87M`）成功。
 - Apple 处理结果：build `2` processingState=VALID（build id `05f48cf0-1a16-4c69-8ac7-301377577c67`），上传时间 2026-11-01T04:27:47-08:00。未分配测试组，由用户在 TestFlight 分配；真机验收由用户完成。
 - 未执行：性能/浏览器回归、模拟器与真机功能验收、安卓验证。
 - 构建制品（未入库）：`release/LumiComic.xcarchive`（含 dSYM）、`release/upload/` 上传产物、`release/ios-derived/`。
 
-## 上一检查点：PDF 导入与阅读（2026-11-01）
+## 历史检查点：PDF 导入与阅读（2026-11-01）
 
 - 范围：在 Linux 云端容器从 `devin/ios-testflight-20261031`（50cfd83）继续，正式导入支持 PDF。没有 Mac，Swift 未编译、XCTest 未运行、真机未验收。
 - iOS 原生（`ios/ComicNative`）：

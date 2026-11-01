@@ -2,9 +2,15 @@
 
 更新：2026-11-01｜工程：`D:\微光漫画`｜分支：`m0`｜版本：`0.0.1`
 
-**第二个 TestFlight 内部测试构建已上传并通过 Apple 处理：从 m0 最新提交 `a0fe039`（含 PDF 导入）完成 Web 构建、Swift 编译、ComicNative 全部 10 个 XCTest（模拟器，含 PDFPageTests）与归档签名上传；build `2`（0.0.1）状态 VALID，build id `05f48cf0-1a16-4c69-8ac7-301377577c67`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机功能与性能验收由用户通过 TestFlight 完成。**
+**第三个 TestFlight 内部测试构建已上传并通过 Apple 处理：先做了 iPhone 17 模拟器功能验收（ZIP/CBZ/PDF 导入、阅读、目录、全屏、持久化、旋转均通过；唯一发现：ComicInfo `<Manga>` RTL 未自动识别，属未实现功能），再以构建号 3 归档上传；build `3`（0.0.1）状态 VALID，build id `dd913370-02af-4e96-a31a-3124e1bad908`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机验收由用户通过 TestFlight 完成。**
 
-## -3. 最新：TestFlight 构建 2 上传（2026-11-01）
+## -4. 最新：模拟器验收与 TestFlight 构建 3 上传（2026-11-01）
+
+- iPhone 17 模拟器 Debug 构建功能验收：ZIP/CBZ/PDF 导入与阅读、目录跳转、全屏、持久化、旋转全通过，无崩溃。
+- 唯一发现（中）：CBZ ComicInfo `<Manga>YesAndRightToLeft</Manga>` 未自动识别为 RTL，需手动切换；属未实现功能，未阻断上传。
+- 构建号 2→3，archive + `-exportArchive` 上传，build `3` VALID。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。
+
+## -3. TestFlight 构建 2 上传（2026-11-01）
 
 - 流程同上：install → build:ios → check:ios --release → SPM 解析 → `xcodebuild -scheme ComicNative test`（10/10 通过）→ archive → `-exportArchive` 上传。
 - 一处必要修复：`ios/ComicNative/Package.swift` 目标补 Cordova 依赖，否则独立跑包测试报 `module 'Cordova' not found`；构建号 1→2。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。
