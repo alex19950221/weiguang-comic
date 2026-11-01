@@ -3,7 +3,7 @@ import Foundation
 import UIKit
 import UniformTypeIdentifiers
 
-/// 正式 ZIP/CBZ 导入。选择授权仅在本次进程保留，网页只拿到不透明标识。
+/// 正式 ZIP/CBZ/PDF 导入。选择授权仅在本次进程保留，网页只拿到不透明标识。
 @objc(ComicImportPlugin)
 public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDelegate {
     public let identifier = "ComicImportPlugin"
@@ -29,7 +29,7 @@ public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDel
             }
             self.pickerCall = call
             let cbz = UTType(importedAs: "dev.weiguang.comic.cbz", conformingTo: .zip)
-            let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.zip, cbz], asCopy: false)
+            let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.zip, cbz, .pdf], asCopy: false)
             picker.allowsMultipleSelection = true
             picker.delegate = self
             controller.present(picker, animated: true)
@@ -62,8 +62,8 @@ public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDel
                 call.reject("文件选择授权已失效，请重新选择文件。", "SOURCE_EXPIRED"); return
             }
             guard self.jobs[jobId] == nil else { call.reject("这个文件正在导入。"); return }
-            guard ["zip", "cbz"].contains(source.pathExtension.lowercased()) else {
-                call.reject("目前支持导入 ZIP 和 CBZ 文件。", "UNSUPPORTED_FORMAT"); return
+            guard ["zip", "cbz", "pdf"].contains(source.pathExtension.lowercased()) else {
+                call.reject("目前支持导入 ZIP、CBZ 和 PDF 文件。", "UNSUPPORTED_FORMAT"); return
             }
             let progress = Progress(totalUnitCount: 0)
             self.jobs[jobId] = progress
@@ -88,7 +88,9 @@ public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDel
         let access = source.startAccessingSecurityScopedResource()
         defer { if access { source.stopAccessingSecurityScopedResource() } }
         let root = try ComicStore.libraryRoot(prototype: false)
-        let destination = root.appendingPathComponent(bookId + ".zip")
+        // PDF 副本保留 .pdf 扩展名，读取时据此选择 PDFKit；CBZ 与 ZIP 统一存为 .zip。
+        let suffix = source.pathExtension.lowercased() == "pdf" ? "pdf" : "zip"
+        let destination = root.appendingPathComponent(bookId + "." + suffix)
         let temporary = root.appendingPathComponent(bookId + ".part")
         let fm = FileManager.default
         guard !fm.fileExists(atPath: destination.path) else { throw ComicError.invalid("漫画副本已经存在。") }
@@ -103,7 +105,7 @@ public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDel
             do {
                 let values = try coordinated.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey])
                 guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                    throw ComicError.invalid("请选择 ZIP 或 CBZ 文件。")
+                    throw ComicError.invalid("请选择 ZIP、CBZ 或 PDF 文件。")
                 }
                 let input = try FileHandle(forReadingFrom: coordinated)
                 defer { try? input.close() }
@@ -165,7 +167,7 @@ public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDel
             do {
                 let root = try ComicStore.libraryRoot(prototype: false)
                 // 固定根目录 + 校验过的 UUID，无任意路径/递归删除入口。
-                for suffix in ["zip", "part"] {
+                for suffix in ["zip", "pdf", "part"] {
                     let url = root.appendingPathComponent(id + "." + suffix)
                     if FileManager.default.fileExists(atPath: url.path) {
                         try FileManager.default.removeItem(at: url)

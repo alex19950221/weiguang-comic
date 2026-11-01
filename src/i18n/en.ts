@@ -45,6 +45,9 @@ export const en: Record<string, string> = {
   '取消未完成，请稍后重试。': 'Unable to cancel. Please try again.',
   '目前支持导入 ZIP 和 CBZ 文件。':
     'ZIP and CBZ files are currently supported.',
+  '目前支持导入 ZIP、CBZ 和 PDF 文件。':
+    'ZIP, CBZ and PDF files are currently supported.',
+  'PDF 中没有可读取的页面。': 'No readable pages were found in the PDF.',
   '复制结果无效，请重新选择文件。':
     'The copy is invalid. Please select the file again.',
   '文件校验失败，请重新选择文件。':

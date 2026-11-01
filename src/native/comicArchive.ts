@@ -10,7 +10,7 @@ export interface ArchiveEntry {
 }
 
 export interface Inspection {
-  format: 'zip' | 'rar' | '7z' | 'tar';
+  format: 'zip' | 'pdf' | 'rar' | '7z' | 'tar';
   encrypted: boolean;
   entries: ArchiveEntry[];
 }

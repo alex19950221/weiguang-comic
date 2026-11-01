@@ -1,6 +1,8 @@
 import CryptoKit
 import Foundation
 import ImageIO
+import PDFKit
+import UIKit
 import UniformTypeIdentifiers
 import ZIPFoundation
 
@@ -9,6 +11,7 @@ final class ComicStore {
     private let fm = FileManager.default
     private let cacheLimit = 500 * 1024 * 1024
     private var opened: (path: String, archive: Archive, entries: [Entry], directory: [ZipItem])?
+    private var openedPDF: (path: String, document: PDFDocument)?
 
     static func libraryRoot(prototype: Bool = true) throws -> URL {
         let base = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
@@ -26,7 +29,7 @@ final class ComicStore {
     func source(_ path: String) throws -> URL {
         let stored = URL(fileURLWithPath: path)
         let folder = stored.deletingLastPathComponent().lastPathComponent
-        guard folder == "ComicLibrary" || folder == "ComicPrototype", stored.pathExtension == "zip",
+        guard folder == "ComicLibrary" || folder == "ComicPrototype", ["zip", "pdf"].contains(stored.pathExtension),
               UUID(uuidString: stored.deletingPathExtension().lastPathComponent) != nil else {
             throw ComicError.invalid("只能读取应用导入的漫画副本。")
         }
@@ -55,8 +58,32 @@ final class ComicStore {
         return (archive, entries, directory)
     }
 
+    /// PDF 用系统 PDFKit 读取；需要密码才能打开的文件不尝试解锁（不处理 DRM）。
+    private func openPDF(_ url: URL) throws -> PDFDocument {
+        if let existing = openedPDF, existing.path == url.path { return existing.document }
+        guard let document = PDFDocument(url: url) else {
+            throw ComicError.invalid("PDF 已损坏或格式不受支持。")
+        }
+        guard !document.isLocked else {
+            throw ComicError.invalid("暂不支持需要密码的 PDF，请选择未加密的自有文件。")
+        }
+        openedPDF = (url.path, document)
+        return document
+    }
+
     func inspect(_ path: String) throws -> [String: Any] {
         let url = try source(path)
+        if url.pathExtension == "pdf" {
+            guard let document = PDFDocument(url: url) else {
+                throw ComicError.invalid("PDF 已损坏或格式不受支持。")
+            }
+            let count = document.isLocked ? 0 : document.pageCount
+            let entries: [[String: Any]] = (0..<count).map { index in
+                ["index": index, "name": String(format: "%04d", index + 1), "size": 1,
+                 "isDirectory": false, "isSymlink": false]
+            }
+            return ["format": "pdf", "encrypted": document.isLocked, "entries": entries]
+        }
         let directory = try ZipDirectory.read(url)
         return ["format": "zip", "encrypted": directory.contains(where: { $0.encrypted }),
                 "entries": directory.map(\.json)]
@@ -100,6 +127,10 @@ final class ComicStore {
             result["url"] = cache.absoluteString
             result["cached"] = true
             return result
+        }
+        if sourceURL.pathExtension == "pdf" {
+            return try renderPDF(sourceURL, index: index, requested: requested, cache: cache,
+                                 metadata: metadata, root: root)
         }
         let book = try open(sourceURL.path)
         guard book.entries.indices.contains(index), book.directory.indices.contains(index),
@@ -162,6 +193,49 @@ final class ComicStore {
         return result.merging(["url": cache.absoluteString, "cached": false]) { _, new in new }
     }
 
+    private func renderPDF(_ url: URL, index: Int, requested: Int, cache: URL, metadata: URL,
+                           root: URL) throws -> [String: Any] {
+        let document = try openPDF(url)
+        guard index < document.pageCount, let page = document.page(at: index) else {
+            throw ComicError.invalid("漫画页不存在。")
+        }
+        let box = page.bounds(for: .cropBox)
+        let rotated = abs(page.rotation) % 180 == 90
+        let width = Double(rotated ? box.height : box.width)
+        let height = Double(rotated ? box.width : box.height)
+        guard width >= 1, height >= 1, width.isFinite, height.isFinite else {
+            throw ComicError.invalid("PDF 页面尺寸无效。")
+        }
+        // 与图片页同一预算：长边不超过请求尺寸，总像素不超过四百万；矢量页允许放大到请求尺寸。
+        let scale = min(Double(requested) / max(width, height), sqrt(4_000_000 / (width * height)))
+        let size = CGSize(width: max(1, (width * scale).rounded()), height: max(1, (height * scale).rounded()))
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        format.opaque = true
+        let image = UIGraphicsImageRenderer(size: size, format: format).image { context in
+            UIColor.white.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+            let cg = context.cgContext
+            // PDF 坐标原点在左下角；先翻转，再按页面旋转后的尺寸缩放绘制。
+            cg.translateBy(x: 0, y: size.height)
+            cg.scaleBy(x: size.width / CGFloat(width), y: -size.height / CGFloat(height))
+            page.draw(with: .cropBox, to: cg)
+        }
+        guard let cgImage = image.cgImage,
+              let destination = CGImageDestinationCreateWithURL(cache as CFURL, UTType.png.identifier as CFString, 1, nil)
+        else { throw ComicError.invalid("无法生成漫画预览。") }
+        CGImageDestinationAddImage(destination, cgImage, nil)
+        guard CGImageDestinationFinalize(destination) else {
+            try? fm.removeItem(at: cache)
+            throw ComicError.invalid("页面缓存写入失败，请检查可用空间。")
+        }
+        let result: [String: Any] = ["width": cgImage.width, "height": cgImage.height,
+                                    "sourceWidth": Int(width.rounded()), "sourceHeight": Int(height.rounded())]
+        try JSONSerialization.data(withJSONObject: result).write(to: metadata, options: .atomic)
+        try trimCache(root, keeping: cache)
+        return result.merging(["url": cache.absoluteString, "cached": false]) { _, new in new }
+    }
+
     private func trimCache(_ root: URL, keeping: URL) throws {
         let urls = try fm.contentsOfDirectory(at: root, includingPropertiesForKeys: [.fileSizeKey, .contentModificationDateKey])
         let files = try urls.filter { $0.pathExtension == "png" }.map { url -> (URL, Int, Date) in
@@ -184,16 +258,18 @@ final class ComicStore {
             if bookId == nil || file.lastPathComponent.hasPrefix(bookId! + "-") { try fm.removeItem(at: file) }
         }
         opened = nil
+        openedPDF = nil
     }
 
     /// 与渲染同一串行队列，先释放归档句柄；固定目录和 UUID，不接受任意路径。
     func disposeBook(bookId: String, deleteCopy: Bool) throws {
         guard UUID(uuidString: bookId) != nil else { throw ComicError.invalid("漫画标识无效。") }
         opened = nil
+        openedPDF = nil
         try clearCache(bookId: bookId)
         guard deleteCopy else { return }
         let root = try Self.libraryRoot(prototype: false).resolvingSymlinksInPath().standardizedFileURL
-        for suffix in ["zip", "part"] {
+        for suffix in ["zip", "pdf", "part"] {
             let file = root.appendingPathComponent(bookId + "." + suffix)
             // 不跟随外部符号链接；不存在的副本视为已经完成，允许断电后重试。
             if fm.fileExists(atPath: file.path) {

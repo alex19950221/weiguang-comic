@@ -7,6 +7,12 @@ export const nativeEn: Record<string, string> = {
   '这个文件正在导入。': 'This file is already being imported.',
   '漫画副本已经存在。': 'A copy of this comic already exists.',
   '请选择 ZIP 或 CBZ 文件。': 'Please choose a ZIP or CBZ file.',
+  '请选择 ZIP、CBZ 或 PDF 文件。': 'Please choose a ZIP, CBZ or PDF file.',
+  'PDF 已损坏或格式不受支持。':
+    'The PDF is damaged or in an unsupported format.',
+  '暂不支持需要密码的 PDF，请选择未加密的自有文件。':
+    'Password-protected PDFs are not supported. Please choose an unencrypted file you own.',
+  'PDF 页面尺寸无效。': 'The PDF page size is invalid.',
   '文件大小无效。': 'The file size is invalid.',
   '已取消导入。': 'Import cancelled.',
   '文件在导入时发生变化，请重试。':

@@ -69,3 +69,23 @@ export function pageList(
     })
     .sort((a, b) => naturalCompare(a.name, b.name) || a.entry - b.entry);
 }
+
+/** PDF 页按原生给出的页序阅读，不按名称重排；跳过重复或无效的序号。 */
+export function pdfPageList(entries: readonly ArchiveEntry[]): ComicPage[] {
+  const seen = new Set<number>();
+  return entries
+    .filter(
+      (entry) =>
+        Number.isSafeInteger(entry.index) &&
+        entry.index >= 0 &&
+        !entry.isDirectory &&
+        !entry.isSymlink &&
+        !seen.has(entry.index) &&
+        seen.add(entry.index),
+    )
+    .sort((a, b) => a.index - b.index)
+    .map((entry) => ({
+      entry: entry.index,
+      name: entry.name ?? String(entry.index + 1).padStart(4, '0'),
+    }));
+}

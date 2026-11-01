@@ -7,7 +7,7 @@ export interface ParsedComicName {
 }
 export type ReadingState = 'unread' | 'reading' | 'finished';
 
-const extension = /\.(cbz|cbr|cb7|zip|rar|7z)$/i;
+const extension = /\.(cbz|cbr|cb7|zip|rar|7z|pdf)$/i;
 // 方括号、圆括号、书名号标注通常是作者、年份、扫图组，不属于书名。
 const annotations = /[[【(（][^\]】)）]*[\]】)）]/g;
 const volumePatterns: readonly [RegExp, VolumeUnit][] = [

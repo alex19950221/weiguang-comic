@@ -46,8 +46,8 @@ export const shelfEn: Record<string, string> = {
   '微光漫画只读你自己的漫画文件，不内置、也不联网获取任何内容。':
     'LumiComic reads only your own comic files. It includes no comics and downloads no content.',
   '从“文件”导入': 'Import from Files',
-  '选择自己的 ZIP 或 CBZ 文件，可以一次多选。':
-    'Choose your own ZIP or CBZ files. You can select several at once.',
+  '选择自己的 ZIP、CBZ 或 PDF 文件，可以一次多选。':
+    'Choose your own ZIP, CBZ or PDF files. You can select several at once.',
   自动整理: 'Organized automatically',
   '同一系列按卷、话排在一起，也可以创建自己的分组。':
     'Volumes and chapters are grouped by series. You can also create your own groups.',

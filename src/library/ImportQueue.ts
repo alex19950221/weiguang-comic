@@ -1,4 +1,4 @@
-import { pageList } from '@/archive/pageList';
+import { pageList, pdfPageList } from '@/archive/pageList';
 import { parseComicName } from './series';
 import { ensureSeries } from './seriesRepository';
 import type { PluginListenerHandle } from '@capacitor/core';
@@ -174,8 +174,8 @@ export class ImportQueue {
   private async process(job: ImportJob) {
     try {
       this.checkCancelled(job);
-      if (job.source.isDirectory || !/\.(zip|cbz)$/i.test(job.source.name))
-        throw new Error('目前支持导入 ZIP 和 CBZ 文件。');
+      if (job.source.isDirectory || !/\.(zip|cbz|pdf)$/i.test(job.source.name))
+        throw new Error('目前支持导入 ZIP、CBZ 和 PDF 文件。');
       await this.patch(job, { state: 'copying' });
       this.checkCancelled(job);
       const copy = await this.files.copyToLibrary({
@@ -200,12 +200,25 @@ export class ImportQueue {
       const contentId = fingerprint.sha256.toLowerCase();
       this.checkCancelled(job);
       const inspection = await this.archive.inspect({ path: copy.path });
+      const format = inspection.format;
+      if (format !== 'zip' && format !== 'pdf')
+        throw new Error('目前支持导入 ZIP、CBZ 和 PDF 文件。');
       if (inspection.encrypted)
-        throw new Error('暂不支持加密压缩包，请选择未加密的自有文件。');
-      if (inspection.format !== 'zip')
-        throw new Error('目前支持导入 ZIP 和 CBZ 文件。');
-      const pages = pageList(inspection.entries);
-      if (!pages.length) throw new Error('压缩包中没有可读取的图片。');
+        throw new Error(
+          format === 'pdf'
+            ? '暂不支持需要密码的 PDF，请选择未加密的自有文件。'
+            : '暂不支持加密压缩包，请选择未加密的自有文件。',
+        );
+      const pages =
+        format === 'pdf'
+          ? pdfPageList(inspection.entries)
+          : pageList(inspection.entries);
+      if (!pages.length)
+        throw new Error(
+          format === 'pdf'
+            ? 'PDF 中没有可读取的页面。'
+            : '压缩包中没有可读取的图片。',
+        );
       this.checkCancelled(job);
       // 此后原子提交，取消不能把已入库文件作为临时副本清理。
       this.committing.add(job.id);
@@ -244,7 +257,7 @@ export class ImportQueue {
             volume: parsed.unit === '卷' ? parsed.volume : null,
             chapter: parsed.unit === '话' ? parsed.volume : null,
             sortKey: parsed.title.normalize('NFC').toLowerCase(),
-            format: 'zip',
+            format,
             location: 'copy',
             path: copy.path,
             sizeBytes: copy.size,

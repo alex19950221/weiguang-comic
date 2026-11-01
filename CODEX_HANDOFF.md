@@ -1,10 +1,15 @@
 # 微光漫画最新交接摘要
 
-更新：2026-10-31｜工程：`D:\微光漫画`｜分支：`m0`｜版本：`0.0.1`
+更新：2026-11-01｜工程：`D:\微光漫画`｜分支：`m0`｜版本：`0.0.1`
 
 **首个 TestFlight 内部测试构建已上传并通过 Apple 处理：macOS/Xcode 26.6 从基线 d8400b1 完成 Web 构建、Swift 首次编译、归档签名与上传；build `1`（0.0.1）状态 VALID，App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`。未分配测试组、未送审；Swift 的 8 个 XCTest、触屏与性能仍未真机验收。**
 
-## -1. 最新：TestFlight 上传（2026-10-31）
+## -2. 最新：PDF 导入与阅读（2026-11-01）
+
+- 正式导入新增 PDF：iOS 用系统 PDFKit 读取页数并按请求尺寸渲染白底页面（四百万像素上限），副本为 `<UUID>.pdf`；需要密码的 PDF 拒绝导入。网页层按原生页序建页目录，书籍 format 记为 pdf。
+- 174 个 Vitest、lint、构建、iOS 同步与 release 静态检查通过；Swift 未编译，新增 2 个 XCTest（共 10 个）未运行，真机未验收。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。
+
+## -1. TestFlight 上传（2026-10-31）
 
 - `pnpm install --frozen-lockfile` → `pnpm build:ios` → `pnpm check:ios --release` → SPM 解析 → Release 模拟器编译 → `xcodebuild archive` → `-exportArchive` 上传，全链路通过。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。
 - 上传前在 App Store Connect 新建 App（用户操作）、API 注册 Bundle ID；构建制品在 `release/`（已忽略，未入库）。

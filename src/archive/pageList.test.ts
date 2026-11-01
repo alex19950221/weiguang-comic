@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { naturalCompare, pageList } from './pageList';
+import { naturalCompare, pageList, pdfPageList } from './pageList';
 import type { ArchiveEntry } from '@/native/comicArchive';
 
 function entry(name: string, index = 0): ArchiveEntry {
@@ -52,5 +52,24 @@ describe('M0 页面列表', () => {
     expect(pageList([{ index: 7, size: 10, rawName: gbk }])[0]?.name).toBe(
       '中文.jpg',
     );
+  });
+});
+
+describe('PDF 页目录', () => {
+  it('按原生页序排列，不按名称重排，跳过重复、负数与目录条目', () => {
+    const pages = pdfPageList([
+      { index: 2, name: '0003', size: 1 },
+      { index: 0, name: '0001', size: 1 },
+      { index: 10, size: 1 },
+      { index: 0, name: '重复', size: 1 },
+      { index: -1, name: '无效', size: 1 },
+      { index: 1.5, name: '小数', size: 1 },
+      { index: 4, name: '目录', size: 0, isDirectory: true },
+    ]);
+    expect(pages).toEqual([
+      { entry: 0, name: '0001' },
+      { entry: 2, name: '0003' },
+      { entry: 10, name: '0011' },
+    ]);
   });
 });

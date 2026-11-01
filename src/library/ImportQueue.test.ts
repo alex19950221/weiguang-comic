@@ -152,6 +152,54 @@ describe('M1-03 ZIP/CBZ 导入作业', () => {
     expect(removeCopy).toHaveBeenCalledTimes(1);
   });
 
+  it('PDF 按原生页序入库，格式记为 pdf，书名去掉扩展名', async () => {
+    const { queue, copy, inspect } = fixture();
+    copy.mockImplementationOnce(async ({ bookId }) => ({
+      path: `/library/${bookId}.pdf`,
+      size: 123,
+    }));
+    inspect.mockResolvedValueOnce({
+      format: 'pdf',
+      encrypted: false,
+      entries: [
+        { index: 1, name: '0002', size: 1 },
+        { index: 0, name: '0001', size: 1 },
+      ],
+    });
+    await queue.enqueue([source('测试系列 第03卷.pdf')]);
+    await queue.idle();
+    const book = (await db.books.toArray())[0]!;
+    expect(book).toMatchObject({
+      title: '测试系列',
+      volume: 3,
+      format: 'pdf',
+      pageCount: 2,
+      nameEncoding: 'utf-8',
+    });
+    expect(book.path).toMatch(/\.pdf$/);
+    expect(
+      (await db.pageLists.get(book.id))?.pages.map((page) => page.entry),
+    ).toEqual([0, 1]);
+  });
+
+  it('需要密码或没有页面的 PDF 不入库并清理副本', async () => {
+    const { queue, inspect, removeCopy } = fixture();
+    inspect
+      .mockResolvedValueOnce({ format: 'pdf', encrypted: true, entries: [] })
+      .mockResolvedValueOnce({ format: 'pdf', encrypted: false, entries: [] });
+    await queue.enqueue([source('加密.pdf'), source('空白.pdf')]);
+    await queue.idle();
+    expect(await db.books.count()).toBe(0);
+    const errors = (await db.imports.toArray()).map((job) => job.error);
+    expect(errors).toEqual(
+      expect.arrayContaining([
+        '暂不支持需要密码的 PDF，请选择未加密的自有文件。',
+        'PDF 中没有可读取的页面。',
+      ]),
+    );
+    expect(removeCopy).toHaveBeenCalledTimes(2);
+  });
+
   it('数据库事务失败时回滚书籍和页目录，再清理副本', async () => {
     const { queue, removeCopy } = fixture();
     db.pageLists.hook('creating', () => {
