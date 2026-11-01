@@ -266,7 +266,7 @@ export class ImportQueue {
             nameEncoding: inspection.entries.some((entry) => entry.rawName)
               ? 'gb18030'
               : 'utf-8',
-            direction: null,
+            direction: inspection.manga === 'rtl' ? 'rtl' : null,
             mode: null,
             spreadOffset: 0,
             cropBorders: false,

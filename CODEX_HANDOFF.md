@@ -2,12 +2,18 @@
 
 更新：2026-11-01｜工程：`D:\微光漫画`｜分支：`m0`｜版本：`0.0.1`
 
-**第三个 TestFlight 内部测试构建已上传并通过 Apple 处理：先做了 iPhone 17 模拟器功能验收（ZIP/CBZ/PDF 导入、阅读、目录、全屏、持久化、旋转均通过；唯一发现：ComicInfo `<Manga>` RTL 未自动识别，属未实现功能），再以构建号 3 归档上传；build `3`（0.0.1）状态 VALID，build id `dd913370-02af-4e96-a31a-3124e1bad908`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机验收由用户通过 TestFlight 完成。**
+**第四个 TestFlight 内部测试构建已上传并通过 Apple 处理：修复了验收发现的 ComicInfo `<Manga>` 右翻标记未识别问题（原生 inspect 解析 ComicInfo.xml，新书自动 RTL），模拟器复验通过；build `4`（0.0.1）状态 VALID，build id `69633c88-3c45-45db-b232-fb3d26cfe7c1`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机验收由用户通过 TestFlight 完成。**
 
-## -4. 最新：模拟器验收与 TestFlight 构建 3 上传（2026-11-01）
+## -5. 最新：ComicInfo 右翻修复与 TestFlight 构建 4（2026-11-01）
+
+- `ComicStore.inspect` 读根目录 ComicInfo.xml 的 `<Manga>`（YesAndRightToLeft/Yes → manga="rtl"）；`ImportQueue` 据此给新书 `direction='rtl'`（每书偏好，可手动覆盖）。
+- 新增 2 个 XCTest + 1 个 Vitest：XCTest 12/12、Vitest 175、lint/构建/同步/静态检查全通过。
+- 模拟器复验：含标记 CBZ 自动 RTL（点按区与菜单均右翻），普通 ZIP 仍 LTR、PDF 正常。构建号 3→4 上传，VALID。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。
+
+## -4. 模拟器验收与 TestFlight 构建 3 上传（2026-11-01）
 
 - iPhone 17 模拟器 Debug 构建功能验收：ZIP/CBZ/PDF 导入与阅读、目录跳转、全屏、持久化、旋转全通过，无崩溃。
-- 唯一发现（中）：CBZ ComicInfo `<Manga>YesAndRightToLeft</Manga>` 未自动识别为 RTL，需手动切换；属未实现功能，未阻断上传。
+- 发现（中）：CBZ ComicInfo `<Manga>YesAndRightToLeft</Manga>` 未自动识别为 RTL，需手动切换；已在下一轮修复（见 -5）。
 - 构建号 2→3，archive + `-exportArchive` 上传，build `3` VALID。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。
 
 ## -3. TestFlight 构建 2 上传（2026-11-01）

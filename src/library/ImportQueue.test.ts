@@ -126,6 +126,23 @@ describe('M1-03 ZIP/CBZ 导入作业', () => {
     expect(removeCopy).not.toHaveBeenCalled();
   });
 
+  it('ComicInfo 标记右翻的书默认 RTL，未标记的仍为全局默认', async () => {
+    const { queue, inspect, archive } = fixture();
+    inspect.mockResolvedValueOnce({ ...inspection, manga: 'rtl' });
+    vi.mocked(archive.fingerprint)
+      .mockResolvedValueOnce({ sha256: 'b'.repeat(64), size: 123 })
+      .mockResolvedValueOnce({ sha256: 'c'.repeat(64), size: 123 });
+    await queue.enqueue([source('漫画第一卷.cbz'), source('普通第一卷.cbz')]);
+    await queue.idle();
+    const books = await db.books.toArray();
+    expect(books.find((b) => b.fileName === '漫画第一卷.cbz')?.direction).toBe(
+      'rtl',
+    );
+    expect(books.find((b) => b.fileName === '普通第一卷.cbz')?.direction).toBe(
+      null,
+    );
+  });
+
   it('重复指纹只保留一本书，清理新副本，不删除已有文件', async () => {
     const { queue, removeCopy } = fixture();
     await queue.enqueue([source('第一份.zip'), source('重命名副本.cbz')]);

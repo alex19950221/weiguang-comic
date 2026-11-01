@@ -13,6 +13,8 @@ export interface Inspection {
   format: 'zip' | 'pdf' | 'rar' | '7z' | 'tar';
   encrypted: boolean;
   entries: ArchiveEntry[];
+  /** 原生读到根目录 ComicInfo.xml 的 <Manga> 右翻标记时为 'rtl'，否则缺省。 */
+  manga?: 'rtl';
 }
 
 export interface RenderedPage {

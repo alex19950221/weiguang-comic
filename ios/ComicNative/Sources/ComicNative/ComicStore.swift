@@ -85,8 +85,32 @@ final class ComicStore {
             return ["format": "pdf", "encrypted": document.isLocked, "entries": entries]
         }
         let directory = try ZipDirectory.read(url)
-        return ["format": "zip", "encrypted": directory.contains(where: { $0.encrypted }),
-                "entries": directory.map(\.json)]
+        let encrypted = directory.contains(where: { $0.encrypted })
+        var result: [String: Any] = ["format": "zip", "encrypted": encrypted,
+                                     "entries": directory.map(\.json)]
+        if !encrypted, let manga = mangaDirection(url) { result["manga"] = manga }
+        return result
+    }
+
+    /// 根目录 ComicInfo.xml 的 <Manga> 标记（ComicInfo 规范）：YesAndRightToLeft/Yes 视为右翻书。
+    /// 文件缺失或无法解析时返回 nil，不阻断导入。
+    private func mangaDirection(_ url: URL) -> String? {
+        guard let archive = try? Archive(url: url, accessMode: .read),
+              let entry = archive.first(where: {
+                  $0.path.replacingOccurrences(of: "\\", with: "/")
+                      .caseInsensitiveCompare("ComicInfo.xml") == .orderedSame
+              }) else { return nil }
+        var data = Data()
+        _ = try? archive.extract(entry, bufferSize: 64 * 1024) { chunk in
+            if data.count + chunk.count <= 1_048_576 { data.append(chunk) }
+        }
+        guard data.count <= 1_048_576, let text = String(data: data, encoding: .utf8),
+              let match = text.range(of: #"(?i)<manga>\s*([^<]+?)\s*</manga>"#,
+                                     options: .regularExpression) else { return nil }
+        let value = text[match]
+            .replacingOccurrences(of: #"(?i)</?manga>"#, with: "", options: .regularExpression)
+            .trimmingCharacters(in: .whitespaces)
+        return ["yesandrighttoleft", "yes"].contains(value.lowercased()) ? "rtl" : nil
     }
 
     func fingerprint(_ path: String) throws -> [String: Any] {

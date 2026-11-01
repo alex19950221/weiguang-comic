@@ -1,10 +1,21 @@
 # 开发进度检查点
 
-## 最新检查点：模拟器功能验收与 TestFlight 构建 3 上传（2026-11-01）
+## 最新检查点：ComicInfo 右翻识别修复与 TestFlight 构建 4 上传（2026-11-01）
+
+- 范围：修复上一轮验收发现的 ComicInfo `<Manga>` 标记未识别问题，复验后以构建号 4 上传 TestFlight。
+- 代码修复：`ComicStore.inspect` 读根目录 `ComicInfo.xml` 的 `<Manga>` 标记，`YesAndRightToLeft`/`Yes` 在返回里带 `manga: "rtl"`（文件缺失或解析失败不阻断导入，不返回该字段）；`Inspection` 增加可选 `manga`，`ImportQueue` 据此把新书 `direction` 置为 `rtl`（仍是每书偏好，用户可在阅读设置覆盖）。未标记的书仍为全局默认。
+- 自动检查（实际执行）：新增 2 个 XCTest（`ComicInfoTests`，右翻识别与缺失/No 不误判）——XCTest 现共 12 个，iPhone 17 模拟器 12/12 通过；新增 1 个 Vitest（ImportQueue 方向写入）——全量 175 通过；`pnpm lint`、`pnpm build:ios`、`pnpm check:ios --release` 通过。
+- 模拟器复验（Debug 构建实际执行）：重新导入含 `<Manga>YesAndRightToLeft</Manga>` 的 CBZ，阅读器自动 RTL（首次引导点按区已翻转，左缘=下一页，菜单显示 Right to left）；普通 ZIP 仍为 LTR；PDF 正常；无崩溃。
+- 归档与上传：`CURRENT_PROJECT_VERSION` 3→4，营销版本 0.0.1。`xcodebuild archive`（Team `7R5Z28YJZ9`）成功；`-exportArchive`（app-store-connect/upload，API Key `N23VM7F87M`）成功。
+- Apple 处理结果：build `4` 状态 VALID（build id `69633c88-3c45-45db-b232-fb3d26cfe7c1`，上传时间 2026-11-01T05:15:33-08:00）。未分配测试组，真机验收由用户完成。
+- 未执行：性能回归（大书/大 PDF 内存与翻页耗时）、ComicInfo 其他字段（标题/作者等元数据）、安卓验证。
+- 构建制品（未入库）：`release/LumiComic.xcarchive`（含 dSYM）、`release/upload/`、`release/ios-derived/`。
+
+## 上一检查点：模拟器功能验收与 TestFlight 构建 3 上传（2026-11-01）
 
 - 范围：在 macOS（Xcode 26.6, macOS 26.6.2）先对 m0 最新代码（含 PDF 导入）做 iPhone 17 模拟器功能验收，再以构建号 3 归档上传 TestFlight。
 - 模拟器验收（Debug 构建实际执行）：空书架正常；文件选择器导入 ZIP、CBZ、PDF 各一均入库出封面；ZIP 书页图渲染、LTR 点按翻页、页数正确（23 页含跨页）、目录缩略图与跳转可用；CBZ 37 页打开正常；PDF 以 PDFKit 白底位图渲染、5 页翻页到底；阅读器菜单/设置/进度条可用；全屏进出状态栏正确；杀进程重启后书籍、导入记录、进度与「继续阅读」均保留；横竖屏旋转无崩溃（无 .ips 记录）；无网络请求。
-- 验收发现（中）：CBZ 的 ComicInfo `<Manga>YesAndRightToLeft</Manga>` 未被识别，书仍以 LTR 打开；手动在阅读设置切换 RTL 后点按方向正确。代码中没有 ComicInfo 解析，`direction` 只是每书偏好——属于未实现功能，不阻断本次上传，留待后续里程碑。
+- 验收发现（中，已修复）：CBZ 的 ComicInfo `<Manga>YesAndRightToLeft</Manga>` 未被识别，书仍以 LTR 打开；手动在阅读设置切换 RTL 后点按方向正确。代码中没有 ComicInfo 解析，`direction` 只是每书偏好——已在下一轮检查点修复。
 - 构建与上传：`CURRENT_PROJECT_VERSION` 2→3，营销版本 0.0.1。`xcodebuild archive`（Team `7R5Z28YJZ9`）成功；`-exportArchive`（app-store-connect/upload，API Key `N23VM7F87M`）成功。
 - Apple 处理结果：build `3` 状态 VALID（build id `dd913370-02af-4e96-a31a-3124e1bad908`，上传时间 2026-11-01T04:55:11-08:00）。未分配测试组，真机验收由用户完成。
 - 未执行：性能回归（大书/大 PDF 内存与翻页耗时）、ComicInfo 元数据识别（上述发现）、安卓验证。
