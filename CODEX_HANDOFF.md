@@ -2,9 +2,14 @@
 
 更新：2026-11-01｜工程：`D:\微光漫画`｜分支：`m0`｜版本：`0.0.1`
 
-**第四个 TestFlight 内部测试构建已上传并通过 Apple 处理：修复了验收发现的 ComicInfo `<Manga>` 右翻标记未识别问题（原生 inspect 解析 ComicInfo.xml，新书自动 RTL），模拟器复验通过；build `4`（0.0.1）状态 VALID，build id `69633c88-3c45-45db-b232-fb3d26cfe7c1`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机验收由用户通过 TestFlight 完成。**
+**第五个 TestFlight 内部测试构建已上传并通过 Apple 处理：从 m0 最新提交 `1f26206`（含 EPUB 导入）完成全部检查、14 个 XCTest 与模拟器 EPUB 验收（图片 EPUB 页序/自动右翻正常、文字书正确拒绝），构建号 4→5 上传；build `5`（0.0.1）状态 VALID，build id `9defbbca-7a29-4b7b-84d3-4d60a35868f8`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机验收由用户通过 TestFlight 完成。**
 
-## -6. 最新：EPUB（图片漫画）导入与阅读（2026-11-01）
+## -7. 最新：EPUB 验收与 TestFlight 构建 5 上传（2026-11-01）
+
+- XCTest 14/14（含 EpubTests）、Vitest 183、lint/构建/同步/静态检查全通过。
+- 模拟器验收：fixed-layout-12p.epub 导入、页序、翻页、自动 RTL 正常；纯文字 EPUB 被拒（「This EPUB is mostly text.」）；ZIP/PDF 回归正常。build `5` VALID。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。
+
+## -6. EPUB（图片漫画）导入与阅读（2026-11-01）
 
 - 正式导入新增 EPUB：原生按 ZIP 读取并只交出 XML/XHTML 文本，网页层 `src/archive/epub.ts` 按 OPF spine 与页面图片引用生成页序、识别右翻、拒绝 DRM 与文字书；图片渲染沿用 ZIP 路径。副本为 `<UUID>.epub`。
 - 183 个 Vitest、lint、构建、iOS 同步与 release 静态检查通过；Swift 未编译，新增 2 个 XCTest（共 14 个）未运行，模拟器/真机未验收。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。

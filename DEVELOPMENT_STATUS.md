@@ -1,6 +1,17 @@
 # 开发进度检查点
 
-## 最新检查点：EPUB（图片漫画）导入与阅读（2026-11-01）
+## 最新检查点：EPUB 导入验收与 TestFlight 构建 5 上传（2026-11-01）
+
+- 范围：在 macOS（Xcode 26.6, macOS 26.6.2）从 m0 最新提交 `1f26206`（M1-15: EPUB 图片漫画导入与阅读）完成全部检查、ComicNative 全部 XCTest、模拟器 EPUB 功能验收，再以构建号 5 归档上传 TestFlight。
+- 自动检查（实际执行）：`pnpm install --frozen-lockfile`、`pnpm lint`、`pnpm test` 22 文件 / 183 用例、`pnpm build:ios`、`pnpm check:ios --release` 全部通过；`xcodebuild -resolvePackageDependencies` 正常。
+- XCTest：ComicNative 包 iPhone 17 模拟器 `xcodebuild -scheme ComicNative test` **14/14 通过**（含新增 2 个 EpubTests）。
+- 模拟器验收（Debug 构建实际执行）：导入 `fixed-layout-12p.epub` 入库出封面，打开 12 页页序正确、翻页正常；该样本 spine 带 `page-progression-direction="rtl"`，书自动以 Right to left 打开；自造 reflowable 纯文字 EPUB 被拒绝（提示「This EPUB is mostly text. Only image-based comic EPUBs are supported.」），不入库；ZIP/PDF 回归正常；无崩溃。
+- 归档与上传：`CURRENT_PROJECT_VERSION` 4→5，营销版本 0.0.1。`xcodebuild archive`（Team `7R5Z28YJZ9`）成功；`-exportArchive`（app-store-connect/upload，API Key `N23VM7F87M`）成功。
+- Apple 处理结果：build `5` 状态 VALID（build id `9defbbca-7a29-4b7b-84d3-4d60a35868f8`，上传时间 2026-11-01T05:58:13-08:00）。未分配测试组，真机验收由用户完成。
+- 未执行：性能回归（大书/大 EPUB/大 PDF 内存与翻页耗时）、安卓验证。
+- 构建制品（未入库）：`release/LumiComic.xcarchive`（含 dSYM）、`release/upload/`、`release/ios-derived/`。
+
+## 上一检查点：EPUB（图片漫画）导入与阅读（2026-11-01）
 
 - 范围：在 Linux 云端容器从 m0 `d36bacf`（M1-14）继续，正式导入支持 EPUB。只支持以图片为页面的漫画 EPUB；文字为主的书、加密或受版权保护（DRM）的 EPUB 拒绝导入。没有 Mac，Swift 未编译、XCTest 未运行、真机未验收。
 - iOS 原生：文件选择器增加 `.epub`；副本存为 `ComicLibrary/<UUID>.epub`，`source`/`disposeBook`/`removeCopy` 一并支持。EPUB 本质是 ZIP，图片页沿用现有 ZIP 读取、降采样与缓存，无新依赖、安装包无增量。`inspect` 返回 `format: "epub"`、ZIP 条目，并附 `texts`：扩展名为 xml/opf/xhtml/html/htm/svg 的文本（单个 ≤1 MiB、合计 ≤16 MiB，校验 CRC）；图片不跨桥。新增 `EpubTests`（2 个），XCTest 现共 14 个，未运行。
