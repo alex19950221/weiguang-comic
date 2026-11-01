@@ -2,9 +2,14 @@
 
 更新：2026-11-01｜工程：`D:\微光漫画`｜分支：`m0`｜版本：`0.0.1`
 
-**首个 TestFlight 内部测试构建已上传并通过 Apple 处理：macOS/Xcode 26.6 从基线 d8400b1 完成 Web 构建、Swift 首次编译、归档签名与上传；build `1`（0.0.1）状态 VALID，App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`。未分配测试组、未送审；Swift 的 8 个 XCTest、触屏与性能仍未真机验收。**
+**第二个 TestFlight 内部测试构建已上传并通过 Apple 处理：从 m0 最新提交 `a0fe039`（含 PDF 导入）完成 Web 构建、Swift 编译、ComicNative 全部 10 个 XCTest（模拟器，含 PDFPageTests）与归档签名上传；build `2`（0.0.1）状态 VALID，build id `05f48cf0-1a16-4c69-8ac7-301377577c67`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机功能与性能验收由用户通过 TestFlight 完成。**
 
-## -2. 最新：PDF 导入与阅读（2026-11-01）
+## -3. 最新：TestFlight 构建 2 上传（2026-11-01）
+
+- 流程同上：install → build:ios → check:ios --release → SPM 解析 → `xcodebuild -scheme ComicNative test`（10/10 通过）→ archive → `-exportArchive` 上传。
+- 一处必要修复：`ios/ComicNative/Package.swift` 目标补 Cordova 依赖，否则独立跑包测试报 `module 'Cordova' not found`；构建号 1→2。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。
+
+## -2. PDF 导入与阅读（2026-11-01）
 
 - 正式导入新增 PDF：iOS 用系统 PDFKit 读取页数并按请求尺寸渲染白底页面（四百万像素上限），副本为 `<UUID>.pdf`；需要密码的 PDF 拒绝导入。网页层按原生页序建页目录，书籍 format 记为 pdf。
 - 174 个 Vitest、lint、构建、iOS 同步与 release 静态检查通过；Swift 未编译，新增 2 个 XCTest（共 10 个）未运行，真机未验收。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。

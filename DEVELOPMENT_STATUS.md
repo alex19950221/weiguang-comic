@@ -1,6 +1,17 @@
 # 开发进度检查点
 
-## 最新检查点：PDF 导入与阅读（2026-11-01）
+## 最新检查点：TestFlight 第二个内部测试构建上传（2026-11-01）
+
+- 范围：在 macOS（Xcode 26.6, macOS 26.6.2）从 m0 最新提交 `a0fe039`（M1-11: PDF 导入与阅读）完成依赖安装、正式 Web 构建与 iOS 同步、ComicNative 全部 XCTest、真机 Release 归档、App Store 发行签名与 TestFlight 上传。不含 App Store 送审与新增外部测试。
+- 实际执行：`pnpm install --frozen-lockfile`（pnpm 11.21.0、Node 24.21.0）、`pnpm build:ios`、`pnpm check:ios --release` 全部通过；`xcodebuild -resolvePackageDependencies` 正常。
+- XCTest：ComicNative 包在 iPhone 17 模拟器上 `xcodebuild -scheme ComicNative test` 执行 **10/10 通过**（含新增 2 个 PDFPageTests）。运行前做了一处必要修复：`ios/ComicNative/Package.swift` 目标补 `.product(name: "Cordova", package: "capacitor-swift-pm")`——App 构建时 Cordova 经 CapApp-SPM 传递可得，独立跑包测试缺少它会报 `module 'Cordova' not found`。
+- 提交审核检查：`pnpm lint` 与全量 `pnpm test` 通过，21 文件 / 174 用例。
+- 归档与上传：`CURRENT_PROJECT_VERSION` 由 1 改为 2（build 1 已存在于 ASC），营销版本仍为 0.0.1。`xcodebuild archive`（Team `7R5Z28YJZ9`）成功；`xcodebuild -exportArchive`（app-store-connect/upload，API Key `N23VM7F87M`）成功。
+- Apple 处理结果：build `2` processingState=VALID（build id `05f48cf0-1a16-4c69-8ac7-301377577c67`），上传时间 2026-11-01T04:27:47-08:00。未分配测试组，由用户在 TestFlight 分配；真机验收由用户完成。
+- 未执行：性能/浏览器回归、模拟器与真机功能验收、安卓验证。
+- 构建制品（未入库）：`release/LumiComic.xcarchive`（含 dSYM）、`release/upload/` 上传产物、`release/ios-derived/`。
+
+## 上一检查点：PDF 导入与阅读（2026-11-01）
 
 - 范围：在 Linux 云端容器从 `devin/ios-testflight-20261031`（50cfd83）继续，正式导入支持 PDF。没有 Mac，Swift 未编译、XCTest 未运行、真机未验收。
 - iOS 原生（`ios/ComicNative`）：
@@ -12,7 +23,7 @@
 - 自动检查（实际执行）：`pnpm test` 21 文件 / 174 用例通过（新增 3）；`pnpm lint`、`pnpm build`、`pnpm build:ios`、`pnpm check:ios --release` 通过。
 - 未测：Swift 编译、10 个 XCTest、真机导入/阅读 PDF、大页数 PDF 性能与内存、安卓（插件仍未实现）。
 
-## 上一检查点：TestFlight 首个内部测试构建上传（2026-10-31）
+## 历史检查点：TestFlight 首个内部测试构建上传（2026-10-31）
 
 - 范围：在 macOS（Xcode 26.6, macOS 26.6.2）从基线提交 `d8400b1`（分支 `devin/ios-testflight-20261031`）完成依赖安装、正式 Web 构建与 iOS 同步、Swift 首次真实编译、真机 Release 归档、App Store 发行签名与 TestFlight 上传。不含 App Store 送审与新增外部测试。
 - 实际执行：`pnpm install --frozen-lockfile`（pnpm 11.21.0、Node 24.21.0）、`pnpm build:ios`、`pnpm check:ios --release` 全部通过；`xcodebuild -resolvePackageDependencies` 解析 CapacitorApp/ZIPFoundation 0.9.20/capacitor-swift-pm 8.5.3/CapApp-SPM/ComicNative；Release 模拟器构建成功；`xcodebuild archive`（Team `7R5Z28YJZ9`）成功；`xcodebuild -exportArchive`（app-store-connect 上传）成功。

@@ -12,6 +12,7 @@ let package = Package(
     targets: [
         .target(name: "ComicNative", dependencies: [
             .product(name: "Capacitor", package: "capacitor-swift-pm"),
+            .product(name: "Cordova", package: "capacitor-swift-pm"),
             .product(name: "ZIPFoundation", package: "ZIPFoundation")
         ]),
         .testTarget(name: "ComicNativeTests", dependencies: ["ComicNative"])
