@@ -1,6 +1,15 @@
 # 开发进度检查点
 
-## 最新检查点：应用图标与显示名称（2026-11-02）
+## 最新检查点：Pro 规划确认与内购接入、购买页（M3-01/02，2026-11-02）
+
+- 决定（用户确认，已写入 PRD 第 8 节）：Pro 国区 ¥20 一次买断；自定义分组永久免费；1.0 Pro = 自动裁白边 + 应用锁与隐藏系列，1.1 原位阅读 + 批量整理，1.2 自动翻页 + 画面滤镜；两项交付后才开放购买。详见 [docs/PRO.md](./docs/PRO.md)。
+- iOS：新增 `ProStorePlugin`（StoreKit 2，系统框架，无新依赖）并在 `ComicBridgeViewController` 注册；`check:ios` 增加注册、接口与商品标识检查。新增 `ios/App/LumiComicPro.storekit` 供 Xcode 离线测试（需在 Scheme 中手动选择，未登记进工程）。
+- 网页层：`src/app/proPolicy.ts`（功能清单、开放门槛、入口可见性、只拦新增操作）、`src/app/pro.ts`（状态与购买/恢复）、`ProDialog` 购买页、设置页「微光 Pro」入口（正式商店开放前隐藏，Debug/TestFlight 可见并可测试购买）、中英文案。
+- 自动检查（实际执行）：`pnpm test` 24 文件 / 193 用例通过（新增 10）；`pnpm lint`、`pnpm build`、`pnpm build:ios`、`pnpm check:ios --release` 通过；临时预览页在 375/1280 宽截图检查购买页布局，无控制台错误（预览文件已删除）。
+- 未测：Swift 编译、StoreKit 沙盒/本地配置购买与恢复、退款与家人共享、真机。App Store Connect 的内购项目与付费协议需用户创建。
+- 下一步：M3-03 自动裁白边（第一项 Pro 功能）。
+
+## 上一检查点：应用图标与显示名称（2026-11-02）
 
 - 图标：用户确认采用自己提供的「翻页漫画」图标（米白底、蓝色分格页、右下角橙黄翻页），源图存档于 `design/app-icon/source-1254.png`。iOS `AppIcon-512@2x.png` 为 1024×1024 不透明 RGB；安卓 5 档密度重新生成 `ic_launcher`（圆角）、`ic_launcher_round`（圆形）与自适应前景 `ic_launcher_foreground`（108dp，内容约 56dp），自适应背景色改为图标底色 `#FEFBF0`。
 - 显示名称（用户确认）：简体中文「微光漫画」、繁体中文「微光漫畫」、英文「LumiComic」。iOS 新增 `en`/`zh-Hans`/`zh-Hant.lproj/InfoPlist.strings`，并在 `project.pbxproj` 登记 InfoPlist.strings 变体组与 knownRegions；Info.plist 默认值仍为「微光漫画」。安卓默认 `values` 改为 LumiComic，新增 `values-zh` 为「微光漫画」。

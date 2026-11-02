@@ -1,6 +1,7 @@
 import { shelfEn } from './shelf.en';
 import { readerEn } from './reader.en';
 import { nativeEn } from './native.en';
+import { proEn } from './pro.en';
 /** 中文原文 → 英文。界面文案以中文为键，缺失时回退到中文。 */
 export const en: Record<string, string> = {
   微光漫画: 'LumiComic',
@@ -67,4 +68,5 @@ export const en: Record<string, string> = {
   ...shelfEn,
   ...readerEn,
   ...nativeEn,
+  ...proEn,
 };

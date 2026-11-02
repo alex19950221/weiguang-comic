@@ -1,0 +1,43 @@
+{
+  "identifier" : "7C2E5B1A",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "20.0",
+      "familyShareable" : true,
+      "internalID" : "6739200001",
+      "localizations" : [
+        {
+          "description" : "一次买断，解锁全部 Pro 功能，后续更新免费获得。",
+          "displayName" : "微光 Pro",
+          "locale" : "zh_Hans"
+        },
+        {
+          "description" : "One-time purchase that unlocks every Pro feature, with future updates included.",
+          "displayName" : "LumiComic Pro",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "dev.weiguang.comic.pro",
+      "referenceName" : "LumiComic Pro",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "zh_Hans",
+    "_storefront" : "CHN",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

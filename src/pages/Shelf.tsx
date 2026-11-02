@@ -37,6 +37,9 @@ import {
   type GroupEditor,
 } from '@/components/LibraryDialogs';
 import { ImportStatus } from '@/components/ImportStatus';
+import { ProDialog } from '@/components/ProDialog';
+import { proStore } from '@/app/pro';
+import { proEntryVisible } from '@/app/proPolicy';
 import { Reader } from '@/reader/Reader';
 import '@/styles/shelf.css';
 
@@ -68,6 +71,8 @@ function ShelfContent() {
   const [group, setGroup] = useState('all');
   const [query, setQuery] = useState('');
   const [manage, setManage] = useState<LibraryTarget | null>(null);
+  const [proOpen, setProOpen] = useState(false);
+  const pro = proStore().state.value;
   const [reading, setReading] = useState<string | null>(null);
   const returnPosition = useRef(0);
   const [groupEditor, setGroupEditor] = useState<GroupEditor | null>(null);
@@ -590,6 +595,24 @@ function ShelfContent() {
                             <option value="en">{t('English')}</option>
                           </select>
                         </div>
+                        {proEntryVisible(pro.environment) && (
+                          <div class="shelf-settings-row">
+                            <div>
+                              <h2>{t('微光 Pro')}</h2>
+                              <p>
+                                {pro.status === 'pro'
+                                  ? t('已解锁微光 Pro')
+                                  : t('一次买断，后续更新免费获得。')}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setProOpen(true)}
+                            >
+                              {t('查看')}
+                            </button>
+                          </div>
+                        )}
                         <div class="shelf-settings-row">
                           <h2>{t('我的分组')}</h2>
                           <button type="button" onClick={() => newGroup()}>
@@ -910,6 +933,7 @@ function ShelfContent() {
             </button>
           ))}
         </nav>
+        {proOpen && <ProDialog onClose={() => setProOpen(false)} />}
         {manage && (
           <ManageDialog
             key={`${manage.kind}:${manage.id}`}

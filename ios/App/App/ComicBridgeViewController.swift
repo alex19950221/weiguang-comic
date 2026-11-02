@@ -28,6 +28,7 @@ final class ComicBridgeViewController: CAPBridgeViewController, ComicReaderDispl
         bridge?.registerPluginInstance(ComicArchivePlugin())
         bridge?.registerPluginInstance(ComicImportPlugin())
         bridge?.registerPluginInstance(ComicReaderPlugin())
+        bridge?.registerPluginInstance(ProStorePlugin())
         #if DEBUG
         bridge?.registerPluginInstance(ComicPrototypePlugin())
         #endif

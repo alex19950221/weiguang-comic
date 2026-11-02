@@ -4,7 +4,12 @@
 
 **第五个 TestFlight 内部测试构建已上传并通过 Apple 处理：从 m0 最新提交 `1f26206`（含 EPUB 导入）完成全部检查、14 个 XCTest 与模拟器 EPUB 验收（图片 EPUB 页序/自动右翻正常、文字书正确拒绝），构建号 4→5 上传；build `5`（0.0.1）状态 VALID，build id `9defbbca-7a29-4b7b-84d3-4d60a35868f8`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机验收由用户通过 TestFlight 完成。**
 
-## -8. 最新：应用图标与显示名称（2026-11-02）
+## -9. 最新：Pro 内购接入与购买页（2026-11-02）
+
+- Pro 定价 ¥20、分组免费、1.0 为裁白边 + 应用锁/隐藏系列（PRD 第 8 节已更新）。StoreKit 2 插件、Pro 状态与策略、购买页和设置入口已接入；两项 Pro 功能交付前正式商店不显示入口。说明见 [docs/PRO.md](./docs/PRO.md)，下一步 M3-03 自动裁白边。
+- 193 个 Vitest、lint、构建、iOS 同步与静态检查通过；Swift 未编译，内购未在沙盒验证。
+
+## -8. 应用图标与显示名称（2026-11-02）
 
 - 采用用户提供的翻页漫画图标（源图 `design/app-icon/source-1254.png`），已生成 iOS 1024 与安卓全套启动图标；显示名称简体「微光漫画」、繁体「微光漫畫」、英文「LumiComic」。Xcode 编译与真机显示未验收，启动画面仍为默认。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md)。
 
@@ -110,7 +115,7 @@
 - 不联网、不注册、不追踪、无广告、无 AI；不内置或搜索漫画资源，不支持第三方书源，不处理 DRM，不改用户原文件。安卓不申请网络权限，正式网页 CSP 禁用对外连接。
 - 已公开免费的功能不改为付费；Pro 一次买断，购买页仅在用户主动打开时出现。
 - 应用标识 `dev.weiguang.comic`；StoreKit 非消耗型商品 `dev.weiguang.comic.pro`。中文名「微光漫画」，英文暂定 LumiComic，最低 iOS 15。
-- 既定 Pro 价格为国区 ¥30 档、美区 US$4.99 档、台区对应档位，并开启家人共享；尚未接入内购。商店素材与备案待发布阶段核对。
+- Pro 价格为国区 ¥20（2026-11-02 确认），其他地区取对应档位，开启家人共享；自定义分组免费。内购代码已接入（docs/PRO.md），App Store Connect 商品待创建。商店素材与备案待发布阶段核对。
 - 技术栈为 Vite 8、Preact、TypeScript strict、Signals、Capacitor 8、Dexie。版本以 `package.json` 和锁文件为准。
 - 压缩包读取、文件复制、指纹和大图降采样放在原生层；WebView 不加载整个压缩包或原图。文件名解码、排序、系列识别等规则放在 TS 纯逻辑中，并补 Vitest。
 - 系统字体、语义 HTML、移动端布局，交互热区不少于 44px；不用 `any` 绕过类型，新依赖须说明用途及体积。

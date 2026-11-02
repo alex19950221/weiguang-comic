@@ -11,6 +11,7 @@
 - 正式 ZIP/CBZ 导入范围与验收：[M1 导入说明](./docs/IMPORT_M1.md)
 - 正式书架与原生封面/删除：[M1-05 说明](./docs/SHELF_M1.md)
 - 正式阅读器与进度：[阅读、目录、书签与进度](./docs/READING_M1.md)
+- 微光 Pro 范围、内购实现与测试：[Pro 说明](./docs/PRO.md)
 - 浏览器交互原型：[书架与阅读器体验说明](./docs/UI_PROTOTYPE.md)
 
 ## 开发

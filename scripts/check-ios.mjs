@@ -137,6 +137,24 @@ assert.match(
   /registerPluginInstance\(ComicReaderPlugin\(\)\)/,
   '阅读显示插件未注册',
 );
+assert.match(
+  read('ios/App/App/ComicBridgeViewController.swift'),
+  /registerPluginInstance\(ProStorePlugin\(\)\)/,
+  'Pro 内购插件未注册',
+);
+for (const method of ['status', 'purchase', 'restore']) {
+  assert.ok(
+    read('ios/ComicNative/Sources/ComicNative/ProStorePlugin.swift').includes(
+      `CAPPluginMethod(name: "${method}"`,
+    ),
+    `Pro 内购接口缺失：${method}`,
+  );
+}
+assert.match(
+  read('ios/ComicNative/Sources/ComicNative/ProStorePlugin.swift'),
+  /productID = "dev\.weiguang\.comic\.pro"/,
+  'Pro 商品标识不一致',
+);
 for (const method of ['getDisplayState', 'setFullscreen']) {
   assert.ok(
     read(
