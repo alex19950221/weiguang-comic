@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">微光漫画</string>
-    <string name="title_activity_main">微光漫画</string>
+    <string name="app_name">LumiComic</string>
+    <string name="title_activity_main">LumiComic</string>
     <string name="package_name">dev.weiguang.comic</string>
     <string name="custom_url_scheme">dev.weiguang.comic</string>
 </resources>

@@ -1,6 +1,14 @@
 # 开发进度检查点
 
-## 最新检查点：EPUB 导入验收与 TestFlight 构建 5 上传（2026-11-01）
+## 最新检查点：应用图标与显示名称（2026-11-02）
+
+- 图标：用户确认采用自己提供的「翻页漫画」图标（米白底、蓝色分格页、右下角橙黄翻页），源图存档于 `design/app-icon/source-1254.png`。iOS `AppIcon-512@2x.png` 为 1024×1024 不透明 RGB；安卓 5 档密度重新生成 `ic_launcher`（圆角）、`ic_launcher_round`（圆形）与自适应前景 `ic_launcher_foreground`（108dp，内容约 56dp），自适应背景色改为图标底色 `#FEFBF0`。
+- 显示名称（用户确认）：简体中文「微光漫画」、繁体中文「微光漫畫」、英文「LumiComic」。iOS 新增 `en`/`zh-Hans`/`zh-Hant.lproj/InfoPlist.strings`，并在 `project.pbxproj` 登记 InfoPlist.strings 变体组与 knownRegions；Info.plist 默认值仍为「微光漫画」。安卓默认 `values` 改为 LumiComic，新增 `values-zh` 为「微光漫画」。
+- App Store 名称/副标题建议（未在 App Store Connect 设置）：「微光漫画 - 本地漫画阅读器」/「只读你自己的漫画，无广告不联网」；英文「LumiComic - Local Comic Reader」/「Your own comics. Offline, no ads.」。
+- 自动检查（实际执行）：`pnpm build:ios`、`pnpm check:ios --release`、`pnpm lint`、`pnpm test`（183）通过。
+- 未测：Xcode 编译（pbxproj 为手工编辑）、主屏图标与中英文名称真机显示、安卓启动器显示；启动画面仍为 Capacitor 默认，未改。
+
+## 上一检查点：EPUB 导入验收与 TestFlight 构建 5 上传（2026-11-01）
 
 - 范围：在 macOS（Xcode 26.6, macOS 26.6.2）从 m0 最新提交 `1f26206`（M1-15: EPUB 图片漫画导入与阅读）完成全部检查、ComicNative 全部 XCTest、模拟器 EPUB 功能验收，再以构建号 5 归档上传 TestFlight。
 - 自动检查（实际执行）：`pnpm install --frozen-lockfile`、`pnpm lint`、`pnpm test` 22 文件 / 183 用例、`pnpm build:ios`、`pnpm check:ios --release` 全部通过；`xcodebuild -resolvePackageDependencies` 正常。

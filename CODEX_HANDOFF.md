@@ -1,10 +1,14 @@
 # 微光漫画最新交接摘要
 
-更新：2026-11-01｜工程：`D:\微光漫画`｜分支：`m0`｜版本：`0.0.1`
+更新：2026-11-02｜工程：`D:\微光漫画`｜分支：`m0`｜版本：`0.0.1`
 
 **第五个 TestFlight 内部测试构建已上传并通过 Apple 处理：从 m0 最新提交 `1f26206`（含 EPUB 导入）完成全部检查、14 个 XCTest 与模拟器 EPUB 验收（图片 EPUB 页序/自动右翻正常、文字书正确拒绝），构建号 4→5 上传；build `5`（0.0.1）状态 VALID，build id `9defbbca-7a29-4b7b-84d3-4d60a35868f8`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机验收由用户通过 TestFlight 完成。**
 
-## -7. 最新：EPUB 验收与 TestFlight 构建 5 上传（2026-11-01）
+## -8. 最新：应用图标与显示名称（2026-11-02）
+
+- 采用用户提供的翻页漫画图标（源图 `design/app-icon/source-1254.png`），已生成 iOS 1024 与安卓全套启动图标；显示名称简体「微光漫画」、繁体「微光漫畫」、英文「LumiComic」。Xcode 编译与真机显示未验收，启动画面仍为默认。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md)。
+
+## -7. EPUB 验收与 TestFlight 构建 5 上传（2026-11-01）
 
 - XCTest 14/14（含 EpubTests）、Vitest 183、lint/构建/同步/静态检查全通过。
 - 模拟器验收：fixed-layout-12p.epub 导入、页序、翻页、自动 RTL 正常；纯文字 EPUB 被拒（「This EPUB is mostly text.」）；ZIP/PDF 回归正常。build `5` VALID。细节见 [DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md) 顶部检查点。
