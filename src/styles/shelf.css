@@ -50,13 +50,15 @@
 .library-shell p {
   margin-top: 0;
 }
-.library-shell .shelf-primary {
+.library-shell .shelf-primary,
+.pro-panel .shelf-primary {
   background: var(--accent);
   color: var(--on-accent);
   border-color: var(--accent);
   font-weight: 600;
 }
-.library-shell .shelf-primary:hover:not(:disabled) {
+.library-shell .shelf-primary:hover:not(:disabled),
+.pro-panel .shelf-primary:hover:not(:disabled) {
   background: var(--accent-hover);
 }
 .library-shell .shelf-danger {
@@ -1127,4 +1129,38 @@
 .pro-notice {
   margin: 0;
   color: var(--positive);
+}
+.pro-preview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.pro-preview figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+.pro-preview img,
+.pro-preview-empty {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: contain;
+  border-radius: 8px;
+  background: var(--surface-muted);
+  -webkit-touch-callout: none;
+}
+.pro-preview-empty {
+  display: grid;
+  place-items: center;
+  color: var(--fg-muted);
+  font-size: 12px;
+  text-align: center;
+  padding: 8px;
+  box-sizing: border-box;
+}
+.pro-preview figcaption {
+  font-size: 12px;
+  color: var(--fg-muted);
 }

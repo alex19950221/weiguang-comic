@@ -5,8 +5,21 @@ import { t } from '@/i18n';
 import { Icon } from './Icon';
 import { LibraryDialog } from './LibraryControls';
 
+/** 裁白边在当前页的前后对比；after 为 null 时仍在生成。 */
+export interface ProPreview {
+  before: string | null;
+  after: string | null;
+  failed?: boolean;
+}
+
 /** 只在用户主动打开时显示：不弹窗、不倒计时；只列已交付的功能，其余写明后续免费获得。 */
-export function ProDialog({ onClose }: { onClose: () => void }) {
+export function ProDialog({
+  onClose,
+  preview,
+}: {
+  onClose: () => void;
+  preview?: ProPreview;
+}) {
   const store = proStore();
   const state = store.state.value;
   useEffect(() => {
@@ -39,6 +52,31 @@ export function ProDialog({ onClose }: { onClose: () => void }) {
         <p class="pro-lead">
           {t('一次买断，后续更新免费获得。不订阅、无广告，阅读功能永久免费。')}
         </p>
+        {preview && (
+          <section>
+            <h3>{t('自动裁白边 · 当前页预览')}</h3>
+            <div class="pro-preview">
+              <figure>
+                {preview.before ? (
+                  <img src={preview.before} alt={t('原图')} />
+                ) : (
+                  <span class="pro-preview-empty">{t('原图')}</span>
+                )}
+                <figcaption>{t('原图')}</figcaption>
+              </figure>
+              <figure>
+                {preview.after ? (
+                  <img src={preview.after} alt={t('裁白边后')} />
+                ) : (
+                  <span class="pro-preview-empty" role="status">
+                    {t(preview.failed ? '预览生成失败' : '正在生成预览…')}
+                  </span>
+                )}
+                <figcaption>{t('裁白边后')}</figcaption>
+              </figure>
+            </div>
+          </section>
+        )}
         {state.status === 'pro' && (
           <p class="pro-owned" role="status">
             <Icon name="check" size={18} />

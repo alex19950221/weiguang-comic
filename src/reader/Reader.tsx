@@ -34,7 +34,10 @@ import {
   topAt,
   type ReadingPosition,
 } from './layout';
-import { saveReaderPreferences } from './preferences';
+import { saveCropBorders, saveReaderPreferences } from './preferences';
+import { proStore } from '@/app/pro';
+import { canPerform, proEntryVisible } from '@/app/proPolicy';
+import { ProDialog, type ProPreview } from '@/components/ProDialog';
 import { useReaderGestures } from './useReaderGestures';
 import { nextZoom } from './zoom';
 import { ReaderContents } from './ReaderContents';
@@ -165,6 +168,11 @@ function ReadingView({
   );
   const [settingsBusy, setSettingsBusy] = useState(false);
   const [settingsError, setSettingsError] = useState(false);
+  const pro = proStore().state.value;
+  const [crop, setCrop] = useState(reading.book.cropBorders);
+  // 失去 Pro 后保留这本书的选择，但按原图显示；重新解锁后自动恢复。
+  const cropActive = crop && pro.status === 'pro';
+  const [proPreview, setProPreview] = useState<ProPreview | null>(null);
   const [images, setImages] = useState(new Map<number, RenderedPage>());
   const [loadVersion, setLoadVersion] = useState(0);
   const [errors, setErrors] = useState(new Set<number>());
@@ -237,11 +245,11 @@ function ReadingView({
   const loader = useMemo(
     () =>
       new PageLoader(
-        { bookId: reading.book.id, path: reading.book.path },
+        { bookId: reading.book.id, path: reading.book.path, crop: cropActive },
         reading.pages,
         async (options) => localPageUrl(await archive.renderPage(options)),
       ),
-    [reading, archive],
+    [reading, archive, cropActive],
   );
   const writer = useMemo(
     () =>
@@ -570,6 +578,49 @@ function ReadingView({
           : {}),
       }));
       setEnded(false);
+    } catch {
+      if (mounted.current) setSettingsError(true);
+    } finally {
+      if (mounted.current) setSettingsBusy(false);
+    }
+  }
+  async function changeCrop(enabled: boolean) {
+    if (settingsBusy) return;
+    if (enabled && !canPerform('crop.enable', pro.status === 'pro')) {
+      // 用户主动开启才出现购买页，并用当前页做裁切前后对比。
+      setSettings(false);
+      const current = reading.pages[page];
+      setProPreview({ before: images.get(page)?.url ?? null, after: null });
+      if (!current) return;
+      try {
+        const after = localPageUrl(
+          await archive.renderPage({
+            bookId: reading.book.id,
+            path: reading.book.path,
+            entry: current.entry,
+            maxPixel: 1200,
+            crop: true,
+          }),
+        );
+        if (mounted.current)
+          setProPreview((previous) =>
+            previous ? { ...previous, after: after.url } : previous,
+          );
+      } catch {
+        if (mounted.current)
+          setProPreview((previous) =>
+            previous ? { ...previous, failed: true } : previous,
+          );
+      }
+      return;
+    }
+    setSettingsBusy(true);
+    setSettingsError(false);
+    try {
+      await saveCropBorders(db, reading.book.id, enabled);
+      if (!mounted.current) return;
+      setErrors(new Set());
+      setCrop(enabled);
     } catch {
       if (mounted.current) setSettingsError(true);
     } finally {
@@ -1161,6 +1212,38 @@ function ReadingView({
                 }
               />
             </label>
+            {(crop ||
+              pro.status === 'pro' ||
+              proEntryVisible(pro.environment)) && (
+              <label class="reading-remember">
+                <span>
+                  <strong>
+                    {t('自动裁白边')}
+                    <em class="reading-pro-tag">Pro</em>
+                  </strong>
+                  <small>
+                    {t(
+                      crop && pro.status !== 'pro'
+                        ? '需要微光 Pro，目前按原图显示'
+                        : '去掉扫描版四周的白边和黑边，只对这本书生效',
+                    )}
+                  </small>
+                </span>
+                <input
+                  type="checkbox"
+                  role="switch"
+                  aria-label={t('自动裁白边')}
+                  checked={crop}
+                  disabled={settingsBusy}
+                  onChange={(event) => {
+                    const enabled = event.currentTarget.checked;
+                    // 需要购买时保持原状态，购买页关闭后由用户再决定。
+                    event.currentTarget.checked = crop;
+                    void changeCrop(enabled);
+                  }}
+                />
+              </label>
+            )}
             <fieldset disabled={settingsBusy}>
               <legend>{t('页面适应')}</legend>
               {(
@@ -1266,6 +1349,16 @@ function ReadingView({
             )}
           </div>
         </LibraryDialog>
+      )}
+      {proPreview && (
+        <ProDialog
+          preview={proPreview}
+          onClose={() => {
+            setProPreview(null);
+            // 在购买页完成购买后，直接为这本书开启。
+            if (proStore().state.value.status === 'pro') void changeCrop(true);
+          }}
+        />
       )}
       {guide && (
         <ReaderGuide

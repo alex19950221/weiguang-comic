@@ -19,7 +19,7 @@ export const proFeatures: readonly ProFeature[] = [
     name: '自动裁白边',
     description: '去掉扫描版四周的白边和黑边，画面更大，可按书开关。',
     release: '1.0',
-    delivered: false,
+    delivered: true,
   },
   {
     id: 'lock',

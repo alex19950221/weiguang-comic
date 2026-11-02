@@ -165,7 +165,7 @@ final class ComicStore {
         return root
     }
 
-    func render(path: String, bookId: String, index: Int, maxPixel: Int) throws -> [String: Any] {
+    func render(path: String, bookId: String, index: Int, maxPixel: Int, crop: Bool = false) throws -> [String: Any] {
         guard UUID(uuidString: bookId) != nil,
               URL(fileURLWithPath: path).deletingPathExtension().lastPathComponent == bookId else {
             throw ComicError.invalid("漫画标识无效。")
@@ -173,7 +173,8 @@ final class ComicStore {
         let sourceURL = try source(path)
         let root = try cacheRoot()
         let requested = min(8192, max(256, maxPixel))
-        let cache = root.appendingPathComponent("\(bookId)-\(index)-\(requested).png")
+        // 裁白边的结果单独缓存，开关切换时不互相覆盖。
+        let cache = root.appendingPathComponent("\(bookId)-\(index)-\(requested)\(crop ? "-crop" : "").png")
         let metadata = cache.appendingPathExtension("json")
         if fm.fileExists(atPath: cache.path),
            let data = try? Data(contentsOf: metadata),
@@ -185,7 +186,7 @@ final class ComicStore {
         }
         if sourceURL.pathExtension == "pdf" {
             return try renderPDF(sourceURL, index: index, requested: requested, cache: cache,
-                                 metadata: metadata, root: root)
+                                 metadata: metadata, root: root, crop: crop)
         }
         let book = try open(sourceURL.path)
         guard book.entries.indices.contains(index), book.directory.indices.contains(index),
@@ -233,23 +234,27 @@ final class ComicStore {
             kCGImageSourceShouldCacheImmediately: true,
             kCGImageSourceThumbnailMaxPixelSize: target
         ]
-        guard let image = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options as CFDictionary),
+        guard let decoded = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options as CFDictionary),
               let destination = CGImageDestinationCreateWithURL(cache as CFURL, UTType.png.identifier as CFString, 1, nil)
         else { throw ComicError.invalid("无法生成漫画预览。") }
+        let trimmed = crop ? ContentBounds.crop(decoded) : (image: decoded, widthRatio: 1.0, heightRatio: 1.0)
+        let image = trimmed.image
         CGImageDestinationAddImage(destination, image, nil)
         guard CGImageDestinationFinalize(destination) else {
             try? fm.removeItem(at: cache)
             throw ComicError.invalid("页面缓存写入失败，请检查可用空间。")
         }
+        // 原图尺寸按保留比例换算，阅读器用它计算版面比例。
         let result: [String: Any] = ["width": image.width, "height": image.height,
-                                    "sourceWidth": sourceWidth, "sourceHeight": sourceHeight]
+                                    "sourceWidth": max(1, Int((Double(sourceWidth) * trimmed.widthRatio).rounded())),
+                                    "sourceHeight": max(1, Int((Double(sourceHeight) * trimmed.heightRatio).rounded()))]
         try JSONSerialization.data(withJSONObject: result).write(to: metadata, options: .atomic)
         try trimCache(root, keeping: cache)
         return result.merging(["url": cache.absoluteString, "cached": false]) { _, new in new }
     }
 
     private func renderPDF(_ url: URL, index: Int, requested: Int, cache: URL, metadata: URL,
-                           root: URL) throws -> [String: Any] {
+                           root: URL, crop: Bool) throws -> [String: Any] {
         let document = try openPDF(url)
         guard index < document.pageCount, let page = document.page(at: index) else {
             throw ComicError.invalid("漫画页不存在。")
@@ -276,16 +281,19 @@ final class ComicStore {
             cg.scaleBy(x: size.width / CGFloat(width), y: -size.height / CGFloat(height))
             page.draw(with: .cropBox, to: cg)
         }
-        guard let cgImage = image.cgImage,
+        guard let rendered = image.cgImage,
               let destination = CGImageDestinationCreateWithURL(cache as CFURL, UTType.png.identifier as CFString, 1, nil)
         else { throw ComicError.invalid("无法生成漫画预览。") }
+        let trimmed = crop ? ContentBounds.crop(rendered) : (image: rendered, widthRatio: 1.0, heightRatio: 1.0)
+        let cgImage = trimmed.image
         CGImageDestinationAddImage(destination, cgImage, nil)
         guard CGImageDestinationFinalize(destination) else {
             try? fm.removeItem(at: cache)
             throw ComicError.invalid("页面缓存写入失败，请检查可用空间。")
         }
         let result: [String: Any] = ["width": cgImage.width, "height": cgImage.height,
-                                    "sourceWidth": Int(width.rounded()), "sourceHeight": Int(height.rounded())]
+                                    "sourceWidth": max(1, Int((width * trimmed.widthRatio).rounded())),
+                                    "sourceHeight": max(1, Int((height * trimmed.heightRatio).rounded()))]
         try JSONSerialization.data(withJSONObject: result).write(to: metadata, options: .atomic)
         try trimCache(root, keeping: cache)
         return result.merging(["url": cache.absoluteString, "cached": false]) { _, new in new }

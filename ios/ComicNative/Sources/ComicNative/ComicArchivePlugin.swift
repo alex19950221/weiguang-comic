@@ -39,8 +39,10 @@ public class ComicArchivePlugin: CAPPlugin, CAPBridgedPlugin {
     private func render(_ call: CAPPluginCall, maxPixel: Int) {
         guard let path = call.getString("path"), let bookId = call.getString("bookId"),
               let index = call.getInt("entry"), index >= 0 else { call.reject("页面参数无效。"); return }
-        if call.getBool("crop") == true { call.reject("自动裁边在 M3 实现。", "UNIMPLEMENTED"); return }
-        run(call) { try self.store.render(path: path, bookId: bookId, index: index, maxPixel: maxPixel) }
+        let crop = call.getBool("crop") == true
+        run(call) {
+            try self.store.render(path: path, bookId: bookId, index: index, maxPixel: maxPixel, crop: crop)
+        }
     }
 
     @objc func fingerprint(_ call: CAPPluginCall) {

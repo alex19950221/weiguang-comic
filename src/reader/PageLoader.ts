@@ -4,6 +4,8 @@ import type { ComicPage } from '@/archive/pageList';
 interface PageSource {
   bookId: string;
   path: string;
+  /** 自动裁白边（Pro）；只在开启时传给原生，关闭时请求与以前完全相同。 */
+  crop?: boolean;
 }
 
 type PageRenderer = (
@@ -73,6 +75,7 @@ export class PageLoader {
           path: this.book.path,
           entry: page.entry,
           maxPixel,
+          ...(this.book.crop ? { crop: true } : {}),
         });
         if (this.disposed || version !== this.version) return undefined;
         this.pages.set(index, result);

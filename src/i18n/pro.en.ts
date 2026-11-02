@@ -49,4 +49,13 @@ export const proEn: Record<string, string> = {
     'Pro is not available from the App Store right now. Please try again later.',
   '购买凭证校验失败，请稍后在设置中恢复购买。':
     'The purchase could not be verified. Please restore purchases in Settings later.',
+  '需要微光 Pro，目前按原图显示':
+    'Requires LumiComic Pro. Showing original pages for now.',
+  '去掉扫描版四周的白边和黑边，只对这本书生效':
+    'Trims white and black borders from scanned pages. Applies to this book only.',
+  '自动裁白边 · 当前页预览': 'Auto-crop margins · Preview of this page',
+  原图: 'Original',
+  裁白边后: 'Cropped',
+  预览生成失败: 'Preview unavailable',
+  '正在生成预览…': 'Generating preview…',
 };

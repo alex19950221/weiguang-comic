@@ -32,3 +32,11 @@
 - 模拟器离线测试：Xcode → Edit Scheme → Run → Options → StoreKit Configuration 选 `ios/App/LumiComicPro.storekit`，即可购买、退款、询问购买（Debug → StoreKit → Manage Transactions）。
 - TestFlight：用沙盒 Apple 账户购买/恢复；需要上一节的内购项目已创建。
 - 验收要点：购买后设置显示“已解锁”；恢复购买；退款（Manage Transactions → Refund）后回到免费且书架数据不变；家人共享；询问购买显示等待批准。
+
+## 已交付功能
+
+### 自动裁白边（M3-03）
+
+- 原生 `ContentBounds.swift`：长边 400 灰度分析图 → 外圈判断白/黑底 → 逐行列向内找空白（1% 杂点容忍）→ 留 1% 余量；底色不明、空白页、保留不足一半、每边不到 2% 时不裁。
+- `renderPage({ crop: true })`，图片页与 PDF 页均支持，单独缓存。阅读设置按书开关（`books.cropBorders`）；只在 Pro 有效时生效，失去 Pro 后按原图显示且可关闭。
+- 验收要点：白边扫描页、黑边扫描页、满版彩页（应不裁）、标题页（应不裁）、条漫与双页观感、翻页耗时。
