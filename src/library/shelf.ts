@@ -42,6 +42,8 @@ export function buildShelf(
   books: readonly Book[],
   series: readonly Series[],
   progress: ReadonlyMap<string, Progress>,
+  /** 隐藏的系列（Pro）默认不出现在书架、最近、继续阅读和搜索中。 */
+  showHidden = false,
 ): ShelfEntry[] {
   const bySeries = new Map<string, Book[]>();
   for (const book of books) {
@@ -51,7 +53,7 @@ export function buildShelf(
     bySeries.set(book.seriesId, items);
   }
   return series
-    .filter((item) => !item.hidden && bySeries.has(item.id))
+    .filter((item) => (showHidden || !item.hidden) && bySeries.has(item.id))
     .map((item) => {
       const items = bySeries.get(item.id)!.sort((a, b) => {
         const left = a.unit === '话' ? a.chapter : a.volume;

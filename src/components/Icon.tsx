@@ -23,7 +23,8 @@ export type IconName =
   | 'upload'
   | 'leaf'
   | 'more'
-  | 'download';
+  | 'download'
+  | 'lock';
 const paths: Record<IconName, string> = {
   book: 'M12 5.5C9 3.5 5 3.5 3 4.5v15c3-1 6-1 9 1 3-2 6-2 9-1v-15c-2-1-6-1-9 1Zm0 0v15',
   shelf: 'M4 3v18M20 3v18M4 10h16M4 18h16M8 4v6m4-7v7m4-6 2 6M8 13v5m4-5v5',
@@ -52,6 +53,7 @@ const paths: Record<IconName, string> = {
   leaf: 'M20 3c-11-1-17 4-15 11 2 7 15 7 15-11ZM5 20 16 8',
   more: 'M4 12h.1m7.9 0h.1m7.9 0h.1',
   download: 'M12 3v13m-5-5 5 5 5-5M4 16v5h16v-5',
+  lock: 'M5 11h14v10H5V11Zm3 0V7a4 4 0 0 1 8 0v4m-4 4v2',
 };
 export function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
   return (

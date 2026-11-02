@@ -1,6 +1,15 @@
 # 开发进度检查点
 
-## 最新检查点：M3-03 自动裁白边（第一项 Pro 功能，2026-11-02）
+## 最新检查点：M3-04 应用锁与隐藏系列（第二项 Pro 功能，开放购买，2026-11-02）
+
+- 原生：新增 `ComicLockPlugin`（LocalAuthentication `deviceOwnerAuthentication`，面容/触控 ID 失败可回落设备密码；只返回是否通过）。`ComicBridgeViewController` 实现隐私遮挡：应用锁开启时进入多任务/后台即盖住画面，从后台回来等网页画出锁屏并调用 `reveal` 后才移开（1.5 秒兜底）。Info.plist 与三语 InfoPlist.strings 增加 `NSFaceIDUsageDescription`；`check:ios` 检查注册与该键。系统框架，无新依赖。
+- 网页层：`src/app/appLock.ts` 状态机（启动与回到前台上锁、自动发起验证；开启需 Pro + 设备密码并先验证一次；关闭与解锁永远可用；设备关闭密码时放行并自动关闭应用锁），设置存 `settings` 表 `app.lock`（新键，不改表结构）。`LockScreen` 盖住书架与阅读器且不卸载它们（阅读位置保留）；读到锁设置前不渲染书架。
+- 隐藏系列：复用已有 `series.hidden`；系列管理弹窗「隐藏系列 Pro / 取消隐藏」（取消隐藏不需要 Pro）；隐藏系列不出现在书架、最近、继续阅读和搜索；设置页「隐藏的系列 · 显示」仅本次打开有效。
+- `proPolicy` 两项均标为已交付 → `purchaseOpen` 为 true：正式商店也会显示「微光 Pro」入口与 Pro 开关。上架前须在 App Store Connect 创建内购商品（见 docs/PRO.md）。
+- 自动检查（实际执行）：`pnpm test` 203 用例通过（新增 8：应用锁 7、隐藏/显示 1+1 断言扩充）；`pnpm lint`、`pnpm build`、`pnpm build:ios`、`pnpm check:ios --release` 通过；临时预览页检查 375/1280 锁屏布局（已删除）。
+- 未测：Swift 编译、面容 ID/密码真机流程、后台遮挡与回前台时序、阅读中上锁后恢复、沙盒内购开放后的完整购买流程。
+
+## 上一检查点：M3-03 自动裁白边（第一项 Pro 功能，2026-11-02）
 
 - 原生（`ContentBounds.swift`）：在长边 400 的灰度缩略图上取最外两圈像素判断白底/黑底（60% 以上），逐行逐列向内找连续空白（容许 1% 杂点），留 1% 余量；底色不明、整页空白、保留区不足一半（标题页/插图页）或每边都不到 2% 时不裁。确定性算法，无新依赖。`renderPage` 接受 `crop: true`（不再拒绝），图片页与 PDF 页都支持；裁边结果单独缓存（`-crop.png`），`sourceWidth/Height` 按保留比例换算。新增 `ContentBoundsTests`（5 个），XCTest 现共 19 个，未运行。
 - 阅读器：阅读设置新增「自动裁白边 Pro」开关，按书保存到已有的 `books.cropBorders`（不改表）；只在 Pro 已解锁时向原生请求裁边，失去 Pro 后保留选择但按原图显示，关闭永远可用。未解锁时开启会关闭设置并打开购买页，显示当前页「原图 / 裁白边后」对比；在购买页解锁后关闭即为这本书开启。开关在正式商店开放购买前隐藏（与设置入口规则一致）。

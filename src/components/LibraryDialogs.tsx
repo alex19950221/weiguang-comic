@@ -13,7 +13,9 @@ import {
   markTargetRead,
   deleteLibraryTarget,
   type LibraryTarget,
+  setSeriesHidden,
 } from '@/library/actions';
+import { canPerform } from '@/app/proPolicy';
 import type { FileCleanupQueue } from '@/library/FileCleanupQueue';
 import { useLibrary } from '@/app/libraryServices';
 import { t } from '@/i18n';
@@ -198,6 +200,9 @@ export function ManageDialog({
   onClose,
   onNewGroup,
   onRead,
+  canHide = false,
+  proActive = false,
+  onPro,
 }: {
   target: LibraryTarget;
   entries: readonly ShelfEntry[];
@@ -207,6 +212,10 @@ export function ManageDialog({
   onClose: () => void;
   onNewGroup: (seriesId: string) => void;
   onRead: (bookId: string) => void;
+  /** 隐藏系列（Pro）入口是否显示；已隐藏的系列总能取消隐藏。 */
+  canHide?: boolean;
+  proActive?: boolean;
+  onPro?: () => void;
 }) {
   const { db, nativeAvailable } = useLibrary();
   const [confirm, setConfirm] = useState(false);
@@ -231,6 +240,22 @@ export function ManageDialog({
   );
   const size = books.reduce((sum, book) => sum + book.sizeBytes, 0);
   const page = progress.get(book.id)?.page;
+  async function toggleHidden(hidden: boolean) {
+    if (!entry) return;
+    if (hidden && !canPerform('series.hide', proActive)) {
+      onPro?.();
+      return;
+    }
+    setBusy(true);
+    setError('');
+    try {
+      await setSeriesHidden(db, entry.series.id, hidden);
+    } catch (error: unknown) {
+      setError(actionError(error));
+    } finally {
+      setBusy(false);
+    }
+  }
   async function act(remove = false) {
     setBusy(true);
     setError('');
@@ -363,6 +388,16 @@ export function ManageDialog({
                   : '标记为读完',
             )}
           </button>
+          {target.kind === 'series' && (entry.series.hidden || canHide) && (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void toggleHidden(!entry.series.hidden)}
+            >
+              {t(entry.series.hidden ? '取消隐藏' : '隐藏系列')}
+              {!entry.series.hidden && <em class="shelf-pro-tag">Pro</em>}
+            </button>
+          )}
           <button
             type="button"
             class="shelf-danger-text"

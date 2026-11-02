@@ -58,4 +58,30 @@ export const proEn: Record<string, string> = {
   裁白边后: 'Cropped',
   预览生成失败: 'Preview unavailable',
   '正在生成预览…': 'Generating preview…',
+  应用锁: 'App lock',
+  '请先在系统设置中设置设备密码。': 'Set a device passcode in Settings first.',
+  '验证未通过，应用锁没有开启。':
+    'Verification failed. App lock was not turned on.',
+  '设置未保存，请重试。': 'The setting was not saved. Please try again.',
+  '设备已关闭密码，应用锁已自动关闭。':
+    'The device passcode was turned off, so app lock was turned off too.',
+  '打开 App 或从后台回来时需要面容 ID 或密码，多任务界面不显示内容。':
+    'Requires Face ID or your passcode when opening the app or returning to it, and hides content in the app switcher.',
+  关闭: 'Turn off',
+  开启: 'Turn on',
+  隐藏的系列: 'Hidden series',
+  '隐藏的系列正在书架中显示，关闭 App 后恢复隐藏。':
+    'Hidden series are showing on the shelf until you close the app.',
+  '隐藏的系列不出现在书架、最近和搜索中。':
+    'Hidden series stay out of the shelf, Recent and search.',
+  不再显示: 'Hide again',
+  显示: 'Show',
+  取消隐藏: 'Unhide',
+  隐藏系列: 'Hide series',
+  微光漫画已锁定: 'LumiComic is locked',
+  '正在验证…': 'Verifying…',
+  '用面容 ID 解锁': 'Unlock with Face ID',
+  '用触控 ID 解锁': 'Unlock with Touch ID',
+  解锁: 'Unlock',
+  '验证未通过，请重试。': 'Verification failed. Please try again.',
 };

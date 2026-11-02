@@ -40,3 +40,14 @@
 - 原生 `ContentBounds.swift`：长边 400 灰度分析图 → 外圈判断白/黑底 → 逐行列向内找空白（1% 杂点容忍）→ 留 1% 余量；底色不明、空白页、保留不足一半、每边不到 2% 时不裁。
 - `renderPage({ crop: true })`，图片页与 PDF 页均支持，单独缓存。阅读设置按书开关（`books.cropBorders`）；只在 Pro 有效时生效，失去 Pro 后按原图显示且可关闭。
 - 验收要点：白边扫描页、黑边扫描页、满版彩页（应不裁）、标题页（应不裁）、条漫与双页观感、翻页耗时。
+
+### 应用锁与隐藏系列（M3-04）
+
+- 原生 `ComicLockPlugin`：`availability`、`authenticate`（deviceOwnerAuthentication）、`setPrivacyCover`、`reveal`。遮挡由 `ComicBridgeViewController` 负责。
+- `src/app/appLock.ts`：启动/回到前台上锁；开启需 Pro 与设备密码并验证一次；解锁、关闭不需要 Pro；设备关闭密码时放行并关闭。设置键 `app.lock`。
+- 隐藏系列：`series.hidden`；隐藏需 Pro，取消隐藏不需要；设置页可临时显示。
+- 验收要点：开启/关闭；冷启动与后台返回各验证一次；多任务界面看不到内容；阅读中切后台再回来位置不变；取消验证停在锁屏可重试；关闭设备密码后能进入；退款后能关闭应用锁、取消隐藏。
+
+## 开放购买
+
+两项 1.0 功能已交付，`purchaseOpen()` 为 true。提交审核前确认 App Store Connect 内购商品已创建并随版本提交，否则购买页会提示无法获取商品。

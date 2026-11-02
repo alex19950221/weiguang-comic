@@ -4,7 +4,11 @@
 
 **第五个 TestFlight 内部测试构建已上传并通过 Apple 处理：从 m0 最新提交 `1f26206`（含 EPUB 导入）完成全部检查、14 个 XCTest 与模拟器 EPUB 验收（图片 EPUB 页序/自动右翻正常、文字书正确拒绝），构建号 4→5 上传；build `5`（0.0.1）状态 VALID，build id `9defbbca-7a29-4b7b-84d3-4d60a35868f8`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机验收由用户通过 TestFlight 完成。**
 
-## -10. 最新：M3-03 自动裁白边（2026-11-02）
+## -11. 最新：M3-04 应用锁与隐藏系列（2026-11-02）
+
+- 第二项 Pro 功能完成，1.0 Pro 两项齐备，代码层已开放购买（正式商店显示 Pro 入口）。应用锁：原生 LocalAuthentication + 后台隐私遮挡，失去 Pro/设备关闭密码都不会锁住用户；隐藏系列复用 `series.hidden`。203 个 Vitest 等通过；Swift 与真机未验收，App Store Connect 内购商品需先创建。
+
+## -10. M3-03 自动裁白边（2026-11-02）
 
 - 第一项 Pro 功能：原生确定性裁边（`ContentBounds.swift`）、阅读设置按书开关、未解锁时购买页显示当前页前后对比。195 个 Vitest 等通过；Swift/XCTest 与真实扫描页效果未验收。下一步 M3-04 应用锁与隐藏系列。
 

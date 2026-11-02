@@ -151,6 +151,15 @@ for (const method of ['status', 'purchase', 'restore']) {
   );
 }
 assert.match(
+  read('ios/App/App/ComicBridgeViewController.swift'),
+  /registerPluginInstance\(ComicLockPlugin\(\)\)/,
+  '应用锁插件未注册',
+);
+assert.ok(
+  info.NSFaceIDUsageDescription,
+  '应用锁需要 NSFaceIDUsageDescription，否则调用面容 ID 会崩溃',
+);
+assert.match(
   read('ios/ComicNative/Sources/ComicNative/ProStorePlugin.swift'),
   /productID = "dev\.weiguang\.comic\.pro"/,
   'Pro 商品标识不一致',

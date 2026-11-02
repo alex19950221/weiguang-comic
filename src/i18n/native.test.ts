@@ -9,6 +9,7 @@ const plugins = [
   'ComicStore',
   'ZipDirectory',
   'ProStorePlugin',
+  'ComicLockPlugin',
 ];
 
 describe('原生错误文案', () => {

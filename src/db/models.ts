@@ -150,7 +150,9 @@ export type Setting =
   | { key: 'reader.tap-hint-seen'; value: boolean }
   | { key: 'library.layout'; value: 'grid' | 'list' }
   | { key: 'ui.appearance'; value: 'system' | 'paper' | 'night' }
-  | { key: 'library.sort'; value: 'title' | 'importedAt' | 'lastReadAt' };
+  | { key: 'library.sort'; value: 'title' | 'importedAt' | 'lastReadAt' }
+  /** 应用锁（Pro）；缺省为关闭。失去 Pro 后仍可解锁与关闭。 */
+  | { key: 'app.lock'; value: boolean };
 
 /** 备份未匹配记录不携带另一台设备的文件路径。匹配时再分配本机bookId。 */
 export interface PendingMatch {

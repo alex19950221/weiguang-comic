@@ -39,6 +39,15 @@ describe('M1-05 正式书架视图', () => {
     );
     expect(entries).toHaveLength(1);
     expect(entries[0]?.books.map((book) => book.id)).toEqual(['v2', 'v10']);
+    // 用户选择显示隐藏系列时才出现，且不影响其他系列。
+    expect(
+      buildShelf(
+        [testBook({ id: 'h', seriesId: hidden.id })],
+        [series, hidden],
+        progress([]),
+        true,
+      ).map((entry) => entry.series.id),
+    ).toEqual(['hidden']);
     const chapters = buildShelf(
       [
         testBook({ id: 'ch10', unit: '话', chapter: 10, seriesId: series.id }),

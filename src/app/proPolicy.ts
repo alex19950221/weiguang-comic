@@ -27,7 +27,7 @@ export const proFeatures: readonly ProFeature[] = [
     description:
       '用面容 ID 或密码进入；切到后台时遮住画面；隐藏的系列默认不显示。',
     release: '1.0',
-    delivered: false,
+    delivered: true,
   },
   {
     id: 'inplace',

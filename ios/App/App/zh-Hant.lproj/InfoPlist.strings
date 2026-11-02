@@ -1,3 +1,4 @@
 /* 图标下方显示的名称 */
 "CFBundleDisplayName" = "微光漫畫";
 "CFBundleName" = "微光漫畫";
+"NSFaceIDUsageDescription" = "用於在打開微光漫畫時驗證是你本人。";

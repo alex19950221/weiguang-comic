@@ -6,6 +6,8 @@
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>用于在打开微光漫画时验证是你本人。</string>
 	<key>CFBundleDisplayName</key>
         <string>微光漫画</string>
 	<key>CFBundleExecutable</key>

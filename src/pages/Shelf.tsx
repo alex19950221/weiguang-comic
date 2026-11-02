@@ -39,7 +39,8 @@ import {
 import { ImportStatus } from '@/components/ImportStatus';
 import { ProDialog } from '@/components/ProDialog';
 import { proStore } from '@/app/pro';
-import { proEntryVisible } from '@/app/proPolicy';
+import { canPerform, proEntryVisible } from '@/app/proPolicy';
+import { appLock, lockAvailable } from '@/app/appLockService';
 import { Reader } from '@/reader/Reader';
 import '@/styles/shelf.css';
 
@@ -73,6 +74,11 @@ function ShelfContent() {
   const [manage, setManage] = useState<LibraryTarget | null>(null);
   const [proOpen, setProOpen] = useState(false);
   const pro = proStore().state.value;
+  const lock = appLock();
+  const lockState = lock.state.value;
+  // 隐藏的系列只在本次打开期间按需显示，不保存。
+  const [showHidden, setShowHidden] = useState(false);
+  const proVisible = pro.status === 'pro' || proEntryVisible(pro.environment);
   const [reading, setReading] = useState<string | null>(null);
   const returnPosition = useRef(0);
   const [groupEditor, setGroupEditor] = useState<GroupEditor | null>(null);
@@ -87,8 +93,8 @@ function ShelfContent() {
     [snapshot.progress],
   );
   const entries = useMemo(
-    () => buildShelf(snapshot.books, snapshot.series, progress),
-    [snapshot.books, snapshot.series, progress],
+    () => buildShelf(snapshot.books, snapshot.series, progress, showHidden),
+    [snapshot.books, snapshot.series, progress, showHidden],
   );
   const selected = entries.find((entry) => entry.series.id === seriesId);
   const sortSetting = snapshot.settings.find(
@@ -613,6 +619,70 @@ function ShelfContent() {
                             </button>
                           </div>
                         )}
+                        {lockAvailable() &&
+                          (lockState.enabled || proVisible) && (
+                            <div class="shelf-settings-row">
+                              <div>
+                                <h2>
+                                  {t('应用锁')}
+                                  <em class="shelf-pro-tag">Pro</em>
+                                </h2>
+                                <p>
+                                  {t(
+                                    lockState.error === 'no-passcode'
+                                      ? '请先在系统设置中设置设备密码。'
+                                      : lockState.error === 'failed'
+                                        ? '验证未通过，应用锁没有开启。'
+                                        : lockState.error === 'save-failed'
+                                          ? '设置未保存，请重试。'
+                                          : lockState.notice ===
+                                              'disabled-no-passcode'
+                                            ? '设备已关闭密码，应用锁已自动关闭。'
+                                            : '打开 App 或从后台回来时需要面容 ID 或密码，多任务界面不显示内容。',
+                                  )}
+                                </p>
+                              </div>
+                              <button
+                                type="button"
+                                aria-pressed={lockState.enabled}
+                                disabled={lockState.busy}
+                                onClick={() => {
+                                  if (lockState.enabled) void lock.disable();
+                                  else if (
+                                    !canPerform(
+                                      'lock.enable',
+                                      pro.status === 'pro',
+                                    )
+                                  )
+                                    setProOpen(true);
+                                  else void lock.enable(true);
+                                }}
+                              >
+                                {t(lockState.enabled ? '关闭' : '开启')}
+                              </button>
+                            </div>
+                          )}
+                        {snapshot.series.some((item) => item.hidden) && (
+                          <div class="shelf-settings-row">
+                            <div>
+                              <h2>{t('隐藏的系列')}</h2>
+                              <p>
+                                {t(
+                                  showHidden
+                                    ? '隐藏的系列正在书架中显示，关闭 App 后恢复隐藏。'
+                                    : '隐藏的系列不出现在书架、最近和搜索中。',
+                                )}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              aria-pressed={showHidden}
+                              onClick={() => setShowHidden((value) => !value)}
+                            >
+                              {t(showHidden ? '不再显示' : '显示')}
+                            </button>
+                          </div>
+                        )}
                         <div class="shelf-settings-row">
                           <h2>{t('我的分组')}</h2>
                           <button type="button" onClick={() => newGroup()}>
@@ -945,6 +1015,12 @@ function ShelfContent() {
             onClose={() => setManage(null)}
             onNewGroup={newGroup}
             onRead={openBook}
+            canHide={proVisible}
+            proActive={pro.status === 'pro'}
+            onPro={() => {
+              setManage(null);
+              setProOpen(true);
+            }}
           />
         )}
         {groupEditor && (

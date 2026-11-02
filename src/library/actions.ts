@@ -44,6 +44,19 @@ export async function toggleSeriesFavorite(
   });
 }
 
+/** 隐藏或取消隐藏系列；取消隐藏不需要 Pro（失去权益不丢数据）。 */
+export async function setSeriesHidden(
+  db: ComicDatabase,
+  id: string,
+  hidden: boolean,
+): Promise<void> {
+  const updated = await db.series.update(id, {
+    hidden,
+    updatedAt: Date.now(),
+  });
+  if (!updated && !(await db.series.get(id))) throw new Error('SERIES_MISSING');
+}
+
 /** 文件系统和 IndexedDB 无法共用事务，先持久化清理任务，再由原生幂等清理。 */
 export async function deleteLibraryTarget(
   db: ComicDatabase,

@@ -1,3 +1,4 @@
 /* 图标下方显示的名称 */
 "CFBundleDisplayName" = "LumiComic";
 "CFBundleName" = "LumiComic";
+"NSFaceIDUsageDescription" = "Used to confirm it is you when opening LumiComic.";

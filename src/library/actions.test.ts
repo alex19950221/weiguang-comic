@@ -5,6 +5,7 @@ import { testBook, testSeries } from '@/db/testing/records';
 import {
   deleteLibraryTarget,
   markTargetRead,
+  setSeriesHidden,
   toggleSeriesFavorite,
 } from './actions';
 import { FileCleanupQueue } from './FileCleanupQueue';
@@ -75,6 +76,18 @@ async function seed() {
   return { series, books };
 }
 describe('M1-05 书架事务与原生副本清理', () => {
+  it('隐藏与取消隐藏系列只改该系列，缺系列时报错', async () => {
+    const { series } = await seed();
+    await setSeriesHidden(db, series.id, true);
+    expect((await db.series.get(series.id))?.hidden).toBe(true);
+    await setSeriesHidden(db, series.id, false);
+    await setSeriesHidden(db, series.id, false);
+    expect((await db.series.get(series.id))?.hidden).toBe(false);
+    expect(await db.books.count()).toBeGreaterThan(0);
+    await expect(setSeriesHidden(db, 'missing', true)).rejects.toThrow(
+      'SERIES_MISSING',
+    );
+  });
   it('按系列标记读完保存末页，标记未读清掉进度和阅读时间，保留书签', async () => {
     const { series, books } = await seed();
     await markTargetRead(db, { kind: 'series', id: series.id }, true);
