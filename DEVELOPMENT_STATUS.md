@@ -1,8 +1,18 @@
 # 开发进度检查点
 
+## 最新检查点：Pro 1.2 第二阶段——画面滤镜与四阶段收尾（2026-11-03）
+
+- 自动翻页已在 `98f55f5` 提交并推送。画面滤镜已接入每书对比度、锐化、暖色，默认原图、免费还原、失去 Pro 时原图显示且保留参数。编辑草稿不解码，点击应用才保存/重建页面；取消不保存。系统 Core Image 处理预算内渲染图，先裁边再滤镜，独立参数缓存；原图分支不创建上下文。不改变进度/书签/原件，无数据库升级、无新增第三方依赖，filters 已标记交付。
+- 自动检查（实际执行）：`pnpm lint`、`pnpm test`（29 文件 **227/227**，新增滤镜边界/权益/参数透传/持久化与故障安全 6）、`pnpm build:ios`、`pnpm check:ios --release` 全部通过；日志 `release/qa/pro-filters-final-{lint,vitest,web,static}.log`。App Debug `xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -destination 'platform=iOS Simulator,id=25D3E645-55A3-44F9-B7FE-7CED6E0DB7AB' -derivedDataPath release/app-debug CODE_SIGNING_ALLOWED=NO build` **BUILD SUCCEEDED**，日志 `pro-filters-final-debug.log`。
+- XCTest（实际执行）：在 ios/ComicNative，`xcodebuild -scheme ComicNative -destination 'platform=iOS Simulator,id=25D3E645-55A3-44F9-B7FE-7CED6E0DB7AB' -derivedDataPath <repo>/release/native-derived -resultBundlePath <repo>/release/qa/pro-filters-final-native.xcresult test`，**30/30 通过、0 失败**。新增 5 项覆盖非法桥接参数、原图同一图像/暖色/尺寸透明度、对比度锐化边缘变化、PDF 原图/滤镜/裁边缓存隔离与清理、原位 ZIP 不放大且原件不变。
+- 失败与最小修复：首轮网页构建因新增英文文案含空格的键未加引号退出 2，补引号后通过。首轮 227 个 Vitest 有 1 个失败：测试错误假设初始化无设置，实际有两项；改为捕获并核对设置前后完整快照，保持“不改其他设置”的验证目的，随后 227/227。原生两次全量运行均 30/30，无 Swift 编译/测试失败；没有跳过、删除或禁用任何测试。
+- 模拟器点检（实际执行，iPhone 18 Pro / iOS 27.2 / Debug）：自制原位 CBZ（4 页）与 PDF 副本（3 页）默认灰度原图；CBZ 应用 127% 对比度/54% 锐化/93% 暖色后画面变化，翻页、返回书架正常。打开 PDF 仍为默认原图，单独应用参数后效果正常；CBZ 重新打开保留第 2/4 页与原参数。英文滤镜说明/参数/按钮无溢出，补查上阶段英文自动翻页说明/常用间隔/速度；点击免费还原按钮恢复原图、仍第 2/4 页（此按钮实测时 Pro 有效，失去权益情况由策略/存储测试覆盖，未冒称退款实测）。临时两本清理后当前容器副本 6→5、引用 1→0，两份原件完整 SHA-256 与创建后记录一致；原 5 本/4 系列、既有 QA Borders 第 2/4 页保留，恢复跟随系统语言与网格布局。截图 `release/qa/pro-filters-{cbz-original,cbz-applied,english-settings}.png`，不入库。
+- 未执行：真机、真实扫描页主观效果、长时内存/耗电/帧率、真实退款与沙盒/家人共享、本阶段模拟器滤镜+双页/条漫组合、iCloud/第三方原位提供者、安卓、Release 归档与新 TestFlight 上传。Xcode 当前调试另一个工程，本轮未中断该会话来操作 StoreKit 退款。模拟器与单元测试不能替代上述项目。
+- 阶段收尾：原位阅读 `3061105`、批量整理 `7ee1a8b`、自动翻页 `98f55f5`、本阶段画面滤镜完成了约定代码、自动检查与可执行模拟器点检，按阶段推送 m0；具体未执行验收保留。TestFlight 仍 0.0.1(7)，本轮不归档/上传，不更改签名或构建号，不提交 release/ 与任何签名材料。四阶段 goal 在本次提交推送完成后结束。
+
 ## 最新检查点：Pro 1.2 第一阶段——自动翻页（2026-11-03）
 
-- 1.1 两阶段已分别推送 `3061105`（原位阅读）、`7ee1a8b`（批量整理）。正在实现单页/双页定时翻页与条漫匀速滚动：只有用户主动启动；触摸、键盘/滚轮、菜单、后台、缩放/旋转、坏页、卷末与权益失效停止，停止免费，不自动进入下一卷。计时从页面实际加载后开始，卡顿不追赶；条漫周期记录实际位置。间隔/速度可持久化，启动状态不持久化。
+- 1.1 两阶段已分别推送 `3061105`（原位阅读）、`7ee1a8b`（批量整理）。已完成单页/双页定时翻页与条漫匀速滚动：只有用户主动启动；触摸、键盘/滚轮、菜单、后台、缩放/旋转、坏页、卷末与权益失效停止，停止免费，不自动进入下一卷。计时从页面实际加载后开始，卡顿不追赶；条漫周期记录实际位置。间隔/速度可持久化，启动状态不持久化。
 - 代码：单调时钟加载后计时、滚动步长限幅与周期实际位置保存，常用间隔/速度按钮；`ComicReader.setKeepAwake` 播放期间保持常亮，停止/网页重载恢复，App 失活有原生兜底。重连原件先 flush 最后位置再重开，避免进度尚未落盘的时序问题。UIKit 系统框架，无新依赖、无数据库升级，原文件不变。autoplay 已标记交付。
 - 自动检查（实际执行）：`pnpm lint`、`pnpm test`（28 文件 **221/221**，新增时钟/滚动边界 6、参数持久化 1）、`pnpm build:ios`、`pnpm check:ios --release` 通过，最终日志 `release/qa/pro-autoplay-final-{lint,vitest,web,static}.log`。App Debug 模拟器构建使用与上阶段相同的项目、scheme、设备和 `CODE_SIGNING_ALLOWED=NO`，**BUILD SUCCEEDED**，日志 `pro-autoplay-third-debug.log`。本阶段无编译/测试失败，未跳过、删除或禁用测试。
 - XCTest（实际执行）：在 ios/ComicNative 以同一 iPhone 18 Pro destination 运行完整 `xcodebuild -scheme ComicNative ... test`，**25/25 通过、0 失败**；日志 `release/qa/pro-autoplay-native.log`，结果 `pro-autoplay-native.xcresult`。

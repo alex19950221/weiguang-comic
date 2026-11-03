@@ -679,3 +679,21 @@
   color: var(--on-accent);
   background: var(--accent);
 }
+.reading-filters {
+  display: grid;
+  gap: 18px;
+}
+.reading-filters label {
+  display: grid;
+  gap: 8px;
+}
+.reading-filters input[type='range'] {
+  width: 100%;
+  min-height: 44px;
+  accent-color: var(--accent);
+}
+.reading-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

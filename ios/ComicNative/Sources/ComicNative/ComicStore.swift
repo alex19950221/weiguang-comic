@@ -1,4 +1,5 @@
 import CryptoKit
+import CoreImage
 import Foundation
 import ImageIO
 import PDFKit
@@ -12,6 +13,12 @@ final class ComicStore {
     private let cacheLimit = 500 * 1024 * 1024
     private var opened: (path: String, archive: Archive, entries: [Entry], directory: [ZipItem])?
     private var openedPDF: (path: String, document: PDFDocument)?
+    private lazy var filterContext = CIContext(options: [.cacheIntermediates: false])
+
+    private func filtered(_ image: CGImage, _ filters: PageFilters) throws -> CGImage {
+        // 原图分支连 CIContext 都不创建；旧用户的解码/缓存路径保持一致。
+        filters.isOriginal ? image : try filters.render(image, context: filterContext)
+    }
 
     static func libraryRoot(prototype: Bool = true) throws -> URL {
         let base = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
@@ -180,22 +187,24 @@ final class ComicStore {
         return root
     }
 
-    func render(path: String, bookId: String, index: Int, maxPixel: Int, crop: Bool = false) throws -> [String: Any] {
+    func render(path: String, bookId: String, index: Int, maxPixel: Int, crop: Bool = false,
+                filters: PageFilters = .original) throws -> [String: Any] {
         guard UUID(uuidString: bookId) != nil,
               ComicReferences.id(path) == bookId ||
               URL(fileURLWithPath: path).deletingPathExtension().lastPathComponent == bookId else {
             throw ComicError.invalid("漫画标识无效。")
         }
         return try withSource(path) {
-            try renderURL($0, bookId: bookId, index: index, maxPixel: maxPixel, crop: crop)
+            try renderURL($0, bookId: bookId, index: index, maxPixel: maxPixel, crop: crop, filters: filters)
         }
     }
 
-    private func renderURL(_ sourceURL: URL, bookId: String, index: Int, maxPixel: Int, crop: Bool) throws -> [String: Any] {
+    private func renderURL(_ sourceURL: URL, bookId: String, index: Int, maxPixel: Int, crop: Bool,
+                           filters: PageFilters) throws -> [String: Any] {
         let root = try cacheRoot()
         let requested = min(8192, max(256, maxPixel))
         // 裁白边的结果单独缓存，开关切换时不互相覆盖。
-        let cache = root.appendingPathComponent("\(bookId)-\(index)-\(requested)\(crop ? "-crop" : "").png")
+        let cache = root.appendingPathComponent("\(bookId)-\(index)-\(requested)\(crop ? "-crop" : "")\(filters.cacheSuffix).png")
         let metadata = cache.appendingPathExtension("json")
         if fm.fileExists(atPath: cache.path),
            let data = try? Data(contentsOf: metadata),
@@ -207,7 +216,7 @@ final class ComicStore {
         }
         if sourceURL.pathExtension.lowercased() == "pdf" {
             return try renderPDF(sourceURL, index: index, requested: requested, cache: cache,
-                                 metadata: metadata, root: root, crop: crop)
+                                 metadata: metadata, root: root, crop: crop, filters: filters)
         }
         let book = try open(sourceURL)
         guard book.entries.indices.contains(index), book.directory.indices.contains(index),
@@ -259,7 +268,7 @@ final class ComicStore {
               let destination = CGImageDestinationCreateWithURL(cache as CFURL, UTType.png.identifier as CFString, 1, nil)
         else { throw ComicError.invalid("无法生成漫画预览。") }
         let trimmed = crop ? ContentBounds.crop(decoded) : (image: decoded, widthRatio: 1.0, heightRatio: 1.0)
-        let image = trimmed.image
+        let image = try filtered(trimmed.image, filters)
         CGImageDestinationAddImage(destination, image, nil)
         guard CGImageDestinationFinalize(destination) else {
             try? fm.removeItem(at: cache)
@@ -275,7 +284,7 @@ final class ComicStore {
     }
 
     private func renderPDF(_ url: URL, index: Int, requested: Int, cache: URL, metadata: URL,
-                           root: URL, crop: Bool) throws -> [String: Any] {
+                           root: URL, crop: Bool, filters: PageFilters) throws -> [String: Any] {
         let document = try openPDF(url)
         guard index < document.pageCount, let page = document.page(at: index) else {
             throw ComicError.invalid("漫画页不存在。")
@@ -306,7 +315,7 @@ final class ComicStore {
               let destination = CGImageDestinationCreateWithURL(cache as CFURL, UTType.png.identifier as CFString, 1, nil)
         else { throw ComicError.invalid("无法生成漫画预览。") }
         let trimmed = crop ? ContentBounds.crop(rendered) : (image: rendered, widthRatio: 1.0, heightRatio: 1.0)
-        let cgImage = trimmed.image
+        let cgImage = try filtered(trimmed.image, filters)
         CGImageDestinationAddImage(destination, cgImage, nil)
         guard CGImageDestinationFinalize(destination) else {
             try? fm.removeItem(at: cache)

@@ -40,8 +40,18 @@ public class ComicArchivePlugin: CAPPlugin, CAPBridgedPlugin {
         guard let path = call.getString("path"), let bookId = call.getString("bookId"),
               let index = call.getInt("entry"), index >= 0 else { call.reject("页面参数无效。"); return }
         let crop = call.getBool("crop") == true
+        let filters: PageFilters
+        do {
+            if call.options["filters"] != nil {
+                guard let object = call.getObject("filters") else {
+                    throw ComicError.invalid("画面滤镜参数无效。")
+                }
+                filters = try PageFilters.parse(object)
+            } else { filters = .original }
+        } catch { call.reject(error.localizedDescription, "INVALID_ARGUMENT"); return }
         run(call) {
-            try self.store.render(path: path, bookId: bookId, index: index, maxPixel: maxPixel, crop: crop)
+            try self.store.render(path: path, bookId: bookId, index: index, maxPixel: maxPixel, crop: crop,
+                                  filters: filters)
         }
     }
 

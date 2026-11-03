@@ -8,6 +8,7 @@ const plugins = [
   'ComicArchivePlugin',
   'ComicStore',
   'ComicReferences',
+  'PageFilters',
   'ZipDirectory',
   'ProStorePlugin',
   'ComicLockPlugin',

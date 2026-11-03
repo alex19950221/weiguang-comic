@@ -1,4 +1,5 @@
 import { Capacitor, registerPlugin } from '@capacitor/core';
+import type { ImageFilters } from '@/reader/filters';
 
 export interface ArchiveEntry {
   index: number;
@@ -36,6 +37,7 @@ export interface ComicArchivePlugin {
     entry: number;
     maxPixel: number;
     crop?: boolean;
+    filters?: ImageFilters;
   }): Promise<RenderedPage>;
   thumbnail(options: {
     bookId: string;

@@ -45,6 +45,8 @@ import { ReaderContents } from './ReaderContents';
 import { useBookmarks } from './useBookmarks';
 import { readerBrightness, dimmingOpacity, folioHeight } from './appearance';
 import { AutoplayClock, autoplayInterval, autoplaySpeed } from './autoplay';
+import { activeImageFilters, normalizeImageFilters } from './filters';
+import { FilterDialog } from './FilterDialog';
 import { setNativeKeepAwake } from '@/native/comicReader';
 import { useFullscreen } from './useFullscreen';
 import { setStatusBarTone } from '@/native/systemBars';
@@ -167,6 +169,7 @@ function ReadingView({
   const [guideBusy, setGuideBusy] = useState(false);
   const [guideError, setGuideError] = useState(false);
   const [settings, setSettings] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [contents, setContents] = useState<'pages' | 'bookmarks' | null>(null);
   const bookmarks = useBookmarks(db, reading.book.id, reading.pages.length);
   const [brightnessPreview, setBrightnessPreview] = useState<number | null>(
@@ -182,6 +185,13 @@ function ReadingView({
   const [crop, setCrop] = useState(reading.book.cropBorders);
   // 失去 Pro 后保留这本书的选择，但按原图显示；重新解锁后自动恢复。
   const cropActive = crop && pro.status === 'pro';
+  const [filters, setFilters] = useState(() =>
+    normalizeImageFilters(reading.book.imageFilters),
+  );
+  const filtersActive = useMemo(
+    () => activeImageFilters(filters, pro.status === 'pro'),
+    [filters, pro.status],
+  );
   const [proPreview, setProPreview] = useState<ProPreview | null>(null);
   const [images, setImages] = useState(new Map<number, RenderedPage>());
   const [loadVersion, setLoadVersion] = useState(0);
@@ -237,7 +247,7 @@ function ReadingView({
     visible,
     prefs,
     guide,
-    settings,
+    settings: settings || filtersOpen,
     contents,
     scroll,
     ended,
@@ -247,7 +257,7 @@ function ReadingView({
     visible,
     prefs,
     guide,
-    settings,
+    settings: settings || filtersOpen,
     contents,
     scroll,
     ended,
@@ -255,11 +265,16 @@ function ReadingView({
   const loader = useMemo(
     () =>
       new PageLoader(
-        { bookId: reading.book.id, path: reading.book.path, crop: cropActive },
+        {
+          bookId: reading.book.id,
+          path: reading.book.path,
+          crop: cropActive,
+          filters: filtersActive,
+        },
         reading.pages,
         async (options) => localPageUrl(await archive.renderPage(options)),
       ),
-    [reading, archive, cropActive],
+    [reading, archive, cropActive, filtersActive],
   );
   const writer = useMemo(
     () =>
@@ -411,7 +426,17 @@ function ReadingView({
   }, [requestKey, revision, recovering, loader, nativeAvailable, contents]);
   useEffect(() => {
     recordVisible();
-  }, [page, prefs, guide, images, revision, loadVersion, settings, contents]);
+  }, [
+    page,
+    prefs,
+    guide,
+    images,
+    revision,
+    loadVersion,
+    settings,
+    filtersOpen,
+    contents,
+  ]);
   useEffect(() => {
     const flush = () => {
       stopAutoplay();
@@ -558,6 +583,7 @@ function ReadingView({
         !node ||
         guide ||
         settings ||
+        filtersOpen ||
         contents !== null ||
         featureProOpen ||
         proPreview !== null ||
@@ -819,7 +845,7 @@ function ReadingView({
   const keyboard = useRef({
     step,
     guide,
-    settings,
+    settings: settings || filtersOpen,
     contents,
     chrome,
     toggleCurrentBookmark,
@@ -827,7 +853,7 @@ function ReadingView({
   keyboard.current = {
     step,
     guide,
-    settings,
+    settings: settings || filtersOpen,
     contents,
     chrome,
     toggleCurrentBookmark,
@@ -1339,6 +1365,20 @@ function ReadingView({
             {nativeAvailable && (
               <RelinkSource book={reading.book} onRelink={reloadSource} />
             )}
+            {(pro.status === 'pro' ||
+              proEntryVisible(pro.environment) ||
+              reading.book.imageFilters) && (
+              <button
+                type="button"
+                disabled={settingsBusy}
+                onClick={() => {
+                  setSettings(false);
+                  setFiltersOpen(true);
+                }}
+              >
+                {t('画面滤镜')} · Pro
+              </button>
+            )}
             {(pro.status === 'pro' || proEntryVisible(pro.environment)) && (
               <fieldset disabled={settingsBusy}>
                 <legend>{t('自动翻页')} · Pro</legend>
@@ -1596,6 +1636,21 @@ function ReadingView({
             setProPreview(null);
             // 在购买页完成购买后，直接为这本书开启。
             if (proStore().state.value.status === 'pro') void changeCrop(true);
+          }}
+        />
+      )}
+      {filtersOpen && (
+        <FilterDialog
+          bookId={reading.book.id}
+          value={filters}
+          onApply={(next) => {
+            setFilters(next);
+            setFiltersOpen(false);
+          }}
+          onClose={() => setFiltersOpen(false)}
+          onPro={() => {
+            setFiltersOpen(false);
+            setFeatureProOpen(true);
           }}
         />
       )}

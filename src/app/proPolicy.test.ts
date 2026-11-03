@@ -21,10 +21,10 @@ describe('Pro 开放购买与入口', () => {
   it('至少交付两项 Pro 功能才开放购买', () => {
     expect(purchaseOpen([feature(true), feature(false)])).toBe(false);
     expect(purchaseOpen([feature(true), feature(true)])).toBe(true);
-    // 1.0、1.1 与 1.2 自动翻页已交付，达到开放门槛。
+    // 已确认的 1.0–1.2 六项功能已实现，达到开放门槛。
     expect(
       proFeatures.filter((item) => item.delivered).map((i) => i.id),
-    ).toEqual(['crop', 'lock', 'inplace', 'batch', 'autoplay']);
+    ).toEqual(['crop', 'lock', 'inplace', 'batch', 'autoplay', 'filters']);
     expect(purchaseOpen(proFeatures)).toBe(true);
   });
 

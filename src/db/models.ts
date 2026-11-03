@@ -1,5 +1,6 @@
 import type { ComicPage } from '@/archive/pageList';
 import type { VolumeUnit } from '@/library/series';
+import type { ImageFilters } from '@/reader/filters';
 
 export type BookFormat =
   'zip' | 'rar' | '7z' | 'tar' | 'folder' | 'pdf' | 'epub';
@@ -44,6 +45,8 @@ export interface Book {
   mode: ReadingMode | null;
   spreadOffset: 0 | 1;
   cropBorders: boolean;
+  /** 每书画面参数；缺省原图，失去 Pro 保留参数但不应用。 */
+  imageFilters?: ImageFilters;
   status: 'ready' | 'missing' | 'error';
   importedAt: number;
   lastReadAt: number | null;

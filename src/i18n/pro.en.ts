@@ -1,5 +1,13 @@
 /** 微光 Pro 购买页与功能介绍。 */
 export const proEn: Record<string, string> = {
+  对比度: 'Contrast',
+  锐化: 'Sharpness',
+  暖色: 'Warmth',
+  应用滤镜: 'Apply filters',
+  '解锁微光 Pro': 'Unlock LumiComic Pro',
+  '还原画面（免费）': 'Restore original (free)',
+  '只对这本书生效，应用后查看效果。原文件不会改变。':
+    'Applies to this book only. Apply to view the result. The original file stays unchanged.',
   '播放期间保持屏幕常亮，停止后恢复系统自动锁屏。':
     'The screen stays awake during playback. Auto-lock returns when playback stops.',
   停止自动翻页: 'Stop auto turn',

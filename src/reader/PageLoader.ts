@@ -1,11 +1,13 @@
 import { ComicArchive, localPageUrl } from '@/native/comicArchive';
 import type { RenderedPage } from '@/native/comicArchive';
 import type { ComicPage } from '@/archive/pageList';
+import { originalFilters, type ImageFilters } from './filters';
 interface PageSource {
   bookId: string;
   path: string;
   /** 自动裁白边（Pro）；只在开启时传给原生，关闭时请求与以前完全相同。 */
   crop?: boolean;
+  filters?: ImageFilters;
 }
 
 type PageRenderer = (
@@ -76,6 +78,9 @@ export class PageLoader {
           entry: page.entry,
           maxPixel,
           ...(this.book.crop ? { crop: true } : {}),
+          ...(this.book.filters && !originalFilters(this.book.filters)
+            ? { filters: this.book.filters }
+            : {}),
         });
         if (this.disposed || version !== this.version) return undefined;
         this.pages.set(index, result);

@@ -55,7 +55,7 @@ export const proFeatures: readonly ProFeature[] = [
     name: '画面滤镜',
     description: '调节对比度、锐化与暖色，不改动原文件。',
     release: '1.2',
-    delivered: false,
+    delivered: true,
   },
 ];
 

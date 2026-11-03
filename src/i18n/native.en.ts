@@ -1,5 +1,8 @@
 /** iOS 原生插件的错误原文会写入导入记录并经 t() 显示；与 Swift 源码中的中文逐字对应。 */
 export const nativeEn: Record<string, string> = {
+  '画面滤镜参数无效。': 'Invalid image filter settings.',
+  '无法应用画面滤镜，请还原画面后重试。':
+    'Unable to apply image filters. Restore the original image and try again.',
   '文件选择器已打开。': 'The file picker is already open.',
   '文件选择器暂不可用。': 'The file picker is unavailable right now.',
   '文件选择授权已失效，请重新选择文件。':
