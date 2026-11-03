@@ -1,5 +1,15 @@
 # 开发进度检查点
 
+## 最新检查点：Pro 1.1 第二阶段——批量整理（2026-11-03）
+
+- 第一阶段已提交并推送 `3061105`，goal 继续 active。批量整理已接入书架多选系列、系列内多选卷；可批量标记已读/未读、移入分组和从书架移除，原有单项管理及分组继续免费。打开时固定所选范围，应用前事务内核对书目变化；失败整批回滚，成功删除后由持久队列清理应用副本/原位引用，原件不动。
+- 代码：`applyBatch` 单一事务去重、验证用户看到的实际书目集合；并发新增/删除造成范围变化则拒绝，读写失败全部回滚。`BatchDialog` 冻结打开时范围，删除前明确标题/数量/进度书签清除提示并先聚焦取消，分组按系列生效始终提示。`proPolicy` 已标记 batch 交付。无新依赖，无数据库升级，无 Swift 改动。
+- 自动检查（实际执行）：`pnpm lint`、`pnpm test`（27 文件 **214/214**，新增 8 个批量事务/安全回归）、`pnpm build:ios`、`pnpm check:ios --release` 全通过。Debug `xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -destination 'platform=iOS Simulator,id=25D3E645-55A3-44F9-B7FE-7CED6E0DB7AB' -derivedDataPath release/app-debug CODE_SIGNING_ALLOWED=NO build` 通过。日志 `release/qa/pro-batch-final-{lint,vitest,web,static,debug}.log`。本阶段没有编译/测试失败，未跳过、删除或禁用测试。
+- XCTest：本阶段**未重跑**（Swift 未改）；上一阶段 25/25 通过，不记成本阶段新执行。
+- 模拟器点检（实际执行，iPhone 18 Pro / iOS 27.2 / Debug）：自制三本、两个系列（2 份副本 + 1 份原位），英文搜索 BATCH 后批量全选显示 2 项/3 本；批量标读完、移入临时 Group、在 Group 筛选核对仅 2 个已读系列、标未读均正常。删除确认逐项列出 2 个系列/3 本及影响，完成后当前应用容器副本 7→5、引用 1→0，三份原件仍存在且前后完整 SHA-256 一致；原 5 本/4 系列、既有第 2/4 页保留。新建空分组 999 后留在新分组，Group/999 临时分组已通过 UI 清理；恢复跟随系统语言。中文批量界面与确认清单核对，回车触发取消并保留原有书籍。另补查第一阶段英文原位导入入口/说明，无溢出。截图 `release/qa/pro-batch-{unread,removed,final-library}.png`，不入库。
+- 点检发现与最小修复：新建分组后 liveQuery 快照尚未到达时，旧逻辑会错误返回全部书架；现先查询数据库确认缺失才退出，新分组 999 实测保持选中。删除确认增加取消按钮焦点，中文实测回车执行取消。
+- 未执行：本阶段真机、VoiceOver 完整验收、退款后批量交互、模拟器系列内逐卷操作（纯逻辑测试覆盖部分卷按系列移动）、Release 归档与 TestFlight 上传；未新增测试员。下一阶段自动翻页与画面滤镜，goal 仍 active，构建仍为 7。
+
 ## 最新检查点：Pro 1.1 第一阶段——原位阅读（2026-11-03）
 
 - 用户要求继续分阶段开发并开启 goal。基线 m0 `2124174`；工作区开始时干净，按 AGENTS.md 单代理执行。阶段依次为：1.1 原位阅读 → 1.1 批量整理 → 1.2 自动翻页 → 1.2 画面滤镜。每阶段实现、自动检查、模拟器/真机验收分别记录。

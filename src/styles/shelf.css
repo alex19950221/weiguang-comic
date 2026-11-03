@@ -722,6 +722,63 @@
   display: grid;
   gap: 10px;
 }
+.shelf-batch-summary {
+  margin-bottom: 12px;
+  color: var(--fg-muted);
+}
+.shelf-batch-select-all {
+  display: flex;
+  gap: 12px;
+}
+.shelf-batch-items {
+  list-style: none;
+  padding: 0;
+  max-height: 35dvh;
+  overflow-y: auto;
+  border-block: 1px solid var(--border);
+}
+.shelf-batch-items label {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  gap: 12px;
+  padding: 8px;
+  cursor: pointer;
+}
+.shelf-batch-items input {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  accent-color: var(--accent);
+}
+.shelf-batch-items span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.shelf-batch-items small {
+  display: block;
+  color: var(--fg-muted);
+  margin-top: 6px;
+}
+.shelf-batch-actions {
+  display: grid;
+  gap: 10px;
+}
+.shelf-batch-actions label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.shelf-batch-actions select {
+  flex: 1;
+  font-size: 16px;
+}
+.shelf-batch-actions p {
+  color: var(--fg-muted);
+  font-size: 12px;
+  line-height: 1.7;
+  margin-bottom: 0;
+}
 .shelf-delete-confirm {
   border-top: 1px solid var(--border);
   padding-top: 18px;

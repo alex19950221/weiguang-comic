@@ -41,7 +41,7 @@ export const proFeatures: readonly ProFeature[] = [
     name: '批量整理',
     description: '多选后一次移入分组、标记已读或删除。',
     release: '1.1',
-    delivered: false,
+    delivered: true,
   },
   {
     id: 'autoplay',

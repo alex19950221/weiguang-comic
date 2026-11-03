@@ -1,5 +1,15 @@
 /** 微光 Pro 购买页与功能介绍。 */
 export const proEn: Record<string, string> = {
+  '已选择 {0} 项，共 {1} 本': '{0} items selected, {1} books',
+  全选: 'Select all',
+  取消全选: 'Deselect all',
+  移入分组: 'Move to group',
+  '分组按系列生效，所选书籍的同系列卷会一起移动。':
+    'Groups apply to entire series, including other volumes of the selected books.',
+  '所选书目已经变化，请关闭后重新选择。':
+    'The selected books have changed. Close this dialog and select again.',
+  '从书架删除所选 {0} 本漫画？App 内副本、阅读位置和书签会清除，原文件不受影响。':
+    'Remove the selected {0} books from your library? App copies, reading positions and bookmarks will be removed. Originals are unaffected.',
   添加漫画: 'Add comics',
   '导入副本（免费）': 'Import a copy (free)',
   '在 App 内保存一份，原文件移动或删除后仍可阅读。':

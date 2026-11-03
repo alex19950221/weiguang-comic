@@ -42,6 +42,7 @@ import {
 } from '@/components/LibraryDialogs';
 import { ImportStatus } from '@/components/ImportStatus';
 import { ProDialog } from '@/components/ProDialog';
+import { BatchDialog, type BatchOption } from '@/components/BatchDialog';
 import { proStore } from '@/app/pro';
 import { canPerform, proEntryVisible } from '@/app/proPolicy';
 import { appLock, lockAvailable } from '@/app/appLockService';
@@ -78,6 +79,7 @@ function ShelfContent() {
   const [manage, setManage] = useState<LibraryTarget | null>(null);
   const [proOpen, setProOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
+  const [batchItems, setBatchItems] = useState<BatchOption[] | null>(null);
   const pro = proStore().state.value;
   const lock = appLock();
   const lockState = lock.state.value;
@@ -157,12 +159,23 @@ function ShelfContent() {
   }, [state, seriesId, selected]);
   useEffect(() => {
     if (
-      group !== 'all' &&
-      group !== 'none' &&
-      !snapshot.groups.some((item) => item.id === group)
+      group === 'all' ||
+      group === 'none' ||
+      snapshot.groups.some((item) => item.id === group)
     )
-      setGroup('all');
-  }, [group, snapshot.groups]);
+      return;
+    // 新建分组刚提交时，liveQuery 快照可能尚未到达；确认数据库里也不存在才退出分组。
+    let current = true;
+    void db.libraryGroups
+      .get(group)
+      .then((record) => {
+        if (current && !record) setGroup('all');
+      })
+      .catch(() => undefined);
+    return () => {
+      current = false;
+    };
+  }, [group, snapshot.groups, db]);
   useEffect(() => {
     const media = matchMedia('(prefers-color-scheme: dark)');
     const update = () => {
@@ -221,6 +234,27 @@ function ShelfContent() {
   }
   function newGroup(seriesId?: string) {
     setGroupEditor({ kind: 'create', seriesId });
+  }
+  function beginBatch() {
+    if (!canPerform('batch.apply', pro.status === 'pro')) {
+      setProOpen(true);
+      return;
+    }
+    setBatchItems(
+      selected
+        ? selected.books.map((book) => ({
+            target: { kind: 'book', id: book.id },
+            title: `${book.title} · ${volumeLabel(book)}`,
+            detail: book.fileName ?? t('{0} 页', book.pageCount),
+            bookIds: [book.id],
+          }))
+        : selection.visible.map((entry) => ({
+            target: { kind: 'series', id: entry.series.id },
+            title: entry.series.title,
+            detail: t('共 {0} 本', entry.books.length),
+            bookIds: entry.books.map((book) => book.id),
+          })),
+    );
   }
   function openBook(id: string) {
     returnPosition.current = window.scrollY;
@@ -525,6 +559,11 @@ function ShelfContent() {
                           onNew={newGroup}
                           onError={setError}
                         />
+                        {proVisible && (
+                          <button type="button" onClick={beginBatch}>
+                            {t('批量整理')} · Pro
+                          </button>
+                        )}
                       </div>
                     </div>
                     <div class="shelf-grid">
@@ -546,6 +585,15 @@ function ShelfContent() {
                         {heading}
                         <span aria-hidden="true">.</span>
                       </h1>
+                      {section !== 'settings' && !firstRun && proVisible && (
+                        <button
+                          type="button"
+                          onClick={beginBatch}
+                          disabled={!selection.visible.length}
+                        >
+                          {t('批量整理')} · Pro
+                        </button>
+                      )}
                       {section !== 'settings' && !firstRun && importButton}
                     </div>
                     {section === 'settings' ? (
@@ -1049,6 +1097,23 @@ function ShelfContent() {
           </LibraryDialog>
         )}
         {proOpen && <ProDialog onClose={() => setProOpen(false)} />}
+        {batchItems && (
+          <BatchDialog
+            items={batchItems}
+            groups={snapshot.groups}
+            onClose={() => setBatchItems(null)}
+            onApplied={() => {
+              setBatchItems(null);
+              void cleanup
+                .drain()
+                .catch(() => setError(t('副本清理暂时无法继续，请重试。')));
+            }}
+            onPro={() => {
+              setBatchItems(null);
+              setProOpen(true);
+            }}
+          />
+        )}
         {manage && (
           <ManageDialog
             key={`${manage.kind}:${manage.id}`}
