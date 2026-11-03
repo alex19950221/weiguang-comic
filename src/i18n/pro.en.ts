@@ -1,5 +1,22 @@
 /** 微光 Pro 购买页与功能介绍。 */
 export const proEn: Record<string, string> = {
+  添加漫画: 'Add comics',
+  '导入副本（免费）': 'Import a copy (free)',
+  '在 App 内保存一份，原文件移动或删除后仍可阅读。':
+    'Keep a copy in the app, readable even if the original is moved or deleted.',
+  '不复制原文件，仅保存访问授权与页面缓存。请保留原件，云盘文件需先下载；移动或移除后可能需要重新选择。':
+    'Keep only file access and page caches. Keep the original and download cloud files first. Moving or removing it may require reselection.',
+  '原位阅读：只保存访问授权。请保留原文件，并确保它已下载到设备。':
+    'Reading in place: only file access is saved. Keep the original downloaded on this device.',
+  重新选择原文件: 'Select original again',
+  '已重新连接，阅读记录已保留。': 'Reconnected. Reading records are preserved.',
+  '请只选择这本书的原文件。': 'Select only the original file for this book.',
+  '原文件不可用或已改变，请重新选择同一文件。':
+    'The original is unavailable or has changed. Select the same file again.',
+  '所选文件与原书不同，阅读记录已保留，请选择原文件。':
+    'This is a different book. Reading records are preserved. Select the original file.',
+  '漫画引用已经存在。': 'A reference for this book already exists.',
+  '原位添加需要微光 Pro。': 'Adding books in place requires LumiComic Pro.',
   '微光 Pro': 'LumiComic Pro',
   查看: 'View',
   '一次买断，后续更新免费获得。': 'One-time purchase. Future updates included.',

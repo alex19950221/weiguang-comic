@@ -127,6 +127,11 @@ assert.match(
   '正式文件导入插件未注册',
 );
 assert.match(
+  read('ios/ComicNative/Sources/ComicNative/ComicImportPlugin.swift'),
+  /CAPPluginMethod\(name: "linkToLibrary", returnType: CAPPluginReturnPromise\)/,
+  '原位阅读授权接口未暴露给插件桥',
+);
+assert.match(
   read('ios/ComicNative/Sources/ComicNative/ComicArchivePlugin.swift'),
   /CAPPluginMethod\(name: "disposeBook", returnType: CAPPluginReturnPromise\)/,
   '正式副本删除接口未暴露给插件桥',

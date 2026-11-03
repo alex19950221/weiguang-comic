@@ -16,8 +16,15 @@ export interface ComicImportPlugin {
     bookId: string;
     item: ImportSource;
   }): Promise<{ path: string; size: number }>;
+  /** 保存书签；fingerprint 仅在重新授权已有原位书时传入，原生匹配成功才替换授权。 */
+  linkToLibrary(options: {
+    bookId: string;
+    item: ImportSource;
+    fingerprint?: string;
+    format?: string;
+  }): Promise<{ path: string; size: number }>;
   cancel(options: { jobId: string }): Promise<void>;
-  /** 仅清理指定 UUID 的应用副本与未完成临时文件，绝不删除源文件。 */
+  /** 仅清理指定 UUID 的应用副本、书签与临时文件，绝不删除源文件。 */
   removeCopy(options: { bookId: string }): Promise<void>;
   releaseSources(options: { uris: string[] }): Promise<void>;
   addListener(

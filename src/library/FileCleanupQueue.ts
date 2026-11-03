@@ -22,7 +22,7 @@ export class FileCleanupQueue {
       const jobs = await this.db.fileCleanup.toArray();
       for (const job of jobs) {
         try {
-          // 不向原生传任何用户路径，inplace 只清缓存。
+          // 不向原生传任何用户路径，inplace 只清缓存和书签授权。
           await this.native.disposeBook({
             bookId: job.bookId,
             deleteCopy: job.location === 'copy',

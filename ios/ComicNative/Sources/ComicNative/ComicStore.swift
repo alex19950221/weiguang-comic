@@ -42,8 +42,16 @@ final class ComicStore {
         return url
     }
 
-    private func open(_ path: String) throws -> (archive: Archive, entries: [Entry], directory: [ZipItem]) {
-        let url = try source(path)
+    private func withSource<T>(_ path: String, _ work: (URL) throws -> T) throws -> T {
+        if path.hasPrefix("comic-reference:") {
+            // 文件提供者的句柄不越过协调读取与 security scope 的生命周期。
+            defer { opened = nil; openedPDF = nil }
+            return try ComicReferences.withURL(path, work)
+        }
+        return try work(source(path))
+    }
+
+    private func open(_ url: URL) throws -> (archive: Archive, entries: [Entry], directory: [ZipItem]) {
         if let existing = opened, existing.path == url.path {
             return (existing.archive, existing.entries, existing.directory)
         }
@@ -72,8 +80,11 @@ final class ComicStore {
     }
 
     func inspect(_ path: String) throws -> [String: Any] {
-        let url = try source(path)
-        if url.pathExtension == "pdf" {
+        try withSource(path) { try inspectURL($0) }
+    }
+
+    private func inspectURL(_ url: URL) throws -> [String: Any] {
+        if url.pathExtension.lowercased() == "pdf" {
             guard let document = PDFDocument(url: url) else {
                 throw ComicError.invalid("PDF 已损坏或格式不受支持。")
             }
@@ -86,10 +97,10 @@ final class ComicStore {
         }
         let directory = try ZipDirectory.read(url)
         let encrypted = directory.contains(where: { $0.encrypted })
-        if url.pathExtension == "epub" {
+        if url.pathExtension.lowercased() == "epub" {
             var result: [String: Any] = ["format": "epub", "encrypted": encrypted,
                                          "entries": directory.map(\.json)]
-            if !encrypted { result["texts"] = try epubTexts(url.path, directory: directory) }
+            if !encrypted { result["texts"] = try epubTexts(url, directory: directory) }
             return result
         }
         var result: [String: Any] = ["format": "zip", "encrypted": encrypted,
@@ -100,8 +111,8 @@ final class ComicStore {
 
     /// EPUB 的阅读顺序在网页层纯逻辑中解析：这里只交出容器、OPF 与页面文档等小文本，
     /// 单个不超过 1 MiB、合计不超过 16 MiB；图片等文件体始终不跨桥。
-    private func epubTexts(_ path: String, directory: [ZipItem]) throws -> [[String: Any]] {
-        let book = try open(path)
+    private func epubTexts(_ url: URL, directory: [ZipItem]) throws -> [[String: Any]] {
+        let book = try open(url)
         let textTypes: Set<String> = ["xml", "opf", "xhtml", "html", "htm", "svg"]
         var total: UInt64 = 0
         var texts: [[String: Any]] = []
@@ -145,7 +156,11 @@ final class ComicStore {
     }
 
     func fingerprint(_ path: String) throws -> [String: Any] {
-        let file = try FileHandle(forReadingFrom: source(path))
+        try withSource(path) { try Self.fingerprintURL($0) }
+    }
+
+    static func fingerprintURL(_ url: URL) throws -> [String: Any] {
+        let file = try FileHandle(forReadingFrom: url)
         defer { try? file.close() }
         let size = try file.seekToEnd()
         var hash = SHA256()
@@ -167,10 +182,16 @@ final class ComicStore {
 
     func render(path: String, bookId: String, index: Int, maxPixel: Int, crop: Bool = false) throws -> [String: Any] {
         guard UUID(uuidString: bookId) != nil,
+              ComicReferences.id(path) == bookId ||
               URL(fileURLWithPath: path).deletingPathExtension().lastPathComponent == bookId else {
             throw ComicError.invalid("漫画标识无效。")
         }
-        let sourceURL = try source(path)
+        return try withSource(path) {
+            try renderURL($0, bookId: bookId, index: index, maxPixel: maxPixel, crop: crop)
+        }
+    }
+
+    private func renderURL(_ sourceURL: URL, bookId: String, index: Int, maxPixel: Int, crop: Bool) throws -> [String: Any] {
         let root = try cacheRoot()
         let requested = min(8192, max(256, maxPixel))
         // 裁白边的结果单独缓存，开关切换时不互相覆盖。
@@ -184,11 +205,11 @@ final class ComicStore {
             result["cached"] = true
             return result
         }
-        if sourceURL.pathExtension == "pdf" {
+        if sourceURL.pathExtension.lowercased() == "pdf" {
             return try renderPDF(sourceURL, index: index, requested: requested, cache: cache,
                                  metadata: metadata, root: root, crop: crop)
         }
-        let book = try open(sourceURL.path)
+        let book = try open(sourceURL)
         guard book.entries.indices.contains(index), book.directory.indices.contains(index),
               book.entries[index].type == .file, !book.directory[index].symlink,
               !book.directory[index].directory else { throw ComicError.invalid("漫画页不存在。") }
@@ -330,6 +351,7 @@ final class ComicStore {
         opened = nil
         openedPDF = nil
         try clearCache(bookId: bookId)
+        try ComicReferences.remove(bookId)
         guard deleteCopy else { return }
         let root = try Self.libraryRoot(prototype: false).resolvingSymlinksInPath().standardizedFileURL
         for suffix in ["zip", "pdf", "epub", "part"] {

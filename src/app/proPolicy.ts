@@ -34,7 +34,7 @@ export const proFeatures: readonly ProFeature[] = [
     name: '原位阅读',
     description: '直接读取“文件”中的原件，不再复制一份，大书库省一半空间。',
     release: '1.1',
-    delivered: false,
+    delivered: true,
   },
   {
     id: 'batch',

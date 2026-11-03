@@ -33,6 +33,8 @@ export interface Book {
   location: 'copy' | 'inplace';
   /** 原生层管理的副本路径或原位访问标识，不存文件本体。 */
   path: string;
+  /** 本机重选原件后刷新封面；旧书缺省，不参与阅读进度或排序。 */
+  sourceUpdatedAt?: number;
   sizeBytes: number;
   pageCount: number;
   /** 排序后页目录的下标，从0开始。 */
@@ -123,6 +125,8 @@ export interface ImportJob {
   state: ImportState;
   source: ImportSource;
   bookId: string;
+  /** 旧任务缺省为复制；原位任务仅保存原生书签。 */
+  location?: Book['location'];
   copiedBytes: number;
   /** 成功复制后才写入原生副本路径。 */
   path: string | null;

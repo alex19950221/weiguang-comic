@@ -11,6 +11,7 @@ public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDel
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "pickFiles", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "copyToLibrary", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "linkToLibrary", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "cancel", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "removeCopy", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "releaseSources", returnType: CAPPluginReturnPromise)
@@ -80,6 +81,25 @@ public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDel
                         call.reject(error.localizedDescription, progress.isCancelled ? "CANCELLED" : "IMPORT_ERROR")
                     }
                 }
+            }
+        }
+    }
+
+    @objc func linkToLibrary(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            guard let bookId = call.getString("bookId"), UUID(uuidString: bookId) != nil,
+                  let token = call.getObject("item")?["uri"] as? String,
+                  let source = self.selected[token] else {
+                call.reject("文件选择授权已失效，请重新选择文件。", "SOURCE_EXPIRED"); return
+            }
+            let expected = call.getString("fingerprint")
+            let format = call.getString("format")
+            if let expected, expected.range(of: "^[a-fA-F0-9]{64}$", options: .regularExpression) == nil {
+                call.reject("文件校验失败，请重新选择文件。"); return
+            }
+            self.queue.async {
+                do { call.resolve(try ComicReferences.remember(source, bookId: bookId, expectedFingerprint: expected, expectedFormat: format)) }
+                catch { call.reject(error.localizedDescription, "REFERENCE_ERROR") }
             }
         }
     }
@@ -166,6 +186,7 @@ public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDel
         queue.async {
             do {
                 let root = try ComicStore.libraryRoot(prototype: false)
+                try ComicReferences.remove(id)
                 // 固定根目录 + 校验过的 UUID，无任意路径/递归删除入口。
                 for suffix in ["zip", "pdf", "epub", "part"] {
                     let url = root.appendingPathComponent(id + "." + suffix)

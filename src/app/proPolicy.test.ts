@@ -21,10 +21,10 @@ describe('Pro 开放购买与入口', () => {
   it('至少交付两项 Pro 功能才开放购买', () => {
     expect(purchaseOpen([feature(true), feature(false)])).toBe(false);
     expect(purchaseOpen([feature(true), feature(true)])).toBe(true);
-    // 1.0 两项（自动裁白边、应用锁与隐藏系列）已交付，达到开放门槛。
+    // 1.0 两项与 1.1 原位阅读已交付，达到开放门槛。
     expect(
       proFeatures.filter((item) => item.delivered).map((i) => i.id),
-    ).toEqual(['crop', 'lock']);
+    ).toEqual(['crop', 'lock', 'inplace']);
     expect(purchaseOpen(proFeatures)).toBe(true);
   });
 

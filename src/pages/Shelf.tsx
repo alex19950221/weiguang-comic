@@ -21,7 +21,11 @@ import { toggleSeriesFavorite, type LibraryTarget } from '@/library/actions';
 import { FileCleanupQueue } from '@/library/FileCleanupQueue';
 import { t, languagePreference, validLanguage } from '@/i18n';
 import { Icon, type IconName } from '@/components/Icon';
-import { IconButton, formatBytes } from '@/components/LibraryControls';
+import {
+  IconButton,
+  LibraryDialog,
+  formatBytes,
+} from '@/components/LibraryControls';
 import {
   ShelfCard,
   VolumeCard,
@@ -73,6 +77,7 @@ function ShelfContent() {
   const [query, setQuery] = useState('');
   const [manage, setManage] = useState<LibraryTarget | null>(null);
   const [proOpen, setProOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const pro = proStore().state.value;
   const lock = appLock();
   const lockState = lock.state.value;
@@ -248,7 +253,7 @@ function ShelfContent() {
       type="button"
       class="shelf-primary"
       disabled={!available || pickingFiles.value}
-      onClick={() => void pickComics()}
+      onClick={() => setImportOpen(true)}
     >
       <Icon name="plus" size={18} />
       {t(pickingFiles.value ? '正在选择文件…' : '导入漫画')}
@@ -403,7 +408,7 @@ function ShelfContent() {
                 icon="plus"
                 label={t('导入漫画')}
                 disabled={!available || pickingFiles.value}
-                onClick={() => void pickComics()}
+                onClick={() => setImportOpen(true)}
               />
             </span>
           </header>
@@ -1003,6 +1008,46 @@ function ShelfContent() {
             </button>
           ))}
         </nav>
+        {importOpen && (
+          <LibraryDialog
+            title={t('添加漫画')}
+            onClose={() => setImportOpen(false)}
+          >
+            <div class="shelf-import-choices">
+              <button
+                type="button"
+                class="shelf-primary"
+                onClick={() => {
+                  setImportOpen(false);
+                  void pickComics();
+                }}
+              >
+                {t('导入副本（免费）')}
+              </button>
+              <p>{t('在 App 内保存一份，原文件移动或删除后仍可阅读。')}</p>
+              {proVisible && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImportOpen(false);
+                      if (!canPerform('inplace.add', pro.status === 'pro'))
+                        setProOpen(true);
+                      else void pickComics('inplace');
+                    }}
+                  >
+                    {t('原位阅读')} · Pro
+                  </button>
+                  <p>
+                    {t(
+                      '不复制原文件，仅保存访问授权与页面缓存。请保留原件，云盘文件需先下载；移动或移除后可能需要重新选择。',
+                    )}
+                  </p>
+                </>
+              )}
+            </div>
+          </LibraryDialog>
+        )}
         {proOpen && <ProDialog onClose={() => setProOpen(false)} />}
         {manage && (
           <ManageDialog

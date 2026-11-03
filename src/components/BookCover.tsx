@@ -44,7 +44,16 @@ export function BookCover({ book }: { book: Book }) {
     return () => {
       cancelled = true;
     };
-  }, [book.id, book.path, book.status, visible, db, archive, nativeAvailable]);
+  }, [
+    book.id,
+    book.path,
+    book.status,
+    book.sourceUpdatedAt,
+    visible,
+    db,
+    archive,
+    nativeAvailable,
+  ]);
   return (
     <span ref={root} class="shelf-cover">
       {url ? (

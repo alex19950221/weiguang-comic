@@ -1,5 +1,17 @@
 # 开发进度检查点
 
+## 最新检查点：Pro 1.1 第一阶段——原位阅读（2026-11-03）
+
+- 用户要求继续分阶段开发并开启 goal。基线 m0 `2124174`；工作区开始时干净，按 AGENTS.md 单代理执行。阶段依次为：1.1 原位阅读 → 1.1 批量整理 → 1.2 自动翻页 → 1.2 画面滤镜。每阶段实现、自动检查、模拟器/真机验收分别记录。
+- 代码实现：系统文件选择 + 原生 `minimalBookmark` + 协调只读访问，默认免费副本导入保留；仅新增原位书需要 Pro，已有引用的阅读、重新授权与移除免费。每次原生读取验证原件大小/修改时间/格式，缺失或变化不直接使用旧页缓存；错误重选不能替换原授权；移除只清理引用与缓存。阅读失败页、阅读设置和单本管理均可重选，重选后刷新封面、保留页序/阅读进度/书签。复用已有表结构；新增可选作业 location、书籍 sourceUpdatedAt，无新依赖。`proPolicy` 已标记 inplace 交付。
+- 自动检查（实际执行）：`pnpm lint`、`pnpm test`（26 文件 **206/206**）、`pnpm build:ios`、`pnpm check:ios --release` 全通过。日志 `release/qa/pro-inplace-final-{lint,vitest,web,static}.log`。Debug 模拟器 `xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -destination 'platform=iOS Simulator,id=25D3E645-55A3-44F9-B7FE-7CED6E0DB7AB' -derivedDataPath release/app-debug CODE_SIGNING_ALLOWED=NO build` 通过，日志 `pro-inplace-final-debug.log`。
+- XCTest（实际执行）：在 ios/ComicNative 运行 `xcodebuild -scheme ComicNative -destination 'platform=iOS Simulator,id=25D3E645-55A3-44F9-B7FE-7CED6E0DB7AB' -derivedDataPath <repo>/release/native-derived -resultBundlePath <repo>/release/qa/pro-inplace-final.xcresult test`，**25/25 通过**（新增 6：PDF 持久引用与不删除原件、ZIP/CBZ/EPUB 渲染、缺失原件不返回旧缓存、变化/错误重选/正确恢复、路径/符号链接/书目身份边界、格式改名不能替换解码器）。新增 3 个 Vitest 覆盖 Pro 新增限制与不复制、重复/失败清理、授权中取消。
+- 首轮失败与最小修复：24 例 XCTest 曾出现 4 个断言失败（1 个抛错）：URL 资源属性缓存使重新授权保存了旧修改时间；测试图片误用模拟器 3 倍倍率。清除 URL 缓存后读取属性、将测试素材明确生成为 1 倍像素，原断言保持；先重跑 24/24，再补格式边界回归后全量 25/25。没有跳过、删除或禁用测试。另在收尾检查补齐重连后的封面刷新及阅读失败页重选入口。
+- 模拟器点检（实际执行，iPhone 18 Pro / iOS 27.2 / Debug / 简体中文）：免费点击原位入口打开购买页，本地 StoreKit 明示不收费的购买成功；系统文件选择器添加自制 QA InPlace Phase1.cbz，6 页封面/翻页正常，第 2/6 页退出/强退重启保留。重选另一册书被拒且保留原进度；不可用授权可从失败页重选原件并恢复第 2/6 页；关闭并重新启动该模拟器后仍能阅读第 2 页。磁盘核对 1 个引用、无对应漫画副本。最后从书架移除本次自制测试书，引用归零、原件仍存在且前后完整 SHA-256 相同，原 5 本/4 系列保留。截图 `release/qa/pro-inplace-{page2,reconnected,removed}.png`，不入库。
+- 未执行：真机（含设备重启、权限撤销）、iCloud/第三方提供者、跨设备恢复、大文件性能、本轮单独英文界面交互、退款后原位交互、Release 归档与 TestFlight 上传。原生 XCTest 的临时文件不代表真实提供者授权已验收；已有原位书在失去 Pro 后可读/重选/移除由策略测试与无权益拦截的实现保证，未写成退款实测通过。
+- PRD/开发计划外部链接本轮读取失败，未声称已读到；范围以已确认的 docs/PRO.md 与既有 Pro 策略为准。无新依赖，不改用户原文件、不引入运行时网络请求。TestFlight 构建仍为 7，本阶段尚未发布。
+- 下一阶段：1.1 批量整理；目标与验收边界见 [docs/PRO_ROADMAP.md](./docs/PRO_ROADMAP.md)。持续 goal 保持 active，未把四阶段目标标为完成。
+
 ## 最新检查点：微光漫卷更名与 TestFlight 构建 7（2026-11-03）
 
 - 用户确认中文桌面名改为「微光漫卷」，全名改为「微光漫卷-离线图片阅读器」，并明确要求生成、上传构建 7。基线 m0 `a893da5`，开始时工作区干净；已阅读 AGENTS.md、交接摘要、本文顶部及 iOS/Pro 说明，单代理执行。

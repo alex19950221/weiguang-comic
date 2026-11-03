@@ -57,6 +57,10 @@ function fixture() {
   const files: ComicImportPlugin = {
     pickFiles: async () => ({ items: [] }),
     copyToLibrary: copy,
+    linkToLibrary: vi.fn(async ({ bookId }) => ({
+      path: `comic-reference://${bookId}`,
+      size: 123,
+    })),
     cancel: vi.fn(async () => undefined),
     removeCopy,
     releaseSources: vi.fn(async () => undefined),
@@ -99,6 +103,56 @@ function fixture() {
 }
 
 describe('M1-03 ZIP/CBZ 导入作业', () => {
+  it('原位授权完成前取消，完成后只清理新引用，不入库', async () => {
+    const { queue, files, removeCopy } = fixture();
+    const pending = deferred<{ path: string; size: number }>();
+    vi.mocked(files.linkToLibrary).mockReturnValueOnce(pending.promise);
+    await queue.enqueue([source()], 'inplace', true);
+    await vi.waitFor(() => expect(files.linkToLibrary).toHaveBeenCalledOnce());
+    const job = (await db.imports.toArray())[0]!;
+    await queue.cancel(job.id);
+    pending.resolve({ path: `comic-reference://${job.bookId}`, size: 123 });
+    await queue.idle();
+    expect(await db.books.count()).toBe(0);
+    expect((await db.imports.get(job.id))?.state).toBe('cancelled');
+    expect(removeCopy).toHaveBeenCalledWith({ bookId: job.bookId });
+  });
+
+  it('原位导入不复制，持久保存引用；免费用户不能新增但默认副本导入不受影响', async () => {
+    const { queue, files, copy } = fixture();
+    await expect(queue.enqueue([source()], 'inplace')).rejects.toThrow('Pro');
+    expect(await db.imports.count()).toBe(0);
+    await queue.enqueue([source()], 'inplace', true);
+    await queue.idle();
+    const book = (await db.books.toArray())[0]!;
+    expect(book).toMatchObject({
+      location: 'inplace',
+      path: `comic-reference://${book.id}`,
+      pageCount: 2,
+    });
+    expect(copy).not.toHaveBeenCalled();
+    expect(files.linkToLibrary).toHaveBeenCalledOnce();
+    db.close();
+    await db.open();
+    expect((await db.books.get(book.id))?.path).toBe(book.path);
+  });
+
+  it('原位导入重复或失败时清理新授权，不删除已有书目', async () => {
+    const { queue, files, inspect, removeCopy } = fixture();
+    await queue.enqueue([source()]);
+    await queue.idle();
+    const original = (await db.books.toArray())[0]!;
+    await queue.enqueue([source('重复.cbz')], 'inplace', true);
+    await queue.idle();
+    inspect.mockRejectedValueOnce(new Error('bad archive'));
+    await queue.enqueue([source('损坏.cbz')], 'inplace', true);
+    await queue.idle();
+    expect(await db.books.toArray()).toEqual([original]);
+    expect(files.linkToLibrary).toHaveBeenCalledTimes(2);
+    expect(removeCopy).toHaveBeenCalledTimes(2);
+    expect(removeCopy).not.toHaveBeenCalledWith({ bookId: original.id });
+  });
+
   it('原子保存书籍、过滤并自然排序后的页目录，重开后保留完成记录', async () => {
     const { queue, removeCopy } = fixture();
     await queue.enqueue([source()]);

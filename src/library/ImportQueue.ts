@@ -2,6 +2,7 @@ import { epubBook } from '@/archive/epub';
 import { pageList, pdfPageList } from '@/archive/pageList';
 import { parseComicName } from './series';
 import { ensureSeries } from './seriesRepository';
+import { canPerform } from '@/app/proPolicy';
 import type { PluginListenerHandle } from '@capacitor/core';
 import type { Book, ImportJob, ImportSource } from '@/db/models';
 import type { ComicDatabase } from '@/db/schema';
@@ -36,12 +37,19 @@ export class ImportQueue {
     private onError: (error: unknown) => void = () => undefined,
   ) {}
 
-  async enqueue(sources: readonly ImportSource[]): Promise<void> {
+  async enqueue(
+    sources: readonly ImportSource[],
+    location: Book['location'] = 'copy',
+    proActive = false,
+  ): Promise<void> {
+    if (location === 'inplace' && !canPerform('inplace.add', proActive))
+      throw new Error('原位添加需要微光 Pro。');
     const now = Date.now();
     const jobs = sources.map((source): ImportJob => ({
       id: crypto.randomUUID(),
       bookId: crypto.randomUUID(),
       source,
+      location,
       state: 'queued',
       copiedBytes: 0,
       path: null,
@@ -181,13 +189,19 @@ export class ImportQueue {
         !/\.(zip|cbz|pdf|epub)$/i.test(job.source.name)
       )
         throw new Error(UNSUPPORTED);
-      await this.patch(job, { state: 'copying' });
+      const inplace = job.location === 'inplace';
+      await this.patch(job, { state: inplace ? 'inspecting' : 'copying' });
       this.checkCancelled(job);
-      const copy = await this.files.copyToLibrary({
-        jobId: job.id,
-        bookId: job.bookId,
-        item: job.source,
-      });
+      const copy = inplace
+        ? await this.files.linkToLibrary({
+            bookId: job.bookId,
+            item: job.source,
+          })
+        : await this.files.copyToLibrary({
+            jobId: job.id,
+            bookId: job.bookId,
+            item: job.source,
+          });
       if (!copy.path || !Number.isSafeInteger(copy.size) || copy.size <= 0)
         throw new Error('复制结果无效，请重新选择文件。');
       await this.patch(job, {
@@ -271,7 +285,7 @@ export class ImportQueue {
             chapter: parsed.unit === '话' ? parsed.volume : null,
             sortKey: parsed.title.normalize('NFC').toLowerCase(),
             format,
-            location: 'copy',
+            location: inplace ? 'inplace' : 'copy',
             path: copy.path,
             sizeBytes: copy.size,
             pageCount: pages.length,

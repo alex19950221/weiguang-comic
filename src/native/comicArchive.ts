@@ -46,7 +46,7 @@ export interface ComicArchivePlugin {
     path: string;
   }): Promise<{ sha256: string; size: number }>;
   clearCache(options: { bookId?: string }): Promise<void>;
-  /** 串行关闭归档、清缓存，只按 UUID 删除 ComicLibrary 中的副本；绝不接收源路径。 */
+  /** 串行关闭归档、清缓存/书签，只按 UUID 删除应用副本；绝不接收源路径。 */
   disposeBook(options: { bookId: string; deleteCopy: boolean }): Promise<void>;
 }
 

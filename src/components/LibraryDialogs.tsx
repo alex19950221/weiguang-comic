@@ -22,6 +22,7 @@ import { t } from '@/i18n';
 import { BookCover } from './BookCover';
 import { LibraryDialog, formatBytes } from './LibraryControls';
 import { volumeLabel } from './ShelfCards';
+import { RelinkSource } from './RelinkSource';
 
 const groupMessages: Record<GroupError['code'], string> = {
   GROUP_NAME_REQUIRED: '请输入分组名称',
@@ -327,6 +328,9 @@ export function ManageDialog({
           </dl>
         </div>
       </div>
+      {target.kind === 'book' && nativeAvailable && (
+        <RelinkSource book={book} />
+      )}
       <GroupSelect
         seriesId={entry.series.id}
         groupId={entry.series.groupId}

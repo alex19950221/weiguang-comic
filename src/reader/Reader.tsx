@@ -38,6 +38,7 @@ import { saveCropBorders, saveReaderPreferences } from './preferences';
 import { proStore } from '@/app/pro';
 import { canPerform, proEntryVisible } from '@/app/proPolicy';
 import { ProDialog, type ProPreview } from '@/components/ProDialog';
+import { RelinkSource } from '@/components/RelinkSource';
 import { useReaderGestures } from './useReaderGestures';
 import { nextZoom } from './zoom';
 import { ReaderContents } from './ReaderContents';
@@ -95,12 +96,13 @@ export function Reader({ bookId, onBack, onOpen, backLabel }: ReaderProps) {
   if (reading?.book.id === bookId)
     return (
       <ReadingView
-        key={bookId}
+        key={`${bookId}:${attempt}`}
         reading={reading}
         onBack={() => void leaveReader()}
         onOpen={onOpen}
         backLabel={backLabel}
         fullscreen={fullscreen}
+        onSourceChanged={() => setAttempt((value) => value + 1)}
       />
     );
   return (
@@ -136,12 +138,14 @@ function ReadingView({
   onOpen,
   backLabel,
   fullscreen,
+  onSourceChanged,
 }: {
   reading: ReadingSession;
   onBack: () => void;
   onOpen: (id: string) => void;
   backLabel: string;
   fullscreen: ReturnType<typeof useFullscreen>;
+  onSourceChanged: () => void;
 }) {
   const { db, archive, nativeAvailable } = useLibrary();
   const [prefs, setPrefs] = useState<ReaderDefaults>({
@@ -809,6 +813,12 @@ function ReadingView({
           }
           backLabel={backLabel}
           onBack={() => void leave()}
+          source={
+            nativeAvailable && reading.book.location === 'inplace'
+              ? reading.book
+              : undefined
+          }
+          onSourceChanged={onSourceChanged}
         />
       );
     if (!image)
@@ -1188,6 +1198,9 @@ function ReadingView({
           }}
         >
           <div class="reading-settings">
+            {nativeAvailable && (
+              <RelinkSource book={reading.book} onRelink={onSourceChanged} />
+            )}
             <label class="reading-remember">
               <span>
                 <strong>{t('记住阅读位置')}</strong>
@@ -1383,6 +1396,8 @@ function PageFailure({
   skip,
   backLabel,
   onBack,
+  source,
+  onSourceChanged,
 }: {
   page: number;
   nativeAvailable: boolean;
@@ -1391,6 +1406,8 @@ function PageFailure({
   skip?: () => void;
   backLabel: string;
   onBack: () => void;
+  source?: Book;
+  onSourceChanged?: () => void;
 }) {
   return (
     <div
@@ -1412,6 +1429,7 @@ function PageFailure({
             : '漫画页面通过设备上的原生接口加载。',
         )}
       </p>
+      {source && <RelinkSource book={source} onRelink={onSourceChanged} />}
       <div>
         {nativeAvailable && (
           <button type="button" disabled={busy} onClick={retry}>
