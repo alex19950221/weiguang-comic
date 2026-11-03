@@ -1,8 +1,12 @@
 # 微光漫画最新交接摘要
 
-更新：2026-11-02｜工程：`D:\微光漫画`｜分支：`m0`｜版本：`0.0.1`
+## 最新：新发行证书与 TestFlight 构建 6（2026-11-03）
 
-**第五个 TestFlight 内部测试构建已上传并通过 Apple 处理：从 m0 最新提交 `1f26206`（含 EPUB 导入）完成全部检查、14 个 XCTest 与模拟器 EPUB 验收（图片 EPUB 页序/自动右翻正常、文字书正确拒绝），构建号 4→5 上传；build `5`（0.0.1）状态 VALID，build id `9defbbca-7a29-4b7b-84d3-4d60a35868f8`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。未分配测试组、未送审；真机验收由用户通过 TestFlight 完成。**
+本轮从 m0 `52ccd03` 开始。203/203 Vitest、19/19 XCTest（iPhone 17）、Debug/Release 编译通过。修复切换裁边后无法返回书架，四项自动检查重跑通过。iPhone 18 Pro Debug 实测四种格式导入/翻页、Pro ¥20 价格/购买/恢复、裁边预览/效果、隐藏/显示/取消隐藏、退款后数据保留；应用锁冷启动/后台验证、多任务遮挡、取消/重试、阅读第 2/4 页保留及退款后关闭锁均通过。中英文界面及主屏名称已核对，真实设备验收未执行。用户新建本地 Apple Distribution（团队 7R5Z28YJZ9，到期 2027-11-03），补齐官方 WWDR G3 后有效，私钥未导出。工程保留 Automatic，构建号 6、版本 0.0.1；用限定到 App 的手动签名参数归档成功，实际签名证书与下载的新 .cer 逐字节一致。用户明确授权代理通过 Organizer 上传，新证书及「LumiComic AppStore Build 6」描述文件已明确选中。Apple 现已处理完成，网页显示「完成 / 准备提交」，达到 VALID 目标；构建 id 3dd8a6a5-42b8-4e9e-82b7-ac7496e67fb7，创建时间 2026-11-03 08:17。已根据代码与 Apple 说明补充本次加密类型信息，未送审、未主动添加测试员。备案公钥/MD5 仅向用户汇报，不入库；未使用旧 API Key N23VM7F87M。详见 DEVELOPMENT_STATUS.md 顶部。
+
+更新：2026-11-03｜工程：`/Users/alexliao/Documents/weiguang-comic`｜分支：`m0`｜版本：`0.0.1 (6)`
+
+**第六个 TestFlight 构建已上传并完成 Apple 处理：0.0.1 (6)，页面「完成 / 准备提交」，build id `3dd8a6a5-42b8-4e9e-82b7-ac7496e67fb7`。App「微光漫画」app id 6829142764，Bundle ID `dev.weiguang.comic`，Team `7R5Z28YJZ9`。使用新建本地 Apple Distribution，未使用云托管发行证书。真机验收、测试员分配、正式内购创建及送审仍需用户完成。**
 
 ## -11. 最新：M3-04 应用锁与隐藏系列（2026-11-02）
 

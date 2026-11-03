@@ -310,6 +310,7 @@ function ReadingView({
   }
   const controls = useRef({ recordVisible });
   controls.current = { recordVisible };
+  useEffect(() => () => loader.dispose(), [loader]);
   useEffect(() => {
     mounted.current = true;
     const overflow = document.body.style.overflow;
@@ -323,12 +324,11 @@ function ReadingView({
       mounted.current = false;
       leaving.current = true;
       clearTimeout(scrollTimer.current);
-      loader.dispose();
       document.body.style.overflow = overflow;
       focus?.focus({ preventScroll: true });
       void writer.flush().catch(() => undefined);
     };
-  }, [loader, writer]);
+  }, [writer]);
   useLayoutEffect(() => {
     const node = stage.current;
     if (!node) return;
