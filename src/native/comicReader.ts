@@ -6,6 +6,7 @@ interface ComicReaderPlugin {
   setFullscreen(options: {
     enabled: boolean;
   }): Promise<{ fullscreen: boolean }>;
+  setKeepAwake(options: { enabled: boolean }): Promise<{ enabled: boolean }>;
 }
 const ComicReader = registerPlugin<ComicReaderPlugin>('ComicReader');
 // 所有原生显示会话共用顺序，防止旧阅读器的恢复覆盖新会话。
@@ -23,8 +24,21 @@ export function resetNativeDisplay(): Promise<void> {
   )
     return Promise.resolve();
   return nativeDisplay(async () => {
+    await ComicReader.setKeepAwake({ enabled: false });
     await ComicReader.setFullscreen({ enabled: false });
   }).catch(() => undefined);
+}
+
+/** 与全屏共享串行队列，旧阅读会话的释放不会覆盖新播放会话。 */
+export function setNativeKeepAwake(enabled: boolean): Promise<void> {
+  if (
+    !Capacitor.isNativePlatform() ||
+    !Capacitor.isPluginAvailable('ComicReader')
+  )
+    return Promise.resolve();
+  return nativeDisplay(async () => {
+    await ComicReader.setKeepAwake({ enabled });
+  });
 }
 export function createFullscreenPort(): FullscreenPort {
   if (Capacitor.isNativePlatform())

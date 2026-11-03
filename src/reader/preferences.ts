@@ -1,6 +1,7 @@
 import type { ReaderDefaults } from '@/db/models';
 import type { ComicDatabase } from '@/db/schema';
 import { readerBrightness } from './appearance';
+import { autoplayInterval, autoplaySpeed } from './autoplay';
 
 /** 自动裁白边按书保存；只改这本书的记录，不影响其他书和默认设置。 */
 export async function saveCropBorders(
@@ -36,6 +37,12 @@ export async function saveReaderPreferences(
       ...patch,
       ...(patch.brightness !== undefined
         ? { brightness: readerBrightness(patch.brightness) }
+        : {}),
+      ...(patch.autoplayInterval !== undefined
+        ? { autoplayInterval: autoplayInterval(patch.autoplayInterval) }
+        : {}),
+      ...(patch.autoplaySpeed !== undefined
+        ? { autoplaySpeed: autoplaySpeed(patch.autoplaySpeed) }
         : {}),
     };
     await db.settings.put({ key: 'reader.defaults', value: next });

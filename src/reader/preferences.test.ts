@@ -40,6 +40,22 @@ describe('第二轮阅读设置与页内进度持久化', () => {
     await saveReaderPreferences(db, 'book-1', { brightness: NaN });
     expect((await openReading(db, 'book-1')).defaults.brightness).toBe(100);
   });
+  it('自动翻页参数限幅后保存，重开保留且不改变当前书的阅读模式', async () => {
+    const before = await db.books.get('book-1');
+    await saveReaderPreferences(db, 'book-1', {
+      autoplayInterval: 0,
+      autoplaySpeed: 999,
+    });
+    db.close();
+    await db.open();
+    const session = await openReading(db, 'book-1');
+    expect(session.defaults).toMatchObject({
+      autoplayInterval: 2,
+      autoplaySpeed: 160,
+      mode: 'paged',
+    });
+    expect(await db.books.get('book-1')).toEqual(before);
+  });
   it('旧设置保持可读，新双页模式和封面选择重开后保留', async () => {
     expect(
       (await openReading(db, 'book-1')).defaults.spreadCover,

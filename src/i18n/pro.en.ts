@@ -1,5 +1,15 @@
 /** 微光 Pro 购买页与功能介绍。 */
 export const proEn: Record<string, string> = {
+  '播放期间保持屏幕常亮，停止后恢复系统自动锁屏。':
+    'The screen stays awake during playback. Auto-lock returns when playback stops.',
+  停止自动翻页: 'Stop auto turn',
+  开始自动翻页: 'Start auto turn',
+  翻页间隔: 'Page interval',
+  滚动速度: 'Scroll speed',
+  '{0} 秒': '{0} s',
+  '单页和双页按间隔翻页，条漫匀速滚动。触摸、打开菜单或切到后台会停止，不自动进入下一卷。':
+    'Single pages and spreads turn at the set interval; webtoons scroll steadily. Touching the screen, opening controls or leaving the app stops playback. The next volume never starts automatically.',
+  '请先将页面缩放还原为 100%。': 'Reset page zoom to 100% first.',
   '已选择 {0} 项，共 {1} 本': '{0} items selected, {1} books',
   全选: 'Select all',
   取消全选: 'Deselect all',

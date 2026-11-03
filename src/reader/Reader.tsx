@@ -44,6 +44,8 @@ import { nextZoom } from './zoom';
 import { ReaderContents } from './ReaderContents';
 import { useBookmarks } from './useBookmarks';
 import { readerBrightness, dimmingOpacity, folioHeight } from './appearance';
+import { AutoplayClock, autoplayInterval, autoplaySpeed } from './autoplay';
+import { setNativeKeepAwake } from '@/native/comicReader';
 import { useFullscreen } from './useFullscreen';
 import { setStatusBarTone } from '@/native/systemBars';
 import '@/styles/reader.css';
@@ -172,6 +174,10 @@ function ReadingView({
   );
   const [settingsBusy, setSettingsBusy] = useState(false);
   const [settingsError, setSettingsError] = useState(false);
+  const [autoPlaying, setAutoPlaying] = useState(false);
+  const autoRequested = useRef(false);
+  const lastAutoRecord = useRef(0);
+  const [featureProOpen, setFeatureProOpen] = useState(false);
   const pro = proStore().state.value;
   const [crop, setCrop] = useState(reading.book.cropBorders);
   // 失去 Pro 后保留这本书的选择，但按原图显示；重新解锁后自动恢复。
@@ -314,6 +320,13 @@ function ReadingView({
   }
   const controls = useRef({ recordVisible });
   controls.current = { recordVisible };
+  function stopAutoplay() {
+    if (!autoRequested.current) return;
+    autoRequested.current = false;
+    setAutoPlaying(false);
+    syncScroll();
+    controls.current.recordVisible();
+  }
   useEffect(() => () => loader.dispose(), [loader]);
   useEffect(() => {
     mounted.current = true;
@@ -337,6 +350,7 @@ function ReadingView({
     const node = stage.current;
     if (!node) return;
     const resize = () => {
+      stopAutoplay();
       setWidth(Math.max(1, Math.min(900, node.clientWidth)));
       setViewportSize({ width: node.clientWidth, height: node.clientHeight });
     };
@@ -400,6 +414,7 @@ function ReadingView({
   }, [page, prefs, guide, images, revision, loadVersion, settings, contents]);
   useEffect(() => {
     const flush = () => {
+      stopAutoplay();
       controls.current.recordVisible();
       void writer.flush().catch(() => {
         if (mounted.current) {
@@ -523,6 +538,116 @@ function ReadingView({
     setChrome,
     step,
   });
+  const autoFrame = useRef<(now: number, clock: AutoplayClock) => boolean>(
+    () => false,
+  );
+  autoFrame.current = (now, clock) => {
+    const node = stage.current;
+    const activePages = scroll ? [position.current.page] : visible;
+    const decision = clock.tick(now, {
+      key: `${prefs.mode}:${activePages.join(',')}:${revision}`,
+      scroll,
+      ready: activePages.every(ready),
+      failed: activePages.some((index) => errors.has(index)),
+      blocked:
+        !autoRequested.current ||
+        pro.status !== 'pro' ||
+        !nativeAvailable ||
+        !appActive.current ||
+        document.visibilityState !== 'visible' ||
+        !node ||
+        guide ||
+        settings ||
+        contents !== null ||
+        featureProOpen ||
+        proPreview !== null ||
+        closing ||
+        ended ||
+        recovering ||
+        saveError ||
+        bookmarks.busy ||
+        gestures.zoom !== 100,
+      interval: prefs.autoplayInterval,
+      speed: prefs.autoplaySpeed,
+      top: node?.scrollTop ?? 0,
+      limit: Math.max(0, (geometry.at(-1) ?? 0) - (node?.clientHeight ?? 0)),
+    });
+    if (decision.kind === 'stop') {
+      stopAutoplay();
+      return false;
+    }
+    if (decision.kind === 'turn') step(1);
+    if (decision.kind === 'scroll' && node) {
+      const next = positionAt(geometry, decision.top).page;
+      if (errors.has(next)) {
+        stopAutoplay();
+        setChrome(true);
+        return false;
+      }
+      // 新页没解码出来前停在边界，不滚入空白，也不把等待时间变成跳跃。
+      if (!ready(next)) return true;
+      node.scrollTop = decision.top;
+      syncScroll();
+      if (now - lastAutoRecord.current >= 250) {
+        controls.current.recordVisible();
+        lastAutoRecord.current = now;
+      }
+      if (decision.end) {
+        stopAutoplay();
+        setChrome(true);
+        return false;
+      }
+    }
+    return true;
+  };
+  useEffect(() => {
+    if (!autoPlaying) return;
+    void setNativeKeepAwake(true).catch(stopAutoplay);
+    const clock = new AutoplayClock();
+    let cancelled = false;
+    let frame = 0;
+    const tick = (now: number) => {
+      if (!cancelled && autoFrame.current(now, clock))
+        frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+      void setNativeKeepAwake(false).catch(() => undefined);
+    };
+  }, [autoPlaying]);
+  function startAutoplay() {
+    if (!canPerform('autoplay.start', pro.status === 'pro')) {
+      setSettings(false);
+      setFeatureProOpen(true);
+      return;
+    }
+    if (gestures.zoom !== 100 || settingsBusy || closing || ended) return;
+    lastAutoRecord.current = 0;
+    autoRequested.current = true;
+    setSettings(false);
+    setChrome(false);
+    setAutoPlaying(true);
+    stage.current?.focus({ preventScroll: true });
+  }
+  function reloadSource() {
+    stopAutoplay();
+    syncScroll();
+    controls.current.recordVisible();
+    // 重连后先提交最后一个可见位置，再重开书目，避免读到尚未落盘的旧进度。
+    void writer
+      .flush()
+      .then(() => {
+        if (mounted.current) onSourceChanged();
+      })
+      .catch(() => {
+        if (mounted.current) {
+          setSaveError(true);
+          setChrome(true);
+        }
+      });
+  }
   async function leave(next?: Book) {
     if (closing || leaving.current || bookmarks.locked.current) return;
     syncScroll();
@@ -709,6 +834,7 @@ function ReadingView({
   };
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
+      stopAutoplay();
       if (
         event.altKey ||
         event.ctrlKey ||
@@ -818,7 +944,7 @@ function ReadingView({
               ? reading.book
               : undefined
           }
-          onSourceChanged={onSourceChanged}
+          onSourceChanged={reloadSource}
         />
       );
     if (!image)
@@ -907,11 +1033,23 @@ function ReadingView({
   return (
     <section
       class="comic-reader"
+      onPointerDownCapture={stopAutoplay}
+      onKeyDownCapture={stopAutoplay}
+      onWheelCapture={stopAutoplay}
       data-background={background}
       data-mode={prefs.mode}
       data-fit={fit}
       aria-label={t('阅读《{0}》', reading.book.title)}
     >
+      {autoPlaying && (
+        <button
+          type="button"
+          class="reading-autoplay-stop"
+          onClick={stopAutoplay}
+        >
+          {t('停止自动翻页')}
+        </button>
+      )}
       <div
         ref={stage}
         class={`reader-canvas ${scroll ? 'is-scroll' : ''} ${fit === 'width' ? 'is-width' : ''}`}
@@ -1199,7 +1337,95 @@ function ReadingView({
         >
           <div class="reading-settings">
             {nativeAvailable && (
-              <RelinkSource book={reading.book} onRelink={onSourceChanged} />
+              <RelinkSource book={reading.book} onRelink={reloadSource} />
+            )}
+            {(pro.status === 'pro' || proEntryVisible(pro.environment)) && (
+              <fieldset disabled={settingsBusy}>
+                <legend>{t('自动翻页')} · Pro</legend>
+                <p>
+                  {t(
+                    '单页和双页按间隔翻页，条漫匀速滚动。触摸、打开菜单或切到后台会停止，不自动进入下一卷。',
+                  )}
+                </p>
+                <p>{t('播放期间保持屏幕常亮，停止后恢复系统自动锁屏。')}</p>
+                <label class="reading-autoplay-option">
+                  <span>
+                    {t('翻页间隔')} ·{' '}
+                    {t('{0} 秒', autoplayInterval(prefs.autoplayInterval))}
+                  </span>
+                  <input
+                    type="range"
+                    min={2}
+                    max={60}
+                    step={1}
+                    value={autoplayInterval(prefs.autoplayInterval)}
+                    aria-label={t('翻页间隔')}
+                    onChange={(event) =>
+                      void changePreferences({
+                        autoplayInterval: Number(event.currentTarget.value),
+                      })
+                    }
+                  />
+                </label>
+                <div class="reading-autoplay-presets">
+                  {[2, 5, 10, 30].map((seconds) => (
+                    <button
+                      type="button"
+                      aria-pressed={
+                        autoplayInterval(prefs.autoplayInterval) === seconds
+                      }
+                      onClick={() =>
+                        void changePreferences({ autoplayInterval: seconds })
+                      }
+                    >
+                      {t('{0} 秒', seconds)}
+                    </button>
+                  ))}
+                </div>
+                <label class="reading-autoplay-option">
+                  <span>
+                    {t('滚动速度')} · {autoplaySpeed(prefs.autoplaySpeed) / 40}×
+                  </span>
+                  <input
+                    type="range"
+                    min={10}
+                    max={160}
+                    step={10}
+                    value={autoplaySpeed(prefs.autoplaySpeed)}
+                    aria-label={t('滚动速度')}
+                    onChange={(event) =>
+                      void changePreferences({
+                        autoplaySpeed: Number(event.currentTarget.value),
+                      })
+                    }
+                  />
+                </label>
+                <div class="reading-autoplay-presets">
+                  {[20, 40, 80, 160].map((speed) => (
+                    <button
+                      type="button"
+                      aria-pressed={
+                        autoplaySpeed(prefs.autoplaySpeed) === speed
+                      }
+                      onClick={() =>
+                        void changePreferences({ autoplaySpeed: speed })
+                      }
+                    >
+                      {speed / 40}×
+                    </button>
+                  ))}
+                </div>
+                {gestures.zoom !== 100 && (
+                  <p>{t('请先将页面缩放还原为 100%。')}</p>
+                )}
+                <button
+                  type="button"
+                  disabled={gestures.zoom !== 100 || closing || ended}
+                  onClick={startAutoplay}
+                >
+                  {t('开始自动翻页')}
+                </button>
+              </fieldset>
             )}
             <label class="reading-remember">
               <span>
@@ -1373,6 +1599,7 @@ function ReadingView({
           }}
         />
       )}
+      {featureProOpen && <ProDialog onClose={() => setFeatureProOpen(false)} />}
       {guide && (
         <ReaderGuide
           scroll={scroll}

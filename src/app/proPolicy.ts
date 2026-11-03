@@ -48,7 +48,7 @@ export const proFeatures: readonly ProFeature[] = [
     name: '自动翻页',
     description: '按设定的间隔翻页，条漫匀速滚动。',
     release: '1.2',
-    delivered: false,
+    delivered: true,
   },
   {
     id: 'filters',

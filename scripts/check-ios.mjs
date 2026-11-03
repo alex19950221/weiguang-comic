@@ -143,6 +143,11 @@ assert.match(
   '阅读显示插件未注册',
 );
 assert.match(
+  read('ios/ComicNative/Sources/ComicNative/ComicReaderPlugin.swift'),
+  /CAPPluginMethod\(name: "setKeepAwake", returnType: CAPPluginReturnPromise\)/,
+  '自动翻页的屏幕常亮接口未暴露给插件桥',
+);
+assert.match(
   read('ios/App/App/ComicBridgeViewController.swift'),
   /registerPluginInstance\(ProStorePlugin\(\)\)/,
   'Pro 内购插件未注册',

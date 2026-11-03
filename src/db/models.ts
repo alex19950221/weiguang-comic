@@ -147,6 +147,8 @@ export interface ReaderDefaults {
   brightness?: number;
   /** 旧设置缺省为开启；关闭不清除以前的阅读位置。 */
   remember?: boolean;
+  autoplayInterval?: number;
+  autoplaySpeed?: number;
 }
 
 export type Setting =

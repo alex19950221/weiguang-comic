@@ -340,6 +340,34 @@
 .reading-settings p {
   font-size: 13px;
 }
+.reading-autoplay-option {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+}
+.reading-autoplay-option input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  accent-color: var(--accent);
+}
+.reading-autoplay-presets {
+  display: flex;
+  flex-wrap: wrap;
+}
+.comic-reader .reading-autoplay-stop {
+  position: fixed;
+  z-index: 15;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  min-height: 44px;
+  padding: 10px 16px;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: 22px;
+  box-shadow: 0 2px 12px #0002;
+}
 .reading-remember {
   display: flex;
   align-items: center;
