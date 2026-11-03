@@ -1,5 +1,18 @@
 # 开发进度检查点
 
+## 最新检查点：TestFlight 构建 8（2026-11-03）
+
+- 用户要求打包并上传构建 8，基线 m0 `aa7655e`，工作区干净，远端无分歧。重新阅读工程规范与交接；App Debug/Release 构建号 7→8，营销版本仍 0.0.1，包含已完成的四项 Pro 后续功能。工程签名保持 Automatic、团队 7R5Z28YJZ9；沿用此前核验的命令行限定 App 手动发行签名参数，不改签名材料。
+- 自动检查（本轮实际执行）：`pnpm install --frozen-lockfile`、`pnpm lint`、`pnpm test`（29 文件 **227/227**）、`pnpm build:ios`、`pnpm check:ios --release`、`xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App` 全通过。日志 `release/qa/build8-{install,lint,vitest,web,static,resolve}.log`。
+- Swift/XCTest（本轮实际执行）：在 ios/ComicNative 以 iPhone 18 Pro（25D3E645-55A3-44F9-B7FE-7CED6E0DB7AB）运行完整 ComicNative 包 XCTest，**30/30 通过、0 失败**，结果 `release/qa/build8-native.xcresult`，日志 `build8-native.log`。随后 App Debug 模拟器构建 **BUILD SUCCEEDED**（`build8-debug.log`）。本轮无编译/测试失败，无跳过/删除/禁用测试。
+- 归档与签名（成功）：`xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath release/LumiComic-build8.xcarchive ... archive`，追加此前成功的 `CODE_SIGN_STYLE=Manual`、本机 Apple Distribution 身份、`PROVISIONING_PROFILE_SPECIFIER='$(LUMICOMIC_PROFILE_$(PRODUCT_NAME))'` 与 `LUMICOMIC_PROFILE_App='LumiComic AppStore Build 6'`，**ARCHIVE SUCCEEDED**（`build8-archive.log`）。该描述文件标签不限定构建号，绑定本 App 与新发行证书，复用有效。证书类型本地 Apple Distribution，到期 2027-11-03（UTC+8），私钥留在本机钥匙串，未导出。
+- 归档核验（通过）：实际 0.0.1(8)、Bundle ID/团队正确，codesign 深度严格验证通过，归档公开叶证书与已下载的新证书逐字节一致；内嵌描述文件只含该证书、get-task-allow=false、无设备列表；dSYM 存在，无 .storekit 测试文件，简繁桌面名「微光漫卷」、英文 LumiComic。
+- 上传（成功）：通过 Xcode 已登录 Apple ID 执行 `xcodebuild -exportArchive -archivePath release/LumiComic-build8.xcarchive -exportOptionsPlist release/qa/build8-ExportOptions.plist -exportPath release/build8-upload -allowProvisioningUpdates`。2026-11-03 18:03:32（UTC+8）显示 `Upload succeeded` / **EXPORT SUCCEEDED**，退出 0。配置保留构建号、上传符号、指定同一新本机发行证书与描述文件，未使用旧 API Key N23VM7F87M；日志 `build8-upload.log`。
+- Apple 处理（已完成）：用户恢复右侧浏览器登录后核验 0.0.1(8)，构建 id `14c98d3e-a73d-45fb-8d66-2c628ad00db6`；「构建版本上传」显示 **完成**，创建日期 Nov 3, 2026 6:03 PM，TestFlight 上传日期 2026-11-03 18:04，状态 **准备提交**、90 天后过期。据网页确认达到 VALID 目标，未调用 API 读取 processingState 原始字段。截图 `release/qa/build8-appstore-complete.png`。
+- 必要元数据（已保存）：初次显示「缺少出口合规证明」。核对本轮新功能未新增自有加密算法，仍只用系统能力与既有 CryptoKit SHA256 文件指纹，参考 [Apple 说明](https://developer.apple.com/help/app-store-connect/manage-app-information/determine-and-upload-app-encryption-documentation)，在本构建「管理 → App 加密文稿」选择「不属于上述的任意一种算法」并保存，随后状态变为准备提交。网页登录曾过期，用户重新登录后完成；没有修改已上传二进制、提交 App Review，或主动添加群组/测试员。
+- 模拟器更新启动（本轮实际执行）：安装并核验 Debug 0.0.1(8)，启动后原 5 本/4 系列、QA Borders 第 2/4 页保留，Pro 页显示六项已包含功能，关闭后返回书架正常；截图 `release/qa/build8-simulator-pro.png`。本轮未重做完整四阶段功能交互、真机、性能、真实退款/沙盒/家人共享；上一轮实际点检及未执行边界保留在下方。发行制品/导出配置/签名材料不入库。
+- 记录与提交：构建号、两份交接记录与路线图中的最新测试构建同步为 8；全局 Git 身份未改，使用用户指定的单次提交身份。发布制品在 `release/LumiComic-build8.xcarchive` / `release/build8-upload`，均忽略不入库，证书/私钥/描述文件/API Key 不入库。
+
 ## 最新检查点：Pro 1.2 第二阶段——画面滤镜与四阶段收尾（2026-11-03）
 
 - 自动翻页已在 `98f55f5` 提交并推送。画面滤镜已接入每书对比度、锐化、暖色，默认原图、免费还原、失去 Pro 时原图显示且保留参数。编辑草稿不解码，点击应用才保存/重建页面；取消不保存。系统 Core Image 处理预算内渲染图，先裁边再滤镜，独立参数缓存；原图分支不创建上下文。不改变进度/书签/原件，无数据库升级、无新增第三方依赖，filters 已标记交付。
