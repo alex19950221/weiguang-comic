@@ -7,9 +7,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>用于在打开微光漫画时验证是你本人。</string>
+	<string>用于在打开微光漫卷时验证是你本人。</string>
 	<key>CFBundleDisplayName</key>
-        <string>微光漫画</string>
+        <string>微光漫卷</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

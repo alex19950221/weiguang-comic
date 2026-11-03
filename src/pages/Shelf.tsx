@@ -264,7 +264,7 @@ function ShelfContent() {
         <aside class="library-sidebar">
           <button
             class="library-brand"
-            aria-label={t('微光漫画')}
+            aria-label={t('微光漫卷')}
             type="button"
             onClick={() => navigate('library')}
           >
@@ -272,7 +272,7 @@ function ShelfContent() {
               <Icon name="book" size={27} />
             </span>
             <span>
-              {t('微光漫画')}
+              {t('微光漫卷')}
               <small>LUMI COMIC</small>
             </span>
           </button>
@@ -369,7 +369,7 @@ function ShelfContent() {
         <div class="library-main">
           <header class="library-topbar">
             <div class="library-breadcrumb">
-              <span>{t('微光漫画')}</span>
+              <span>{t('微光漫卷')}</span>
               <Icon name="right" size={14} />
               <b>{selected?.series.title ?? heading}</b>
             </div>
@@ -719,7 +719,7 @@ function ShelfContent() {
                             <h2>{t('书架还是空的')}</h2>
                             <p>
                               {t(
-                                '微光漫画只读你自己的漫画文件，不内置、也不联网获取任何内容。',
+                                '微光漫卷只读你自己的漫画文件，不内置、也不联网获取任何内容。',
                               )}
                             </p>
                             <ol>

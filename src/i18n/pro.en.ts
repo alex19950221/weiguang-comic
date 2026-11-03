@@ -78,7 +78,7 @@ export const proEn: Record<string, string> = {
   显示: 'Show',
   取消隐藏: 'Unhide',
   隐藏系列: 'Hide series',
-  微光漫画已锁定: 'LumiComic is locked',
+  微光漫卷已锁定: 'LumiComic is locked',
   '正在验证…': 'Verifying…',
   '用面容 ID 解锁': 'Unlock with Face ID',
   '用触控 ID 解锁': 'Unlock with Touch ID',

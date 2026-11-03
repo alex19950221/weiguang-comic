@@ -524,7 +524,7 @@ function FirstRun({ onImport }: { onImport: () => void }) {
         <DemoIcon name="book" size={34} />
       </span>
       <h2>书架还是空的</h2>
-      <p>微光漫画只读你自己的漫画文件，不内置、也不联网获取任何内容。</p>
+      <p>微光漫卷只读你自己的漫画文件，不内置、也不联网获取任何内容。</p>
       <ol class="first-run-steps">
         <li>
           <b>从“文件”导入</b>
@@ -532,7 +532,7 @@ function FirstRun({ onImport }: { onImport: () => void }) {
         </li>
         <li>
           <b>从其他 App 打开</b>
-          <span>在“文件”、网盘或聊天里点分享，选择“微光漫画”。</span>
+          <span>在“文件”、网盘或聊天里点分享，选择“微光漫卷”。</span>
         </li>
         <li>
           <b>自动整理</b>
@@ -594,7 +594,7 @@ export default function InteractivePrototype() {
   }, []);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    document.title = '微光漫画 · 交互原型';
+    document.title = '微光漫卷 · 交互原型';
   }, [theme]);
   useEffect(() => {
     if (
@@ -747,7 +747,7 @@ export default function InteractivePrototype() {
                 <i />
               </span>
               <span>
-                微光漫画<small>LUMI COMIC</small>
+                微光漫卷<small>LUMI COMIC</small>
               </span>
             </a>
             <div class="sidebar-divider" />
@@ -833,7 +833,7 @@ export default function InteractivePrototype() {
           <div class="demo-main">
             <header class="demo-topbar">
               <div class="breadcrumb">
-                <span>微光漫画</span>
+                <span>微光漫卷</span>
                 <DemoIcon name="right" size={13} />
                 <b>{seriesPage ? seriesPage.title : heading}</b>
               </div>

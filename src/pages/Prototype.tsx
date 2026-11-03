@@ -402,7 +402,7 @@ export default function Prototype() {
   return (
     <main class="prototype-home">
       <header>
-        <p class="prototype-eyebrow">微光漫画 · M0-05</p>
+        <p class="prototype-eyebrow">微光漫卷 · M0-05</p>
         <h1>iOS 性能原型</h1>
       </header>
       <p>

@@ -8,7 +8,7 @@ import '@/styles/base.css';
 startLanguage();
 effect(() => {
   document.documentElement.lang = uiLanguage.value;
-  document.title = t('微光漫画');
+  document.title = t('微光漫卷-离线图片阅读器');
 });
 // 跟随系统深浅色；漫画专用的背景色设置在 RD-09 实现。
 const dark = matchMedia('(prefers-color-scheme: dark)');

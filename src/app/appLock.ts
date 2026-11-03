@@ -30,7 +30,7 @@ export interface LockPort {
   afterPaint(): Promise<void>;
 }
 
-const UNLOCK_REASON = '解锁微光漫画';
+const UNLOCK_REASON = '解锁微光漫卷';
 
 /**
  * 应用锁状态机。开启需要 Pro 且设备有密码；解锁与关闭永远可用（失去 Pro 不锁住用户）。

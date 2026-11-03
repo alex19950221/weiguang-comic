@@ -43,7 +43,7 @@ export const shelfEn: Record<string, string> = {
   管理: 'Manage',
   数据只在这台设备上: 'Your data stays on this device',
   书架还是空的: 'Your library is empty',
-  '微光漫画只读你自己的漫画文件，不内置、也不联网获取任何内容。':
+  '微光漫卷只读你自己的漫画文件，不内置、也不联网获取任何内容。':
     'LumiComic reads only your own comic files. It includes no comics and downloads no content.',
   '从“文件”导入': 'Import from Files',
   '选择自己的 ZIP、CBZ、PDF 或 EPUB 文件，可以一次多选。':

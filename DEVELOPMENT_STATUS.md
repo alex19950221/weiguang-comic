@@ -1,5 +1,20 @@
 # 开发进度检查点
 
+## 最新检查点：微光漫卷更名与 TestFlight 构建 7（2026-11-03）
+
+- 用户确认中文桌面名改为「微光漫卷」，全名改为「微光漫卷-离线图片阅读器」，并明确要求生成、上传构建 7。基线 m0 `a893da5`，开始时工作区干净；已阅读 AGENTS.md、交接摘要、本文顶部及 iOS/Pro 说明，单代理执行。
+- 代码实现：同步 iOS 默认及简繁体 CFBundleDisplayName/CFBundleName、Face ID 用途说明、应用锁提示、网页/原型品牌文案、Capacitor appName、安卓中文名称与 README。网页文档标题使用全名，英文标题译为 LumiComic - Offline Image Reader；英文桌面名仍为 LumiComic。Bundle ID `dev.weiguang.comic`、Pro 商品 ID 与存储键未改，未增加依赖。App Debug/Release 构建号 6→7，营销版本 0.0.1，工程签名仍为 Automatic、团队 7R5Z28YJZ9。
+- 自动检查：首次 `pnpm lint` 仅因 index.html 的新 meta 文案触发 Prettier 换行要求，使用 `pnpm exec prettier --write index.html` 做最小格式修复；随后 `pnpm lint`、`pnpm test`（26 文件、203/203）、`pnpm build:ios`、`pnpm check:ios --release` 全部通过。`plutil -lint` 检查 Info.plist、三语 InfoPlist.strings 与 project.pbxproj 全部通过。日志 `release/qa/name-build7-*.log`。
+- Swift/XCTest：最初原生复核命令误从包目录使用根目录相对日志路径，shell 重定向失败，尚未运行编译/测试；修正工作目录后，`xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App` 成功。在 ComicNative 包目录，对 iPhone 18 Pro（25D3E645-55A3-44F9-B7FE-7CED6E0DB7AB）运行完整 `xcodebuild -scheme ComicNative ... test`，**19/19 通过、0 失败**，结果包 `release/qa/name-build7-ComicNative-tests.xcresult`。随后 App Debug 模拟器构建 **BUILD SUCCEEDED**；未跳过、删除或禁用测试。
+- 模拟器验收：更新安装到同一 iPhone 18 Pro / iOS 27.2，实际主屏图标名称为「微光漫卷」（截图 `name-build7-simulator-before-launch.png`）；实际启动成功，原 5 本漫画、4 个系列及 QA Borders 第 2/4 页进度保留（`name-build7-simulator-app.png`）。同时核验 Debug 与 Release 包内简繁体名称均为新名称、英文资源为 LumiComic。本轮未单独再做英文/繁体系统 UI 点检、全部 StoreKit/应用锁交互回归或真机验收。
+- 签名与归档：首次手动命令被自动审批拒绝（认为 Automatic 要求及 Build 6 描述文件名冲突）；按建议先尝试 Automatic，实际因缺少开发描述文件退出 65。只读核验现有「LumiComic AppStore Build 6」描述文件仅绑定本 App ID、团队和同一新本机发行证书，没有构建号限制，名称只是标签。提交该核验及用户原始手动签名例外授权后，审批允许复用。限定描述文件只对 App target 生效的手动命令完成 **ARCHIVE SUCCEEDED**，归档 `release/LumiComic-build7.xcarchive`，保留旧构建 6 归档。
+- 证书与归档核验：继续使用本机新 Apple Distribution（到期 2027-11-03），私钥未导出。codesign 深度严格验证通过，归档叶证书与已下载的新 .cer 逐字节一致；版本为 0.0.1(7)，Bundle ID 正确，无本地 .storekit 文件，中文资源名称正确。
+- App Store Connect 名称：页面实际仍为旧名称，已在 App 信息的简体中文「名称」中保存用户指定全名，界面显示「已保存」，App 菜单亦显示新全名。截图 `release/qa/name-build7-appstore-name.jpg`。未提交 App Review，也未更改其他审核资料。
+- 上传成功：使用 Xcode 已登录 Apple ID 执行 `xcodebuild -exportArchive -archivePath release/LumiComic-build7.xcarchive -exportOptionsPlist release/qa/name-build7-ExportOptions.plist -exportPath release/name-build7-upload -allowProvisioningUpdates`。导出配置明确 method=app-store-connect、destination=upload、manual、本机新证书、同一有效 App 描述文件、manageAppVersionAndBuildNumber=false、包含符号文件。15:29:30 日志显示 Upload succeeded / **EXPORT SUCCEEDED**，退出 0。未使用旧 API Key N23VM7F87M。
+- Apple 处理成功：App Store Connect 的 0.0.1(7)，构建 id `238dc11e-8b14-44af-8a5b-ae6bf6d93e94`，创建时间 2026-11-03 15:29，「构建版本上传」已显示「完成」，TestFlight 显示「准备提交」、90 天后过期。处理后曾提示缺少出口合规信息；本轮只改名称、加密实现未变，沿用构建 6 已核验的系统能力分类，在页面选择「不属于上述的任意一种算法」保存后清除提示。以网页完成状态核验达到 VALID 目标，未调用旧 API Key；截图 `release/qa/name-build7-appstore-complete.jpg`。
+- 收尾检查：最终 `pnpm lint` 再次通过，日志 `release/qa/name-build7-lint-final.log`；文档格式与 `git diff --check` 通过。提交前 `git fetch origin m0` 成功，本地与远端无分歧。
+- 未执行：本轮真机与安卓启动器验收、单独英文/繁体系统界面复验、完整 StoreKit/应用锁交互回归、真实沙盒/家人共享内购、正式送审。本轮未添加测试员或测试群组。所有签名材料、导出选项、截图、日志及制品保留本地，不入库；提交仅包含改名、构建号 7 和交接记录。
+
 ## 最新检查点：新发行证书与 TestFlight 构建 6（2026-11-03）
 
 - 基线：本机 macOS，Xcode 27.2（27B52）；克隆仓库后 `git checkout m0`、`git pull origin m0` 成功，HEAD `52ccd03`，初始工作区干净。已阅读 AGENTS.md、CODEX_HANDOFF.md、本文顶部、docs/IOS_B1.md、docs/PRO.md；README 中 PRD/开发计划外链仍不可访问，未宣称读过原文。

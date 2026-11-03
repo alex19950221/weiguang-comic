@@ -10,12 +10,12 @@ export function LockScreen({ lock }: { lock: AppLock }) {
       class="app-lock"
       role="dialog"
       aria-modal="true"
-      aria-label={t('微光漫画已锁定')}
+      aria-label={t('微光漫卷已锁定')}
     >
       <span class="app-lock-icon">
         <Icon name="lock" size={36} />
       </span>
-      <h1>{t('微光漫画已锁定')}</h1>
+      <h1>{t('微光漫卷已锁定')}</h1>
       <button
         type="button"
         class="app-lock-button"

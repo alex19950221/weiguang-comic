@@ -40,7 +40,7 @@ public class ComicLockPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func authenticate(_ call: CAPPluginCall) {
-        let reason = call.getString("reason") ?? "解锁微光漫画"
+        let reason = call.getString("reason") ?? "解锁微光漫卷"
         DispatchQueue.main.async {
             guard !self.authenticating else { call.resolve(["ok": false, "reason": "busy"]); return }
             self.authenticating = true

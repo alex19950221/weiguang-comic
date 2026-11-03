@@ -4,7 +4,8 @@ import { nativeEn } from './native.en';
 import { proEn } from './pro.en';
 /** 中文原文 → 英文。界面文案以中文为键，缺失时回退到中文。 */
 export const en: Record<string, string> = {
-  微光漫画: 'LumiComic',
+  微光漫卷: 'LumiComic',
+  '微光漫卷-离线图片阅读器': 'LumiComic - Offline Image Reader',
   书架: 'Library',
   还没有漫画: 'No comics yet',
   '从「文件」导入 ZIP、CBZ、RAR 或整个图片文件夹，系列会自动按卷、话排好。':
