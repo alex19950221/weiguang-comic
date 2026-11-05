@@ -1,5 +1,17 @@
 # 开发进度检查点
 
+## 最新检查点：TestFlight 1.0.0（10）归档与上传（2026-11-05）
+
+- 来源与范围：用户根据最新进度截图要求上传 TestFlight，并提醒本地代码已同步。重新核对本地与 `origin/m0` 都为 `9234fe5`、工作区干净；版本已为 **1.0.0（10）**，本轮未修改产品代码或再递增构建号。沿用本 App 已核验的新发行证书；未访问或推送错误的 weiguang-reader 仓库。
+- 自动检查（本轮实际执行，通过）：Node 24.22.2 / pnpm 11.21.0；`pnpm install --frozen-lockfile`、`pnpm lint`、`pnpm test`（31 文件 **233/233**）、`pnpm build:ios`、`pnpm check:ios --release`、`xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App`。日志 `release/qa/build10-{install,lint,vitest,web,static,resolve}.log`。未跳过、删除或禁用测试。
+- XCTest 与 Debug（本轮实际执行，通过）：在 `ios/ComicNative`，`xcodebuild -scheme ComicNative -destination 'platform=iOS Simulator,id=75C111D7-B54C-4B57-AB0C-275B4B1F5994' -derivedDataPath <repo>/release/native-derived -resultBundlePath <repo>/release/qa/build10-native.xcresult test` 完整 **32/32，0 失败**。App 使用 `xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -destination 'platform=iOS Simulator,id=25D3E645-55A3-44F9-B7FE-7CED6E0DB7AB' -derivedDataPath release/app-debug CODE_SIGNING_ALLOWED=NO build`，**BUILD SUCCEEDED**。日志 `build10-{native,debug}.log`；未把编译记为交互验收。
+- Release 归档（成功）：`xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath release/LumiComic-build10.xcarchive -derivedDataPath release/archive-derived-build10 CODE_SIGN_STYLE=Manual 'CODE_SIGN_IDENTITY=Apple Distribution: Zhiliang Liao (7R5Z28YJZ9)' 'PROVISIONING_PROFILE_SPECIFIER=$(LUMICOMIC_PROFILE_$(PRODUCT_NAME))' 'LUMICOMIC_PROFILE_App=LumiComic AppStore Build 6' DEVELOPMENT_TEAM=7R5Z28YJZ9 archive`，**ARCHIVE SUCCEEDED**，工程保留 Automatic。日志 `build10-archive.log`。既有 ZIPFoundation 废弃初始化器/多余 try、无 AppIntents 元数据警告保留，无编译失败。
+- 成品核验（通过）：codesign 深度严格验证成功；实际版本 1.0.0(10)、Bundle ID `dev.weiguang.comic`、团队 7R5Z28YJZ9 正确。实际公开叶证书与构建 9 新发行证书逐字节一致，类型为本机 **Apple Distribution**，到期 **2027-11-03（UTC+8）**，私钥未导出。描述文件「LumiComic AppStore Build 6」有效且仅绑定同一证书、get-task-allow=false、无设备列表；dSYM 齐备、无 .storekit 测试配置。三档 LaunchIcon 的 120/240/360 像素尺寸正确；8 个网页资源与同步后的源文件逐个 SHA-256 一致，包含内置隐私政策；简繁桌面名微光漫卷、英文 LumiComic；`ITSAppUsesNonExemptEncryption` 为布尔 false。结果 `release/qa/build10-verification.json`。
+- 环境与核验修正：初始 shell 没有 Node 路径，使用已安装的 `~/Library/Developer/WeiguangTools/node-v24.22.2-darwin-arm64/bin` 后恢复；模拟器查询与公开描述文件解码首次受沙箱/系统服务权限限制，允许后成功。制品核验初稿错误地要求启动 PNG 与源文件字节相等，而 Xcode `copypng -compress` 会生成 CgBI PNG；核实归档日志后改为检查三档文件、PNG 格式及尺寸，未修改产品或单元测试。外部 PRD/开发计划链接本轮仍无法读取，不宣称获取原文。
+- 上传：已执行 `xcodebuild -exportArchive -archivePath release/LumiComic-build10.xcarchive -exportOptionsPlist release/qa/build10-ExportOptions.plist -exportPath release/build10-upload -allowProvisioningUpdates`，使用 Xcode Apple ID、本机手动发行签名，保留版本/构建号并上传符号；未使用旧 API Key。**2026-11-05 23:05:41（UTC+8）Upload succeeded / EXPORT SUCCEEDED**，退出 0；Xcode 显示 uploaded package is processing，上传已成功，Apple 已开始处理。日志 `build10-upload.log`。
+- Apple 处理与后续：刷新 App Store Connect 时网页登录已过期，已请用户重新登录，当前尚未恢复。最终处理完成/VALID、出口合规自动识别和测试群组状态**未核验**，不把 Xcode 的上传成功当作 Apple 处理完成。未提交正式审核、未添加测试群组或测试员；商店侧材料仍由用户操作。
+- 模拟器交互：本轮未重复完整功能点检；相同产品代码在下方检查点已核对浅/深色启动图、中英隐私政策、原 5 本/4 系列与 QA Borders 第 2/4 页保留。未执行：真实设备、真实/沙盒购买恢复/退款、性能/内存/耗电、iPad 完整回归、安卓、正式 App Review。所有制品、签名材料和日志仅在已忽略的 release 下，不入库。
+
 ## 最新检查点：送审前代码补齐 1.0.0（10）（2026-11-05）
 
 - 范围：用户在送审评估后要求先修代码，其余商店侧（内购商品、备案、截图、隐私网址、年龄分级、审核备注）由用户操作。基线 m0 `a3e7ddb`（与远端一致），单代理执行；未归档、未上传、未提交。

@@ -1,5 +1,9 @@
 # 微光漫卷最新交接摘要
 
+## 最新：TestFlight 1.0.0（10）归档与上传（2026-11-05）
+
+用户要求上传截图中的最新进度，并提醒本地已同步；重新核对 m0 与远端均为 `9234fe5`、工作区干净，版本 1.0.0(10)。本轮 frozen install、lint、233/233 Vitest、iOS 同步/静态检查、SPM 解析、32/32 XCTest、Debug 编译及 Release 发行归档全部通过，无产品代码补修。实际签名与构建 9 新本机 Apple Distribution 证书逐字节一致，到期 2027-11-03，私钥未导出；沿用本 App 有效描述文件，工程仍 Automatic。核对了启动 PNG 三档尺寸、8 个网页资源哈希、双语名称、无 .storekit 配置和加密键 false。2026-11-05 23:05:41（UTC+8）已通过 Xcode Apple ID 上传成功（Upload succeeded / EXPORT SUCCEEDED，退出 0），Xcode 显示 Apple 开始处理。网页登录过期，已请用户恢复；最终处理完成/VALID、出口合规自动识别和测试群组状态未核验，未添加群组或测试员。未使用旧 API Key，不提交正式审核。真实设备/内购/性能与完整模拟器交互本轮未执行；既有启动画面/隐私政策点检见下方。制品和签名材料仅在忽略的 release 下。详见 DEVELOPMENT_STATUS.md 顶部。
+
 ## 最新：送审前代码补齐 1.0.0（10）（2026-11-05）
 
 基线 m0 `a3e7ddb`，未提交。补齐送审代码项：设置页内置中英隐私政策（`docs/PRIVACY_POLICY.md` 为同文托管版，测试保证同步）；启动画面改为系统背景色 + 居中散装 PNG 图标——原 2732² Capacitor 模板图超过系统 25 MB 启动图上限，实际一直黑屏，资源目录图片/命名颜色在模拟器生成启动图时读取失败，故不用资源目录；版本 1.0.0、构建 10，Info.plist 加 `ITSAppUsesNonExemptEncryption = NO`；手机长弹窗避开安全区；README 格式描述更正。lint、233/233 Vitest、build:ios、check:ios --release、Debug 模拟器与 Release 真机 SDK 无签名构建通过；模拟器核对浅/深色启动画面、中英隐私政策、QA 书架数据保留。真机、内购、归档上传与商店侧材料仍待用户。详见 DEVELOPMENT_STATUS.md 顶部。
