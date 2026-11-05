@@ -1,5 +1,18 @@
 # 开发进度检查点
 
+## 最新检查点：TestFlight 构建 9（2026-11-05）
+
+- 用户明确要求将最新验收版本上传 TestFlight。m0 从 `a081e0c` 快进至已推送的 `ce6c79c`，包含 `5987907` 六项网页 QA 修复及本机原生导入卷序补修和验收记录，无冲突；工作区开始时干净。
+- 代码：App Debug/Release 构建号 8→9，版本仍为 0.0.1。工程保留 Automatic、团队 7R5Z28YJZ9；实际复用已核验的本机 Apple Distribution 和同 App 有效描述文件「LumiComic AppStore Build 6」，命令行限定 App 手动签名，私钥只在本机钥匙串。
+- 自动检查（本轮实际执行，通过）：`pnpm install --frozen-lockfile`、`pnpm lint`、`pnpm test`（30 文件 **231/231**）、`pnpm build:ios`、`pnpm check:ios --release`、`xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App`。日志 `release/qa/build9-{install,lint,vitest,web,static,resolve}.log`。
+- XCTest 与 Debug（本轮实际执行，通过）：在 ios/ComicNative，`xcodebuild -scheme ComicNative -destination 'platform=iOS Simulator,id=75C111D7-B54C-4B57-AB0C-275B4B1F5994' -derivedDataPath <repo>/release/native-derived -resultBundlePath <repo>/release/qa/build9-native.xcresult test` 完整 **32/32，0 失败**；App Debug 以 iPhone 18 Pro、`-derivedDataPath release/app-debug CODE_SIGNING_ALLOWED=NO build` 显示 **BUILD SUCCEEDED**，日志 `build9-{native,debug}.log`。未跳过、删除或禁用测试，无编译/测试失败。
+- Release 归档（成功）：`xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath release/LumiComic-build9.xcarchive ... archive`，追加 `CODE_SIGN_STYLE=Manual`、本机 Apple Distribution 身份、`PROVISIONING_PROFILE_SPECIFIER='$(LUMICOMIC_PROFILE_$(PRODUCT_NAME))'`、`LUMICOMIC_PROFILE_App='LumiComic AppStore Build 6'`、团队 7R5Z28YJZ9，**ARCHIVE SUCCEEDED**。工程仍保留 Automatic，日志 `build9-archive.log`。既有 ZIPFoundation 废弃初始化器、无 AppIntents 元数据提示为编译警告，没有为发布进行无关修改。
+- 签名与制品核验（通过）：codesign 深度严格验证成功，实际 **0.0.1(9)**、Bundle ID/团队正确；公开叶证书与构建 8 所用的新本机证书逐字节一致，类型 Apple Distribution，到期 **2027-11-03（UTC+8）**。内嵌发行描述文件只绑定该证书、get-task-allow=false、无设备列表；dSYM 存在、无 .storekit 测试文件；简繁桌面名「微光漫卷」、英文 LumiComic。结果 `release/qa/build9-verification.json`。首次公开证书提取命令把可选前缀写为空格参数，工具报路径不存在；改为 `--extract-certificates=<prefix>` 后全部核验通过，与编译或签名失败无关。未导出私钥。
+- 上传（成功）：`xcodebuild -exportArchive -archivePath release/LumiComic-build9.xcarchive -exportOptionsPlist release/qa/build9-ExportOptions.plist -exportPath release/build9-upload -allowProvisioningUpdates`，**2026-11-05 12:15:08（UTC+8）Upload succeeded / EXPORT SUCCEEDED**，退出 0。使用 Xcode 已登录 Apple ID，沿用手动发行签名并保留构建号、上传符号，未使用旧 API Key N23VM7F87M；日志 `build9-upload.log`。日志/配置/签名材料/制品均在已忽略的 release 下，不入库。
+- Apple 处理（已完成）：用户恢复右侧网页登录后核验 0.0.1(9)，构建 id `f41808a0-3a7b-4c65-bc68-9b51a6506cc6`，初始上传区显示「正在处理」，创建 Nov 5, 2026 12:15 PM。处理后提示缺少出口合规信息；核对本轮未新增自有加密实现，结合 [Apple 说明](https://developer.apple.com/help/app-store-connect/manage-app-information/determine-and-upload-app-encryption-documentation)，拟沿用构建 8 答案。自动审批要求对具体声明另行确认，用户明确授权「允许选择并保存」后，选择「不属于上述的任意一种算法」并保存。最终 TestFlight 显示 **准备提交、90 天后过期**，上传日期 **2026-11-05 12:16（UTC+8）**，以网页状态核验达到 VALID 目标，未调用 API 读取原始 processingState。截图 `release/qa/build9-appstore-complete.png`；未提交 App Review、未主动添加群组或测试员，群组仍待分配。
+- 模拟器验收：发布前已对同一产品代码执行六项 QA 与四格式点检及最小补修，详情为下方 2026-11-05 检查点。本轮仅增加构建号，未重复完整功能点检。未执行：真机、真实内购/退款、性能/内存/耗电、安卓、正式 App Review；不把构建与单元测试记为真机通过。
+- 提交范围：最新验收代码快进 m0 后，仅提交构建号、本文、CODEX_HANDOFF 与路线图的发布摘要；使用用户指定的单次提交身份，全局 Git 身份未改。构建产物、公有证书、描述文件及所有签名材料均不入库。
+
 ## 最新检查点：模拟器验收与原生导入卷序补修（2026-11-05）
 
 - 范围与代码来源：用户最初要求拉取最新代码并真机验收。Mac 解锁后，`xcrun devicectl --timeout 20 list devices` 与 Device Hub 均只识别到模拟器，用户明确改为「先做模拟器验收」。原工作区 `m0` / `a081e0c` 干净，`git pull --ff-only origin m0` 已是最新；`git fetch origin` 定位到截图对应的 `origin/claude/sharp-allen-0xoaaj` / `5987907`。在独立 worktree `weiguang-comic-device-qa-20261105`、分支 `codex/device-qa-20261105` 检出验收，未合并 m0。已读 AGENTS、交接、本文与 iOS/Pro 文档，单代理执行；外部 PRD/开发计划原文仍未获取，不宣称读过。
