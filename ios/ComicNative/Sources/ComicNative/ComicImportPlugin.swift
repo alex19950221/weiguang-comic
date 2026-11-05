@@ -46,7 +46,7 @@ public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDel
         guard let call = pickerCall else { return }
         pickerCall = nil
         // 不在主线程读取文件体，也不把外部 URL 传给 WebView。
-        let items: [[String: Any]] = urls.map { url in
+        let items: [[String: Any]] = ComicImportSelection.ordered(urls).map { url in
             let token = UUID().uuidString
             selected[token] = url
             return ["uri": token, "name": url.lastPathComponent, "size": 0, "isDirectory": false]

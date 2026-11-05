@@ -17,7 +17,7 @@ export const finishedImportStates = [
 ] as const;
 export const isImportFinished = (job: ImportJob) =>
   finishedImportStates.some((state) => state === job.state);
-/** 新的一批排在前面；同一批按用户选择顺序，不受随机主键影响。 */
+/** 新的一批排在前面；同一批保留来源顺序（iOS 按文件名自然排序），不受随机主键影响。 */
 export const compareImportJobs = (a: ImportJob, b: ImportJob) =>
   b.createdAt - a.createdAt ||
   (a.sequence ?? 0) - (b.sequence ?? 0) ||
