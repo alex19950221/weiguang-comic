@@ -10,6 +10,9 @@
 		C00000000000000000000001 /* ComicBridgeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000002; };
 		C00000000000000000000003 /* ComicNative in Frameworks */ = {isa = PBXBuildFile; productRef = C00000000000000000000004; };
 		C00000000000000000000006 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000007; };
+		C00000000000000000000020 /* LaunchIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000023 /* LaunchIcon.png */; };
+		C00000000000000000000021 /* LaunchIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000024 /* LaunchIcon@2x.png */; };
+		C00000000000000000000022 /* LaunchIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C00000000000000000000025 /* LaunchIcon@3x.png */; };
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
 		4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 4D22ABE82AF431CB00220026 /* CapApp-SPM */; };
 		50379B232058CBB4000EE86E /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 50379B222058CBB4000EE86E /* capacitor.config.json */; };
@@ -25,6 +28,9 @@
 /* Begin PBXFileReference section */
 		C00000000000000000000002 /* ComicBridgeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComicBridgeViewController.swift; sourceTree = "<group>"; };
 		C00000000000000000000007 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		C00000000000000000000023 /* LaunchIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LaunchIcon.png"; sourceTree = "<group>"; };
+		C00000000000000000000024 /* LaunchIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LaunchIcon@2x.png"; sourceTree = "<group>"; };
+		C00000000000000000000025 /* LaunchIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LaunchIcon@3x.png"; sourceTree = "<group>"; };
 		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
 		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		504EC3041FED79650016851F /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +88,9 @@
 				504EC30B1FED79650016851F /* Main.storyboard */,
 				504EC30E1FED79650016851F /* Assets.xcassets */,
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
+				C00000000000000000000023 /* LaunchIcon.png */,
+				C00000000000000000000024 /* LaunchIcon@2x.png */,
+				C00000000000000000000025 /* LaunchIcon@3x.png */,
 				504EC3131FED79650016851F /* Info.plist */,
 				C00000000000000000000011 /* InfoPlist.strings */,
 				2FAD9762203C412B000D30F8 /* config.xml */,
@@ -161,6 +170,9 @@
 			files = (
 				C00000000000000000000006 /* PrivacyInfo.xcprivacy in Resources */,
 				504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */,
+				C00000000000000000000020 /* LaunchIcon.png in Resources */,
+				C00000000000000000000021 /* LaunchIcon@2x.png in Resources */,
+				C00000000000000000000022 /* LaunchIcon@3x.png in Resources */,
 				50B271D11FEDC1A000F3C39B /* public in Resources */,
 				504EC30F1FED79650016851F /* Assets.xcassets in Resources */,
 				50379B232058CBB4000EE86E /* capacitor.config.json in Resources */,
@@ -330,7 +342,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 7R5Z28YJZ9;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -338,7 +350,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.1;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = dev.weiguang.comic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -353,7 +365,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 7R5Z28YJZ9;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -361,7 +373,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.1;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.weiguang.comic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";

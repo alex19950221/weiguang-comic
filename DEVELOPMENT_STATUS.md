@@ -1,5 +1,17 @@
 # 开发进度检查点
 
+## 最新检查点：送审前代码补齐 1.0.0（10）（2026-11-05）
+
+- 范围：用户在送审评估后要求先修代码，其余商店侧（内购商品、备案、截图、隐私网址、年龄分级、审核备注）由用户操作。基线 m0 `a3e7ddb`（与远端一致），单代理执行；未归档、未上传、未提交。
+- 隐私政策：新增 `src/app/privacyPolicy.ts`（中英同结构）与设置页「隐私政策 / 查看」弹窗 `PrivacyDialog`，全文内置（正式包禁止外链，离线可看），满足审核 5.1.1(i) 的 App 内入口要求。`docs/PRIVACY_POLICY.md` 为同文托管版，`privacyPolicy.test.ts` 校验中英结构一致且托管版逐段包含 App 内文本。联系方式写为「App Store 产品页的 App 支持链接」，未写入个人邮箱或姓名。
+- 启动画面：原 Capacitor 模板蓝色 X 图（2732² 整屏图）实际从未显示——模拟器 SplashBoard 日志 `Estimated size (29900800) is over limit (25000000)`，启动图超系统 25 MB 渲染上限而黑屏；旧图 A/B 复现同样黑屏。改为 LaunchScreen 系统背景色（浅白/深黑随系统）+ 居中 120pt 圆角 App 图标，图标为散装 `LaunchIcon.png/@2x/@3x`（工程资源已登记），删除 Splash.imageset。另实测资源目录中的图片与命名颜色在模拟器生成启动图时读取失败（`Could not load the "LaunchIcon" image`、`CUIThemeStore: No theme registered`，Xcode 本地签名、未瘦身构建与 UILaunchScreen 写法均同样失败），散装 PNG 正常，因此不用资源目录；真机是否同样受限未验证。注意：`CODE_SIGNING_ALLOWED=NO` 的模拟器构建会因签名校验（-67056）一律显示黑色启动画面，核对启动画面需用 `CODE_SIGN_IDENTITY=-` 本地签名构建。
+- 版本与出口合规：营销版本 0.0.1→**1.0.0**、构建号 9→**10**（Debug/Release），package.json 同步 1.0.0；Info.plist 增加 `ITSAppUsesNonExemptEncryption = NO`（与此前各构建在网页选择的「不属于上述任意一种算法」一致），之后上传不再逐个构建询问。
+- 小修：手机宽度下长弹窗最大高度扣除安全区，隐私政策/Pro 弹窗不再顶到状态栏与灵动岛。README 首段格式描述改为实际支持的 ZIP/CBZ/PDF/图片 EPUB 并链接隐私政策。
+- 自动检查（实际执行，通过）：`pnpm lint`、`pnpm test`（31 文件 **233/233**，新增 2）、`pnpm build:ios`、`pnpm check:ios --release`；App Debug 模拟器构建与 Release `generic/platform=iOS` 无签名构建均 **BUILD SUCCEEDED**，Release 产物为 1.0.0(10)、加密键 false、含三张 LaunchIcon、Assets.car 仅剩 AppIcon。日志 `release/qa/v1-*.log`。Swift 未改，本轮未重跑 XCTest。
+- 模拟器验收（实际执行）：iPhone 18 Pro Max（临时，用后卸载、恢复中文与浅色并关机）本地签名构建暂停启动截图：浅色 #FFFFFF、深色 #000000 底，中心为图标，SplashBoard 无错误；中英文设置页「隐私政策」行与弹窗全文、滚动、关闭正常。QA 用 iPhone 18 Pro 覆盖安装 1.0.0(10)，启动画面正常、原 5 本/4 系列与 QA Borders 第 2/4 页保留。另在 iPad Pro 13 寸模拟器装构建 9 点检书架侧栏布局正常（用后卸载并关机）。
+- 观察未改：英文设置页「外观」下拉在窄屏显示为「Syst」被截断；WebView 首次加载前的空白底色未随深色模式（冷启动约 1–数秒）。
+- 未执行：真机、沙盒内购、iPad 完整流程、Release 签名归档与 TestFlight 上传（构建 10 待用户归档上传）、App Store Connect 任何操作。
+
 ## 最新检查点：TestFlight 构建 9（2026-11-05）
 
 - 用户明确要求将最新验收版本上传 TestFlight。m0 从 `a081e0c` 快进至已推送的 `ce6c79c`，包含 `5987907` 六项网页 QA 修复及本机原生导入卷序补修和验收记录，无冲突；工作区开始时干净。

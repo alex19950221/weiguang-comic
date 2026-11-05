@@ -1,5 +1,9 @@
 # 微光漫卷最新交接摘要
 
+## 最新：送审前代码补齐 1.0.0（10）（2026-11-05）
+
+基线 m0 `a3e7ddb`，未提交。补齐送审代码项：设置页内置中英隐私政策（`docs/PRIVACY_POLICY.md` 为同文托管版，测试保证同步）；启动画面改为系统背景色 + 居中散装 PNG 图标——原 2732² Capacitor 模板图超过系统 25 MB 启动图上限，实际一直黑屏，资源目录图片/命名颜色在模拟器生成启动图时读取失败，故不用资源目录；版本 1.0.0、构建 10，Info.plist 加 `ITSAppUsesNonExemptEncryption = NO`；手机长弹窗避开安全区；README 格式描述更正。lint、233/233 Vitest、build:ios、check:ios --release、Debug 模拟器与 Release 真机 SDK 无签名构建通过；模拟器核对浅/深色启动画面、中英隐私政策、QA 书架数据保留。真机、内购、归档上传与商店侧材料仍待用户。详见 DEVELOPMENT_STATUS.md 顶部。
+
 ## 最新：TestFlight 构建 9（2026-11-05）
 
 用户已授权上传最新模拟器验收版。m0 已快进至 `ce6c79c`，包含网页 QA 六项修复和原生导入自然卷序补修；构建号 8→9，版本仍 0.0.1。本轮 lint、231/231 Vitest、iOS 同步/静态检查、依赖解析、32/32 XCTest、Debug 与 Release 归档全通过，实际签名与之前新建的本机 Apple Distribution 证书逐字节一致（到期 2027-11-03），私钥仍留钥匙串。2026-11-05 12:15:08（UTC+8）已通过 Xcode Apple ID 成功上传，未使用旧 API Key。用户恢复网页登录并明确授权本构建出口合规答案后已保存，最终 0.0.1(9) 显示「准备提交」、90 天后过期、上传时间 12:16，达到网页核验的 VALID 目标；构建 id `f41808a0-3a7b-4c65-bc68-9b51a6506cc6`，截图 `release/qa/build9-appstore-complete.png`。未提交审核或主动添加群组/测试员，构建 9 群组仍待分配。真实设备/内购/性能未执行，本轮未重复完整模拟器交互。详见 DEVELOPMENT_STATUS.md 顶部。

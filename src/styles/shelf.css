@@ -1107,8 +1107,11 @@
   .library-first-run .shelf-primary {
     width: 100%;
   }
+  /* 长弹窗（隐私政策、Pro）不伸到状态栏、灵动岛和主屏指示条下面。 */
   .library-dialog {
-    max-height: calc(100dvh - 32px);
+    max-height: calc(
+      100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+    );
   }
   .library-dialog-body {
     padding: 20px;
@@ -1281,4 +1284,20 @@
   vertical-align: middle;
   color: var(--on-accent);
   background: var(--accent);
+}
+.privacy-policy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  line-height: 1.7;
+}
+.privacy-policy p {
+  margin: 0;
+}
+.privacy-policy section p + p {
+  margin-top: 8px;
+}
+.privacy-policy h3 {
+  font-size: 14px;
+  margin: 0 0 8px;
 }

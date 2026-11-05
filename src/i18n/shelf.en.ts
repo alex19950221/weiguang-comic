@@ -125,4 +125,7 @@ export const shelfEn: Record<string, string> = {
   文件未找到: 'File not found',
   暂无封面: 'No cover',
   清除记录: 'Clear history',
+  隐私政策: 'Privacy Policy',
+  '不收集任何个人信息，数据只保存在这台设备上。':
+    'No personal data is collected. Everything stays on this device.',
 };

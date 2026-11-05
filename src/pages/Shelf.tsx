@@ -42,6 +42,7 @@ import {
 } from '@/components/LibraryDialogs';
 import { ImportStatus } from '@/components/ImportStatus';
 import { ProDialog } from '@/components/ProDialog';
+import { PrivacyDialog } from '@/components/PrivacyDialog';
 import { BatchDialog, type BatchOption } from '@/components/BatchDialog';
 import { proStore } from '@/app/pro';
 import { canPerform, proEntryVisible } from '@/app/proPolicy';
@@ -78,6 +79,7 @@ function ShelfContent() {
   const [query, setQuery] = useState('');
   const [manage, setManage] = useState<LibraryTarget | null>(null);
   const [proOpen, setProOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [batchItems, setBatchItems] = useState<BatchOption[] | null>(null);
   const pro = proStore().state.value;
@@ -761,6 +763,22 @@ function ShelfContent() {
                             </li>
                           ))}
                         </ul>
+                        <div class="shelf-settings-row">
+                          <div>
+                            <h2>{t('隐私政策')}</h2>
+                            <p>
+                              {t(
+                                '不收集任何个人信息，数据只保存在这台设备上。',
+                              )}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setPrivacyOpen(true)}
+                          >
+                            {t('查看')}
+                          </button>
+                        </div>
                         <p class="shelf-muted">{t('数据只在这台设备上')}</p>
                       </section>
                     ) : (
@@ -1113,6 +1131,7 @@ function ShelfContent() {
           </LibraryDialog>
         )}
         {proOpen && <ProDialog onClose={() => setProOpen(false)} />}
+        {privacyOpen && <PrivacyDialog onClose={() => setPrivacyOpen(false)} />}
         {batchItems && (
           <BatchDialog
             items={batchItems}
