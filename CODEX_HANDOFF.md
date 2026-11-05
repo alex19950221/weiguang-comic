@@ -1,5 +1,9 @@
 # 微光漫卷最新交接摘要
 
+## 最新：网页层验收修复（2026-11-05）
+
+基线 `a081e0c`，分支 `claude/sharp-allen-0xoaaj`。Linux 云端容器内执行，无 Mac/模拟器/真机，未改 Swift、构建号或签名。生产构建 + Chromium 注入 iOS 桥替身，点检中英文与 390/375/1280 宽的导入、阅读三种模式、卷末/下一卷、坏页与原位重选、Pro 购买与四项新功能、批量、隐藏、分组、应用锁。修复 6 项：应用锁系统验证说明未翻译；同批导入记录顺序随机（新增可选 `sequence`，无数据库升级）；系列内删除单卷确认未写卷号；设置按钮在手机宽度被挤成两行；无筛选的空「最近阅读」误提示“换关键词/清除筛选”；全部交付后购买页残留空的“后续更新”标题。lint、231/231 Vitest（新增 4）、build、build:ios、check:ios --release 通过；原生/真机仍未验收。详情与未改观察见 DEVELOPMENT_STATUS.md 顶部。
+
 ## 最新：TestFlight 构建 8（2026-11-03）
 
 用户要求把四阶段 Pro 新功能打包上传。基线 `aa7655e`，构建号已 7→8（版本 0.0.1）；227/227 Vitest、lint、iOS 同步/静态检查、依赖解析、30/30 XCTest、Debug 构建及 Release 归档全通过。实际签名与新本机 Apple Distribution 证书逐字节一致（到期 2027-11-03），私钥未导出；沿用同 App 有效描述文件「LumiComic AppStore Build 6」，工程仍 Automatic。Xcode Apple ID 上传 0.0.1(8) 成功，未使用旧 API Key；Apple 网页已显示上传「完成」、TestFlight「准备提交」、90 天后过期，构建 id `14c98d3e-a73d-45fb-8d66-2c628ad00db6`。用户恢复网页登录后补充本构建加密类型信息，未提交审核或主动添加群组/测试员。模拟器更新启动核对原 5 本/4 系列和第 2/4 页保留，Pro 六项已包含；本轮完整交互/真机未执行，上一轮验收记录保留。截图 `release/qa/build8-appstore-complete.png`，详情见 DEVELOPMENT_STATUS.md 顶部。

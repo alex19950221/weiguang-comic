@@ -17,6 +17,11 @@ export const finishedImportStates = [
 ] as const;
 export const isImportFinished = (job: ImportJob) =>
   finishedImportStates.some((state) => state === job.state);
+/** 新的一批排在前面；同一批按用户选择顺序，不受随机主键影响。 */
+export const compareImportJobs = (a: ImportJob, b: ImportJob) =>
+  b.createdAt - a.createdAt ||
+  (a.sequence ?? 0) - (b.sequence ?? 0) ||
+  a.id.localeCompare(b.id);
 
 class ImportCancelled extends Error {}
 const UNSUPPORTED = '目前支持导入 ZIP、CBZ、PDF 和 EPUB 文件。';
@@ -45,11 +50,12 @@ export class ImportQueue {
     if (location === 'inplace' && !canPerform('inplace.add', proActive))
       throw new Error('原位添加需要微光 Pro。');
     const now = Date.now();
-    const jobs = sources.map((source): ImportJob => ({
+    const jobs = sources.map((source, sequence): ImportJob => ({
       id: crypto.randomUUID(),
       bookId: crypto.randomUUID(),
       source,
       location,
+      sequence,
       state: 'queued',
       copiedBytes: 0,
       path: null,

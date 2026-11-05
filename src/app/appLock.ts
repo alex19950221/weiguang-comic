@@ -1,5 +1,6 @@
 import { signal, type Signal } from '@preact/signals';
 import type { AuthResult, Biometry, ComicLockPlugin } from '@/native/comicLock';
+import { t } from '@/i18n';
 
 export interface LockState {
   /** 已读取设置。 */
@@ -30,7 +31,9 @@ export interface LockPort {
   afterPaint(): Promise<void>;
 }
 
+// 系统面容 ID/密码弹窗直接显示这段说明，调用时按当前界面语言翻译。
 const UNLOCK_REASON = '解锁微光漫卷';
+const ENABLE_REASON = '开启应用锁';
 
 /**
  * 应用锁状态机。开启需要 Pro 且设备有密码；解锁与关闭永远可用（失去 Pro 不锁住用户）。
@@ -98,7 +101,7 @@ export class AppLock {
     this.patch({ busy: true, error: null });
     let result: AuthResult;
     try {
-      result = await native.authenticate({ reason: UNLOCK_REASON });
+      result = await native.authenticate({ reason: t(UNLOCK_REASON) });
     } catch {
       result = { ok: false, reason: 'failed' };
     }
@@ -145,7 +148,9 @@ export class AppLock {
         this.patch({ busy: false, error: 'no-passcode' });
         return false;
       }
-      const result = await native.authenticate({ reason: '开启应用锁' });
+      const result = await native.authenticate({
+        reason: t(ENABLE_REASON),
+      });
       if (!result.ok) {
         this.patch({
           busy: false,

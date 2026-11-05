@@ -17,7 +17,7 @@
 | `src/native/proStore.ts`                                   | 插件类型与注册；浏览器/安卓无插件时 `supportsPro()` 为 false。                                                                                                                                       |
 | `src/app/proPolicy.ts`                                     | 纯逻辑：功能清单、开放购买门槛、入口可见性、`requiresPro`/`canPerform`。只有“新增”类操作需要 Pro；关闭、解锁、取消隐藏、读取已有原位书等永远可用（失去权益不丢数据）。                               |
 | `src/app/pro.ts`                                           | Pro 状态（signal）：读取、购买、恢复、原生变化订阅；可注入替身测试。                                                                                                                                 |
-| `src/components/ProDialog.tsx`                             | 购买页，只在用户从设置点「查看」时出现；列已交付功能与“后续更新，买断用户免费获得”。                                                                                                                 |
+| `src/components/ProDialog.tsx`                             | 购买页，只在用户从设置点「查看」时出现；列已交付功能，仍有未交付功能时另列“后续更新，买断用户免费获得”（全部交付后由开头说明承诺后续免费）。                                                         |
 
 入口规则：正式商店在开放购买前不显示「微光 Pro」设置行；Debug 与 TestFlight（沙盒收据）始终显示，并允许“测试环境”购买，用于验证流程。
 

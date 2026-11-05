@@ -1,6 +1,7 @@
 import { liveQuery } from 'dexie';
 import { useEffect, useState } from 'preact/hooks';
 import type { ComicDatabase } from '@/db/schema';
+import { compareImportJobs } from '@/library/ImportQueue';
 import type {
   Book,
   Series,
@@ -50,9 +51,7 @@ export function useShelf(db: ComicDatabase) {
           series: await db.series.toArray(),
           progress: await db.progress.toArray(),
           groups: await db.libraryGroups.orderBy('order').toArray(),
-          jobs: (await db.imports.toArray()).sort(
-            (a, b) => b.createdAt - a.createdAt,
-          ),
+          jobs: (await db.imports.toArray()).sort(compareImportJobs),
           cleanup: await db.fileCleanup.toArray(),
           settings: await db.settings.toArray(),
         }),

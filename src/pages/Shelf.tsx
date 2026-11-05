@@ -130,6 +130,8 @@ function ShelfContent() {
     sort,
   });
   const continuing = continuingBooks(entries, progress);
+  const filtered =
+    query.trim() !== '' || filter !== 'all' || favorites || group !== 'all';
   const heading =
     section === 'settings'
       ? t('偏好设置')
@@ -1003,7 +1005,7 @@ function ShelfContent() {
                                     />
                                   ))}
                                 </div>
-                              ) : (
+                              ) : filtered ? (
                                 <section class="library-empty">
                                   <Icon name="search" size={32} />
                                   <h2>{t('没有找到漫画')}</h2>
@@ -1019,6 +1021,20 @@ function ShelfContent() {
                                   >
                                     {t('清除筛选')}
                                   </button>
+                                </section>
+                              ) : (
+                                // 没有任何筛选时不提示“换关键词”，例如还没读过漫画的“最近阅读”。
+                                <section class="library-empty">
+                                  <Icon
+                                    name={
+                                      section === 'recent' ? 'clock' : 'book'
+                                    }
+                                    size={32}
+                                  />
+                                  <h2>{t('这里还没有漫画')}</h2>
+                                  {section === 'recent' && (
+                                    <p>{t('打开一本漫画后会显示在这里。')}</p>
+                                  )}
                                 </section>
                               )}
                               <p class="shelf-footer">

@@ -5,7 +5,7 @@ import type { ComicDatabase } from '@/db/schema';
 import type { ImportJob, ImportSource } from '@/db/models';
 import type { ComicArchivePlugin, Inspection } from '@/native/comicArchive';
 import type { ComicImportPlugin, ImportProgress } from '@/native/comicImport';
-import { ImportQueue } from './ImportQueue';
+import { ImportQueue, compareImportJobs } from './ImportQueue';
 import { createLibraryGroup, moveSeriesToGroup } from './groups';
 import { testSeries } from '@/db/testing/records';
 
@@ -528,5 +528,30 @@ describe('M1-03 ZIP/CBZ 导入作业', () => {
     expect(f.onProgress).toHaveBeenCalledTimes(1);
     copying.resolve({ path: `/library/${job.bookId}.zip`, size: 123 });
     await f.queue.idle();
+  });
+
+  it('导入记录同一批按选择顺序显示，新的一批排在前面', async () => {
+    const f = fixture();
+    const names = ['第01卷.cbz', '第02卷.cbz', '第03卷.cbz', '第10卷.cbz'];
+    await f.queue.enqueue(names.map((name) => source(name)));
+    await f.queue.idle();
+    const earlier: ImportJob = {
+      id: '0-old',
+      bookId: crypto.randomUUID(),
+      source: source('旧记录.cbz'),
+      state: 'done',
+      copiedBytes: 0,
+      path: null,
+      error: null,
+      createdAt: 1,
+      updatedAt: 1,
+    };
+    await db.imports.add(earlier);
+    const jobs = (await db.imports.toArray()).sort(compareImportJobs);
+    expect(jobs.map((job) => job.source.name)).toEqual([
+      ...names,
+      '旧记录.cbz',
+    ]);
+    expect(jobs.slice(0, 4).map((job) => job.sequence)).toEqual([0, 1, 2, 3]);
   });
 });

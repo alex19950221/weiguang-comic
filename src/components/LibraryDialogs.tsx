@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'preact/hooks';
-import type { LibraryGroup, Progress } from '@/db/models';
+import type { Book, LibraryGroup, Progress } from '@/db/models';
 import type { ShelfEntry } from '@/library/shelf';
 import { bookState } from '@/library/shelf';
 import {
@@ -31,6 +31,16 @@ const groupMessages: Record<GroupError['code'], string> = {
   GROUP_NOT_FOUND: '分组已不存在，请重新选择',
   SERIES_NOT_FOUND: '系列已不存在，请返回书架',
 };
+/** 系列中只删除一卷时写明卷号，避免误以为会删除整个系列。 */
+export function targetTitle(
+  target: LibraryTarget,
+  entry: Pick<ShelfEntry, 'series' | 'books'>,
+  book: Book,
+): string {
+  return target.kind === 'book' && entry.books.length > 1
+    ? `${entry.series.title} ${volumeLabel(book)}`
+    : entry.series.title;
+}
 export const actionError = (error: unknown) =>
   t(
     error instanceof GroupError
@@ -344,7 +354,7 @@ export function ManageDialog({
           <p>
             {t(
               '从书架删除《{0}》（{1}）？App 内副本、阅读位置和书签会一并清除，你的原文件不受影响。',
-              entry.series.title,
+              targetTitle(target, entry, book),
               formatBytes(size),
             )}
           </p>

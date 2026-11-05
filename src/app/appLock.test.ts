@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { AppLock, type LockPort } from './appLock';
 import type { AuthResult } from '@/native/comicLock';
+import { languagePreference } from '@/i18n';
 
 function fixture(stored = false, available = true) {
   let saved = stored;
@@ -132,5 +133,31 @@ describe('应用锁', () => {
     await lock.start();
     expect(await lock.disable()).toBe(false);
     expect(lock.state.value.enabled).toBe(true);
+  });
+
+  it('系统验证弹窗的说明跟随界面语言', async () => {
+    const before = languagePreference.value;
+    try {
+      languagePreference.value = 'en';
+      const { lock, native } = fixture(false);
+      await lock.start();
+      expect(await lock.enable(true)).toBe(true);
+      expect(native.authenticate).toHaveBeenLastCalledWith({
+        reason: 'Turn on app lock',
+      });
+      lock.pause();
+      await lock.resume();
+      expect(native.authenticate).toHaveBeenLastCalledWith({
+        reason: 'Unlock LumiComic',
+      });
+      languagePreference.value = 'zh-Hans';
+      lock.pause();
+      await lock.resume();
+      expect(native.authenticate).toHaveBeenLastCalledWith({
+        reason: '解锁微光漫卷',
+      });
+    } finally {
+      languagePreference.value = before;
+    }
   });
 });

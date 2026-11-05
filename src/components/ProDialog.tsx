@@ -96,17 +96,20 @@ export function ProDialog({
             </ul>
           </section>
         )}
-        <section>
-          <h3>{t('后续更新，买断用户免费获得')}</h3>
-          <ul class="pro-features is-upcoming">
-            {upcoming.map((feature) => (
-              <li key={feature.id}>
-                <b>{t(feature.name)}</b>
-                <span>{t(feature.description)}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        {/* 全部交付后不留空标题；“后续更新免费”已写在开头说明里。 */}
+        {upcoming.length > 0 && (
+          <section>
+            <h3>{t('后续更新，买断用户免费获得')}</h3>
+            <ul class="pro-features is-upcoming">
+              {upcoming.map((feature) => (
+                <li key={feature.id}>
+                  <b>{t(feature.name)}</b>
+                  <span>{t(feature.description)}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         {!open && (
           <p class="shelf-muted">
             {t('Pro 功能正在开发，至少两项完成后开放购买。')}

@@ -136,6 +136,8 @@ export interface ImportJob {
   error: string | null;
   /** 清理失败时保留任务，下一次打开继续清理应用副本。 */
   cleanupPending?: boolean;
+  /** 同一次选择中的先后顺序；旧任务缺省，不建索引。 */
+  sequence?: number;
   createdAt: number;
   updatedAt: number;
 }

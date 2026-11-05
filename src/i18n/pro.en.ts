@@ -128,5 +128,7 @@ export const proEn: Record<string, string> = {
   '用面容 ID 解锁': 'Unlock with Face ID',
   '用触控 ID 解锁': 'Unlock with Touch ID',
   解锁: 'Unlock',
+  解锁微光漫卷: 'Unlock LumiComic',
+  开启应用锁: 'Turn on app lock',
   '验证未通过，请重试。': 'Verification failed. Please try again.',
 };

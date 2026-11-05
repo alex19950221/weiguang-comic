@@ -68,6 +68,8 @@ export const shelfEn: Record<string, string> = {
   没有找到漫画: 'No comics found',
   '试试其他关键词或筛选条件。': 'Try another search or filter.',
   清除筛选: 'Clear filters',
+  这里还没有漫画: 'Nothing here yet',
+  '打开一本漫画后会显示在这里。': 'Comics you open will appear here.',
   '共 {0} 个系列 · {1} 本漫画': '{0} series · {1} books',
   底部导航: 'Tab navigation',
   最近: 'Recent',

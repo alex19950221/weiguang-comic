@@ -830,6 +830,11 @@
   line-height: 1.7;
   margin: 0;
 }
+/* 说明文字较长时由文字换行，操作按钮保持一行。 */
+.shelf-settings-row > button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
 .shelf-settings-groups {
   list-style: none;
   padding: 0;
