@@ -50,6 +50,7 @@ import { FilterDialog } from './FilterDialog';
 import { setNativeKeepAwake } from '@/native/comicReader';
 import { useFullscreen } from './useFullscreen';
 import { setStatusBarTone } from '@/native/systemBars';
+import { useAppDark } from './useAppDark';
 import '@/styles/reader.css';
 
 interface ReaderProps {
@@ -112,7 +113,7 @@ export function Reader({ bookId, onBack, onOpen, backLabel }: ReaderProps) {
   return (
     <section
       class="comic-reader"
-      data-background="paper"
+      data-background="auto"
       aria-label={t('漫画阅读器')}
     >
       <div class="reader-message" role={error ? 'alert' : 'status'}>
@@ -926,10 +927,13 @@ function ReadingView({
       ? 'dark'
       : prefs.background === 'white'
         ? 'white'
-        : 'paper';
+        : 'auto';
+  const appDark = useAppDark();
+  const backgroundDark =
+    background === 'dark' || (background === 'auto' && appDark);
   useEffect(() => {
-    setStatusBarTone(background === 'dark' ? 'dark' : 'light');
-  }, [background]);
+    setStatusBarTone(backgroundDark ? 'dark' : 'light');
+  }, [backgroundDark]);
   const brightness = readerBrightness(brightnessPreview ?? prefs.brightness);
   const fit = prefs.fit === 'width' ? 'width' : 'page';
   const baseFolioHeight = folioHeight(
@@ -1607,9 +1611,9 @@ function ReadingView({
               <legend>{t('阅读背景')}</legend>
               {(
                 [
-                  { background: 'system', label: '暖纸' },
+                  { background: 'system', label: '自动' },
                   { background: 'white', label: '纯白' },
-                  { background: 'black', label: '深色' },
+                  { background: 'black', label: '纯黑' },
                 ] as const
               ).map((item) => (
                 <button

@@ -64,9 +64,9 @@ export const readerEn: Record<string, string> = {
   封面单独显示: 'Cover alone',
   封面与第二页拼合: 'Pair cover with page 2',
   阅读背景: 'Reading background',
-  暖纸: 'Paper',
+  自动: 'Auto',
   纯白: 'White',
-  深色: 'Dark',
+  纯黑: 'Black',
   向上滑动: 'Swipe up',
   向下滑动: 'Swipe down',
   '上下滑动连续阅读，轻点画面呼出工具栏。':

@@ -5,13 +5,11 @@
   background: var(--reading-bg);
   color: var(--reading-fg);
   font-family: var(--font-sans);
-  --reading-bg: var(--reader-paper);
-  --reading-fg: var(--reader-paper-fg);
-}
-.comic-reader[data-background='white'] {
   --reading-bg: var(--reader-white);
   --reading-fg: var(--reader-white-fg);
 }
+/* 自动：浅色外观纯白、深色外观纯黑（与书架外观设置一致）。 */
+[data-theme='night'] .comic-reader[data-background='auto'],
 .comic-reader[data-background='dark'] {
   --reading-bg: var(--reader-dark);
   --reading-fg: var(--reader-dark-fg);
