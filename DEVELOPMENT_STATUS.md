@@ -1,5 +1,14 @@
 # 开发进度检查点
 
+## 最新检查点：TestFlight 1.0.0（11）归档与上传（2026-11-07）
+
+- 范围：用户要求把中性阅读背景（`f8c7a2f`）打包上传。基线 m0 `f8c7a2f` 与远端一致；仅构建号 10→**11**，版本仍 1.0.0。沿用构建 10 的发行证书、描述文件与导出配置。
+- 自动检查（实际执行，通过）：`pnpm install --frozen-lockfile`、`pnpm lint`、`pnpm test`（31 文件 **233/233**）、`pnpm build:ios`、`pnpm check:ios --release`、`xcodebuild -resolvePackageDependencies`；ComicNative XCTest（Weiguang QA Compact 模拟器）**32/32，0 失败**。日志 `release/qa/build11-*.log`。
+- Release 归档（成功）：与构建 10 相同命令，archivePath `release/LumiComic-build11.xcarchive`、derivedDataPath `release/archive-derived-build11`，**ARCHIVE SUCCEEDED**。
+- 成品核验（通过）：codesign 深度严格验证成功；1.0.0(11)、`dev.weiguang.comic`、`ITSAppUsesNonExemptEncryption` false；叶证书与构建 10 逐字节一致（Apple Distribution，到期 2027-11-03），描述文件「LumiComic AppStore Build 6」get-task-allow=false、无设备列表；dSYM 齐备、无 .storekit；包内网页资源与同步后的 `ios/App/App/public` 完全一致，含 `--reader-dark:#000`。
+- 上传（成功）：`xcodebuild -exportArchive -archivePath release/LumiComic-build11.xcarchive -exportOptionsPlist release/qa/build11-ExportOptions.plist -exportPath release/build11-upload -allowProvisioningUpdates`，**2026-11-07 14:54:54（UTC+8）Upload succeeded / EXPORT SUCCEEDED**，Apple 已开始处理。使用 Xcode Apple ID，未用旧 API Key。日志 `build11-upload.log`。
+- 未核验/未执行：App Store Connect 处理完成状态与测试群组分配（网页需登录，未查看）；真机效果；正式送审。制品与签名材料仅在已忽略的 release 下。
+
 ## 最新检查点：阅读背景改为中性纯白/纯黑（2026-11-07）
 
 - 起因：用户真机截图（彩色漫画白底页）显示默认「暖纸」#E7E7DD 底色在白色页面四周形成米黄灰色块，衔接突兀。参照 Apple Books、Panels、Chunky、Mihon 等阅读器均使用无色相的纯白/纯黑底（Mihon 另有按页边取色的自动模式）。
