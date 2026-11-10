@@ -11,7 +11,7 @@
 | `site.css` / `comic.css` | 基础样式 / 漫画风叠加样式 |
 | `lumicomic-icon.png` | 站点图标，由正式 App 图标 `AppIcon-512@2x.png` 缩到 288px |
 | `public/` | 生成结果，即部署内容 |
-| `deployment-lumicomic.json` | 最近一次部署记录（2026-10-30） |
+| `deployment-lumicomic.json` | 最近一次部署记录 |
 
 ```bash
 python website/build.py
@@ -22,8 +22,8 @@ wrangler pages deploy website/public --project-name lumicomic-support --branch m
 
 2026-11-10 从 `D:\电子书阅读器\website\spineapps\` 迁入。原脚本同时生成微光阅读（LumiRead）支持站，这里只保留微光漫画部分，输出目录由 `public-lumicomic/` 改为 `public/`。迁入后重新生成的 14 个文件与 2026-10-30 线上部署的本地产物逐字节一致。本次未重新部署。
 
-`deployment-lumicomic.json` 里的 `verificationReport` 指向原目录下的核对记录，没有一起迁入。
+10-30 那次部署的逐页核对记录留在原目录 `D:电子书阅读器rtifacts`，没有迁入。
 
 ## 2026-11-10 更名与正式图标
 
-中文名称改为「微光漫卷」，与 M3-05 的 App 更名一致；英文名称仍为 LumiComic。站点图标换成正式 App 图标。正文更新日期改为 2026-11-10。已在本地起服务器核对中英文页面，尚未部署到线上。
+中文名称改为「微光漫卷」，与 M3-05 的 App 更名一致；英文名称仍为 LumiComic。站点图标换成正式 App 图标。正文更新日期改为 2026-11-10。已于同日部署（`https://dadb759b.lumicomic-support.pages.dev`），正式域名 13 个文件与 `public/` 逐字节一致。

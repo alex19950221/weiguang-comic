@@ -5,7 +5,7 @@
 - 范围：用户要求把官网代码上传到本仓库。官网（https://comic.spineapps.com/ ，Cloudflare Pages `lumicomic-support`）原在 `D:\电子书阅读器\website\spineapps\` 未入库，现迁入 `website/`，只保留微光漫画部分（`build.py` 去掉微光阅读条目，输出目录改为 `website/public/`）。说明见 [website/README.md](./website/README.md)。
 - 自动检查（实际执行，通过）：`python website/build.py` 重新生成的 14 个文件与 10-30 线上部署的本地产物 SHA-256 逐一相同。
 - 未执行：重新部署、线上页面核对、App 构建与测试（未改 App 代码）。
-- 后续（同日）：官网中文名称改为「微光漫卷」（英文仍为 LumiComic），图标换成正式 App 图标（288px），正文日期改为 2026-11-10。生成结果里已经搜不到「微光漫画」，已在本地服务器上核对首页、隐私政策和英文首页。尚未部署到线上。
+- 后续（同日）：官网中文名称改为「微光漫卷」（英文仍为 LumiComic），图标换成正式 App 图标（288px），正文日期改为 2026-11-10。生成结果里已经搜不到「微光漫画」，已在本地服务器上核对首页、隐私政策和英文首页。已部署到 Cloudflare Pages（`dadb759b`），正式域名 13 个文件全部 HTTP 200 且与本地逐字节一致，不带参数的普通网址也已核对。
 
 ## 最新检查点：TestFlight 1.0.0（11）归档与上传（2026-11-07）
 

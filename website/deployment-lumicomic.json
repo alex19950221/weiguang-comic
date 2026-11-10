@@ -1,15 +1,15 @@
 {
-  "date": "2026-10-30",
+  "date": "2026-11-10",
   "project": "lumicomic-support",
   "environment": "production",
   "branch": "main",
   "preview": "https://lumicomic-support.pages.dev/",
-  "deployment": "https://01013e2f.lumicomic-support.pages.dev",
+  "deployment": "https://dadb759b.lumicomic-support.pages.dev",
   "customDomain": "comic.spineapps.com",
   "dns": "DNSPod: comic / CNAME / lumicomic-support.pages.dev, TTL 600, added by the user; resolved on 119.29.29.29, 223.5.5.5 and 8.8.8.8",
   "domainStatus": "active (Cloudflare validation and verification active, certificate authority google)",
-  "change": "Updated the contact email and every mailto link to support@surveykit.cc on all 8 Chinese and English LumiComic pages; updated page dates and sitemap to 2026-10-30.",
-  "uploadedFiles": 9,
+  "change": "Renamed the Chinese product name to 微光漫卷 (English stays LumiComic), replaced the placeholder icon with the official app icon (288px), and updated page dates and sitemap to 2026-11-10.",
+  "uploadedFiles": 11,
   "pages": [
     "https://comic.spineapps.com/",
     "https://comic.spineapps.com/en/",
@@ -24,10 +24,9 @@
   "email": "support@surveykit.cc",
   "testsRun": false,
   "appBuildRun": false,
-  "verification": "All 8 ordinary page URLs on https://comic.spineapps.com returned HTTP 200 and were byte-identical to public-lumicomic/. Every page contains support@surveykit.cc and no old contact email; all mailto links were validated locally. The English privacy page briefly returned cached content, then its ordinary URL and versioned URL both matched the new output. No browser regression tests or App build were run.",
-  "supportSiteUnchanged": "support.spineapps.com was not redeployed; its local public/ output is unchanged from before this update.",
-  "reusedFiles": 4,
+  "verification": "All 13 files (8 pages, assets, robots.txt, sitemap.xml) returned HTTP 200 and were byte-identical to website/public/ on both the deployment URL and https://comic.spineapps.com, with and without a cache-busting query. _headers CSP and X-Frame-Options are served. No browser regression tests or App build were run.",
+  "reusedFiles": 2,
   "staticBuildRun": true,
   "browserTestsRun": false,
-  "verificationReport": "../../artifacts/lumicomic-email-20261030-fgdz8evf/live-verification.json"
+  "sourceCommit": "cedf3f7"
 }
