@@ -22,7 +22,7 @@ wrangler pages deploy website/public --project-name lumicomic-support --branch m
 
 2026-11-10 从 `D:\电子书阅读器\website\spineapps\` 迁入。原脚本同时生成微光阅读（LumiRead）支持站，这里只保留微光漫画部分，输出目录由 `public-lumicomic/` 改为 `public/`。迁入后重新生成的 14 个文件与 2026-10-30 线上部署的本地产物逐字节一致。本次未重新部署。
 
-10-30 那次部署的逐页核对记录留在原目录 `D:电子书阅读器rtifacts`，没有迁入。
+10-30 那次部署的逐页核对记录留在原目录 `D:\电子书阅读器rtifacts\`，没有迁入。
 
 ## 2026-11-10 更名与正式图标
 
