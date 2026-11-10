@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-30",
+  "updated": "2026-11-10",
   "developer": "liaozhiliang",
   "email": "support@surveykit.cc",
   "origin": "https://comic.spineapps.com",
@@ -11,7 +11,7 @@
         "sections": [
           [
             "适用范围与联系",
-            "本政策适用于微光漫画（LumiComic）iOS 应用及其支持网站。开发者为 liaozhiliang，联系邮箱为 <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>。本应用是本地漫画阅读工具，无需注册账户，也不提供任何漫画内容。"
+            "本政策适用于微光漫卷（LumiComic）iOS 应用及其支持网站。开发者为 liaozhiliang，联系邮箱为 <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>。本应用是本地漫画阅读工具，无需注册账户，也不提供任何漫画内容。"
           ],
           [
             "本机处理与保存",
@@ -19,7 +19,7 @@
           ],
           [
             "你主动使用的系统功能",
-            "导入只读取你通过系统「文件」、分享或「用微光漫画打开」交给应用的文件；存放在 iCloud Drive 等云盘中的文件，由相应文件服务负责下载。应用以只读方式打开压缩包，不修改你的原文件。开启应用锁时，Face ID、触控 ID 或设备密码的验证由 iOS 完成，应用只得到「验证是否成功」，拿不到任何生物特征信息；开启后，切到后台时多任务预览画面会被遮盖。"
+            "导入只读取你通过系统「文件」、分享或「用微光漫卷打开」交给应用的文件；存放在 iCloud Drive 等云盘中的文件，由相应文件服务负责下载。应用以只读方式打开压缩包，不修改你的原文件。开启应用锁时，Face ID、触控 ID 或设备密码的验证由 iOS 完成，应用只得到「验证是否成功」，拿不到任何生物特征信息；开启后，切到后台时多任务预览画面会被遮盖。"
           ],
           [
             "备份与导出",
@@ -27,7 +27,7 @@
           ],
           [
             "应用内购买",
-            "微光漫画 Pro 通过 App Store 一次买断。付款、退款和账户信息由 Apple 处理，开发者看不到你的 Apple ID 或支付信息。应用通过 Apple 的 StoreKit 在本机确认购买状态，不把购买记录发送给开发者。"
+            "微光漫卷 Pro 通过 App Store 一次买断。付款、退款和账户信息由 Apple 处理，开发者看不到你的 Apple ID 或支付信息。应用通过 Apple 的 StoreKit 在本机确认购买状态，不把购买记录发送给开发者。"
           ],
           [
             "Apple 提供的诊断信息",
@@ -61,7 +61,7 @@
         "sections": [
           [
             "Scope and contact",
-            "This policy covers the LumiComic (微光漫画) iOS app and its support website. The developer is liaozhiliang; contact <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>. LumiComic is a local comic reader. It needs no account and provides no comic content."
+            "This policy covers the LumiComic (微光漫卷) iOS app and its support website. The developer is liaozhiliang; contact <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>. LumiComic is a local comic reader. It needs no account and provides no comic content."
           ],
           [
             "Processed and stored on your device",
@@ -109,15 +109,15 @@
     "terms": {
       "zh": {
         "title": "用户协议",
-        "summary": "微光漫画只读取你自己的文件。核心功能永久免费，Pro 一次买断。",
+        "summary": "微光漫卷只读取你自己的文件。核心功能永久免费，Pro 一次买断。",
         "sections": [
           [
             "应用与协议",
-            "微光漫画（LumiComic）由开发者 liaozhiliang 提供和维护，联系邮箱为 <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>。下载或使用应用即表示你同意本协议。通过 App Store 获取应用时，相应商店与软件许可条款仍适用，包括未另行提供自定义许可时的 <a href=\"https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\" rel=\"noopener noreferrer\">Apple 标准最终用户许可协议</a>。"
+            "微光漫卷（LumiComic）由开发者 liaozhiliang 提供和维护，联系邮箱为 <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>。下载或使用应用即表示你同意本协议。通过 App Store 获取应用时，相应商店与软件许可条款仍适用，包括未另行提供自定义许可时的 <a href=\"https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\" rel=\"noopener noreferrer\">Apple 标准最终用户许可协议</a>。"
           ],
           [
             "应用的作用",
-            "微光漫画是本地文件阅读工具。它不提供、不出售、不推荐任何漫画内容，不提供资源搜索、书源或插件，也不会把你的文件上传到任何地方。"
+            "微光漫卷是本地文件阅读工具。它不提供、不出售、不推荐任何漫画内容，不提供资源搜索、书源或插件，也不会把你的文件上传到任何地方。"
           ],
           [
             "你的内容与版权",
@@ -125,7 +125,7 @@
           ],
           [
             "免费功能与 Pro",
-            "全部格式的导入与阅读、阅读模式、系列整理、进度、书签与备份永久免费，不做计时试用。公开上架时免费的功能，以后不会改为付费，也不会加次数限制。微光漫画 Pro 为一次买断，不是订阅；购买后，后续加入 Pro 的功能免费获得。Pro 支持家人共享和恢复购买；退款由 Apple 按其规则处理。"
+            "全部格式的导入与阅读、阅读模式、系列整理、进度、书签与备份永久免费，不做计时试用。公开上架时免费的功能，以后不会改为付费，也不会加次数限制。微光漫卷 Pro 为一次买断，不是订阅；购买后，后续加入 Pro 的功能免费获得。Pro 支持家人共享和恢复购买；退款由 Apple 按其规则处理。"
           ],
           [
             "失去 Pro 时",
@@ -155,7 +155,7 @@
         "sections": [
           [
             "The app and these terms",
-            "LumiComic (微光漫画) is provided and maintained by developer liaozhiliang. Contact <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>. By downloading or using the app you agree to these terms. Applicable App Store and software licence terms also apply, including <a href=\"https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\" rel=\"noopener noreferrer\">Apple’s Standard End User Licence Agreement</a> when no custom licence is supplied."
+            "LumiComic (微光漫卷) is provided and maintained by developer liaozhiliang. Contact <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>. By downloading or using the app you agree to these terms. Applicable App Store and software licence terms also apply, including <a href=\"https://www.apple.com/legal/internet-services/itunes/dev/stdeula/\" rel=\"noopener noreferrer\">Apple’s Standard End User Licence Agreement</a> when no custom licence is supplied."
           ],
           [
             "What the app does",
@@ -199,7 +199,7 @@
         "sections": [
           [
             "怎么导入漫画？",
-            "在书架点「导入漫画」，从「文件」选择一个或多个文件，也可以直接选整个文件夹；在其他 App 里用「分享」或「用微光漫画打开」也可以导入。首版支持 ZIP/CBZ、RAR/CBR、图片文件夹和固定版式的漫画 EPUB。导入时会在应用内复制一份，原文件不会被修改。"
+            "在书架点「导入漫画」，从「文件」选择一个或多个文件，也可以直接选整个文件夹；在其他 App 里用「分享」或「用微光漫卷打开」也可以导入。首版支持 ZIP/CBZ、RAR/CBR、图片文件夹和固定版式的漫画 EPUB。导入时会在应用内复制一份，原文件不会被修改。"
           ],
           [
             "系列或卷、话的顺序不对",

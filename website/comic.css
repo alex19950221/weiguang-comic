@@ -1,4 +1,4 @@
-/* 微光漫画专用：叠加在 site.css 之后，只有 lumicomic 页面加载。
+/* 微光漫卷专用：叠加在 site.css 之后，只有 lumicomic 页面加载。
    取漫画页的语汇：粗墨线分格与硬投影、角落网点、主页集中线、对话框式摘要、章末「完」字章。 */
 :root{--ink:#241f1a;--accent:#b5452f;--white:#fffdf8;--tone:rgba(36,31,26,.15);--mark:rgba(181,69,47,.2)}
 body::before{content:"";position:fixed;top:0;right:0;width:min(48vw,540px);height:440px;background-image:radial-gradient(var(--tone) 1.4px,transparent 1.7px);background-size:11px 11px;-webkit-mask-image:radial-gradient(ellipse at 100% 0,#000 0,transparent 70%);mask-image:radial-gradient(ellipse at 100% 0,#000 0,transparent 70%);pointer-events:none;z-index:-1}

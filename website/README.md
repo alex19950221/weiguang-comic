@@ -9,7 +9,7 @@
 | `build.py` | 生成脚本，只用 Python 标准库 |
 | `content-lumicomic.json` | 页面正文、开发者、联系邮箱、正式域名、更新日期 |
 | `site.css` / `comic.css` | 基础样式 / 漫画风叠加样式 |
-| `lumicomic-icon.png` | 站点图标（占位图，尚未换成正式 App 图标） |
+| `lumicomic-icon.png` | 站点图标，由正式 App 图标 `AppIcon-512@2x.png` 缩到 288px |
 | `public/` | 生成结果，即部署内容 |
 | `deployment-lumicomic.json` | 最近一次部署记录（2026-10-30） |
 
@@ -24,7 +24,6 @@ wrangler pages deploy website/public --project-name lumicomic-support --branch m
 
 `deployment-lumicomic.json` 里的 `verificationReport` 指向原目录下的核对记录，没有一起迁入。
 
-## 待办
+## 2026-11-10 更名与正式图标
 
-- App 已于 M3-05 更名为「微光漫卷」，官网仍写「微光漫画 / LumiComic」，需要另行更新文案并重新部署。
-- 图标仍是占位图。
+中文名称改为「微光漫卷」，与 M3-05 的 App 更名一致；英文名称仍为 LumiComic。站点图标换成正式 App 图标。正文更新日期改为 2026-11-10。已在本地起服务器核对中英文页面，尚未部署到线上。

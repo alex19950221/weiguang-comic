@@ -25,11 +25,11 @@ APPS = [
         "extra_css": "comic.css",
         "eyebrow": "LUMICOMIC",
         "words": {
-            "zh": {"name":"微光漫画", "lang":"zh-Hans", "other":"English", "skip":"跳到正文", "toc":"本页内容", "home":"支持与说明", "updated":"更新及生效日期", "contact":"联系开发者", "end":"如需咨询此页面内容，请联系", "footer":"本地漫画 · 无需账户 · 不收集数据", "alt":"LUMICOMIC"},
-            "en": {"name":"LumiComic", "lang":"en", "other":"简体中文", "skip":"Skip to content", "toc":"On this page", "home":"Support & information", "updated":"Last updated and effective", "contact":"Contact the developer", "end":"Questions about this page? Contact", "footer":"Local comics · No account · No data collected", "alt":"微光漫画"},
+            "zh": {"name":"微光漫卷", "lang":"zh-Hans", "other":"English", "skip":"跳到正文", "toc":"本页内容", "home":"支持与说明", "updated":"更新及生效日期", "contact":"联系开发者", "end":"如需咨询此页面内容，请联系", "footer":"本地漫画 · 无需账户 · 不收集数据", "alt":"LUMICOMIC"},
+            "en": {"name":"LumiComic", "lang":"en", "other":"简体中文", "skip":"Skip to content", "toc":"On this page", "home":"Support & information", "updated":"Last updated and effective", "contact":"Contact the developer", "end":"Questions about this page? Contact", "footer":"Local comics · No account · No data collected", "alt":"微光漫卷"},
         },
         "home": {
-            "zh": {"headline":"安静地，看完一整卷。", "intro":"微光漫画是一款本地漫画阅读器：导入你自己的 CBZ、ZIP、RAR 或整个图片文件夹，系列会自动按卷、话排好。漫画留在本机，无需账户、没有广告、不收集数据，即将在 App Store 推出。在这里查看技术支持、隐私政策与用户协议。", "facts":["无需注册","不收集数据","一次买断"]},
+            "zh": {"headline":"安静地，看完一整卷。", "intro":"微光漫卷是一款本地漫画阅读器：导入你自己的 CBZ、ZIP、RAR 或整个图片文件夹，系列会自动按卷、话排好。漫画留在本机，无需账户、没有广告、不收集数据，即将在 App Store 推出。在这里查看技术支持、隐私政策与用户协议。", "facts":["无需注册","不收集数据","一次买断"]},
             "en": {"headline":"Quiet pages.<br>Whole volumes.", "intro":"LumiComic is a local comic reader. Import your own CBZ, ZIP, RAR or whole image folders, and series are sorted by volume and chapter for you. Your comics stay on your device: no account, no ads, no data collected. Coming soon to the App Store. Find support, privacy information and terms here.", "facts":["No account","No data collected","One-time purchase"]},
         },
     },
