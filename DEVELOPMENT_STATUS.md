@@ -1,5 +1,12 @@
 # 开发进度检查点
 
+## 最新检查点：官网源码入库（2026-11-10）
+
+- 范围：用户要求把官网代码上传到本仓库。官网（https://comic.spineapps.com/ ，Cloudflare Pages `lumicomic-support`）原在 `D:\电子书阅读器\website\spineapps\` 未入库，现迁入 `website/`，只保留微光漫画部分（`build.py` 去掉微光阅读条目，输出目录改为 `website/public/`）。说明见 [website/README.md](./website/README.md)。
+- 自动检查（实际执行，通过）：`python website/build.py` 重新生成的 14 个文件与 10-30 线上部署的本地产物 SHA-256 逐一相同。
+- 未执行：重新部署、线上页面核对、App 构建与测试（未改 App 代码）。
+- 待办：官网仍写「微光漫画 / LumiComic」，未跟进 M3-05 更名「微光漫卷」；图标仍为占位图。
+
 ## 最新检查点：TestFlight 1.0.0（11）归档与上传（2026-11-07）
 
 - 范围：用户要求把中性阅读背景（`f8c7a2f`）打包上传。基线 m0 `f8c7a2f` 与远端一致；仅构建号 10→**11**，版本仍 1.0.0。沿用构建 10 的发行证书、描述文件与导出配置。
