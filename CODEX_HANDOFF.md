@@ -1,5 +1,9 @@
 # 微光漫卷最新交接摘要
 
+## 最新：上架表单交接（2026-11-10）
+
+准备在 App Store Connect 填写 1.0 上架表单时，先读 [docs/APP_STORE_SUBMISSION.md](./docs/APP_STORE_SUBMISSION.md)：其中有各表单的值、中英文案、截图要求、隐私/年龄分级/内购/审核备注、用户待办与禁止代办的操作（不点提交审核）。代码基线 `08e6d64`，待送审构建 1.0.0 (11)。
+
 ## 最新：TestFlight 1.0.0（11）上传（2026-11-07）
 
 包含中性阅读背景。构建号 10→11，233/233 Vitest、lint、iOS 同步/静态检查、32/32 XCTest、Release 归档通过；签名证书与构建 10 一致。2026-11-07 14:54:54 Xcode 上传成功，Apple 处理状态与测试群组未核验，未送审。详见 DEVELOPMENT_STATUS.md 顶部。

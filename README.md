@@ -5,6 +5,7 @@
 只读你自己文件的本地漫画阅读器：从「文件」导入 ZIP、CBZ、PDF 或图片 EPUB，按系列自动排好，不联网、不登录、不内置任何漫画来源。（RAR 与图片文件夹导入尚未实现。）
 
 - 隐私政策：[PRIVACY_POLICY.md](./docs/PRIVACY_POLICY.md)（与 App 内「设置 → 隐私政策」同文，可托管为商店隐私政策网址）
+- 上架表单交接：[APP_STORE_SUBMISSION.md](./docs/APP_STORE_SUBMISSION.md)
 
 - 产品需求：[PRD](https://claude.ai/artifact/7e8vaUFGU7Com28mQL5ZwR)
 - 开发计划：[开发计划](https://claude.ai/artifact/SUz5GAJMqLQvZcULVB6Va5)
