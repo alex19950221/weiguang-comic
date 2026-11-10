@@ -7,101 +7,127 @@
     "privacy": {
       "zh": {
         "title": "隐私政策",
-        "summary": "漫画留在本机。应用不连接开发者服务器，不收集任何数据。",
+        "summary": "漫画留在本机。我们不收集、不上传、不出售任何个人信息。",
         "sections": [
           [
             "适用范围与联系",
-            "本政策适用于微光漫卷（LumiComic）iOS 应用及其支持网站。开发者为 liaozhiliang，联系邮箱为 <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>。本应用是本地漫画阅读工具，无需注册账户，也不提供任何漫画内容。"
+            [
+              "本政策适用于微光漫卷（英文名 LumiComic）iOS 应用及本支持网站，与 App 内「设置 → 隐私政策」一致。微光漫卷是一款只读取你自己文件的离线图片阅读器。开发者为 liaozhiliang，联系邮箱为 <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>。"
+            ]
           ],
           [
-            "本机处理与保存",
-            "你导入的漫画文件副本、书架记录（标题、系列、卷与话、封面、阅读状态）、阅读进度、书签和设置，都只在本机处理和保存；封面、缩略图和页面缓存保存在本机缓存目录，系统清理后会重新生成。我们不运营接收这些数据的服务器，不建立云端书库或阅读画像，不出售数据，不接入广告、跨应用追踪、第三方统计或崩溃上报 SDK。除购买和恢复购买 Pro 时由 Apple 的 StoreKit 与 App Store 通信外，应用不发起任何网络请求。"
+            "我们不收集的信息",
+            [
+              "App 没有账号与登录，不内置广告、统计分析或任何第三方 SDK，也不进行跟踪。",
+              "App 本身不发送任何网络请求。你的漫画、书架、阅读进度和设置都不会离开这台设备。"
+            ]
           ],
           [
-            "你主动使用的系统功能",
-            "导入只读取你通过系统「文件」、分享或「用微光漫卷打开」交给应用的文件；存放在 iCloud Drive 等云盘中的文件，由相应文件服务负责下载。应用以只读方式打开压缩包，不修改你的原文件。开启应用锁时，Face ID、触控 ID 或设备密码的验证由 iOS 完成，应用只得到「验证是否成功」，拿不到任何生物特征信息；开启后，切到后台时多任务预览画面会被遮盖。"
+            "保存在你设备上的数据",
+            [
+              "导入的漫画：默认在 App 内保存一份副本，原文件不会被修改；副本不包含在 iCloud 或电脑备份中。",
+              "原位阅读：只保存系统提供的文件访问授权，不复制原件。",
+              "书架信息：系列与分组、阅读进度、书签、阅读设置和导入记录，保存在 App 的本地数据库中。",
+              "页面缓存：为加快翻页生成的缩小图片，存放在系统缓存目录，空间不足时可能被系统清理。",
+              "这些数据只供 App 在本机使用。你可以在 App 中删除漫画；删除 App 会清除以上全部数据。"
+            ]
           ],
           [
-            "备份与导出",
-            "轻量备份会把书架记录、进度、书签和设置导出成一个文件，不包含漫画文件本身；保存到哪里由你选择，存入 iCloud Drive 等服务时由该服务处理。漫画文件副本被标记为不计入 iOS 整机备份；书架记录与设置可能随 iOS 整机备份一起保存，这部分由 Apple 按其规则处理。"
-          ],
-          [
-            "应用内购买",
-            "微光漫卷 Pro 通过 App Store 一次买断。付款、退款和账户信息由 Apple 处理，开发者看不到你的 Apple ID 或支付信息。应用通过 Apple 的 StoreKit 在本机确认购买状态，不把购买记录发送给开发者。"
-          ],
-          [
-            "Apple 提供的诊断信息",
-            "如果你在 iOS 设置中同意「与 App 开发者共享」分析数据，Apple 可能通过 App Store Connect 向开发者提供汇总的崩溃与性能报告。是否共享由你在系统设置中决定，应用本身不另外收集。"
+            "使用的系统功能",
+            [
+              "文件访问：App 只能读取你在系统文件选择器中主动选择的文件。",
+              "面容 ID、触控 ID 或设备密码（应用锁）：验证由 iOS 完成，App 只得到“是否通过”的结果，无法获取你的生物特征信息。",
+              "App 内购买：购买与恢复购买由 Apple 通过 App Store 处理。App 只从系统读取是否已解锁 Pro，开发者不会获得你的支付信息或 Apple 账户信息。",
+              "崩溃报告：如果你在 iOS“设置 → 隐私与安全性 → 分析与改进”中选择与 App 开发者共享，Apple 可能向开发者提供不含个人身份信息的崩溃报告。是否共享由你决定。"
+            ]
           ],
           [
             "你主动联系我们",
-            "通过邮件联系时，你提供的邮箱地址、问题描述、截图或文件，仅用于回复和解决问题，不用于营销，问题解决后不再需要时删除。请不要发送有版权的漫画文件或与问题无关的个人信息；排查问题通常只需要文件名或文件夹结构的截图。"
+            [
+              "通过邮件联系时，你提供的邮箱地址、问题描述、截图或文件，仅用于回复和解决问题，不用于营销，问题解决后不再需要时删除。请不要发送有版权的漫画文件或与问题无关的个人信息；排查问题通常只需要文件名的截图。"
+            ]
           ],
           [
             "支持网站",
-            "本网站为静态页面，没有统计脚本、Cookie、表单或第三方字体。托管服务商 Cloudflare 可能为安全和运维需要处理访问日志，例如 IP 地址和浏览器信息。"
+            [
+              "本网站为静态页面，没有统计脚本、Cookie、表单或第三方字体。托管服务商 Cloudflare 可能为安全和运维需要处理访问日志，例如 IP 地址和浏览器信息。"
+            ]
           ],
           [
-            "儿童",
-            "本应用不收集任何人的个人信息，也不会特意收集儿童的信息。"
+            "未成年人",
+            [
+              "App 不收集任何人的个人信息，包括未满 14 周岁的未成年人。"
+            ]
           ],
           [
-            "删除数据",
-            "你可以在应用内删除书架条目及其文件副本，或卸载应用以删除全部本机数据。导出的备份文件由你自行保管和删除。"
-          ],
-          [
-            "政策变更",
-            "如果将来增加联网、同步、统计或新的数据处理方式，我们会在相应功能发布前更新本政策和 App Store 隐私信息，并修改本页日期。"
+            "政策更新与联系方式",
+            [
+              "本政策如有变更，会随 App 更新发布，并更新上方的生效日期。",
+              "如有疑问，请发邮件到 <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>，或通过 App Store 产品页中的“App 支持”链接联系我们。"
+            ]
           ]
         ]
       },
       "en": {
         "title": "Privacy Policy",
-        "summary": "Your comics stay on your device. The app connects to no developer server and collects no data.",
+        "summary": "Your comics stay on your device. We do not collect, upload or sell any personal information.",
         "sections": [
           [
             "Scope and contact",
-            "This policy covers the LumiComic (微光漫卷) iOS app and its support website. The developer is liaozhiliang; contact <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>. LumiComic is a local comic reader. It needs no account and provides no comic content."
+            [
+              "This policy covers the LumiComic (微光漫卷) iOS app and this support website, and matches Settings → Privacy Policy in the app. LumiComic is an offline image reader that only opens your own files. The developer is liaozhiliang; contact <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>."
+            ]
           ],
           [
-            "Processed and stored on your device",
-            "Copies of the comics you import, your library records (titles, series, volumes and chapters, covers, reading status), reading positions, bookmarks and settings are processed and stored only on your device. Covers, thumbnails and page caches live in the device cache and are rebuilt if the system clears them. We run no server that receives this data, build no cloud library or reading profile, sell no data, and include no advertising, cross-app tracking, third-party analytics or crash-reporting SDK. Apart from Apple’s StoreKit talking to the App Store when you buy or restore Pro, the app makes no network requests."
+            "What we do not collect",
+            [
+              "There are no accounts or sign-in. The app contains no ads, analytics or third-party SDKs, and it does not track you.",
+              "The app itself makes no network requests. Your comics, library, reading progress and settings never leave this device."
+            ]
           ],
           [
-            "System features you choose to use",
-            "Import reads only the files you hand to the app through Files, the share sheet or Open in LumiComic. Files in iCloud Drive or other cloud storage are downloaded by that file provider. Archives are opened read-only and your original files are never modified. If you turn on App Lock, Face ID, Touch ID or your passcode is checked by iOS; the app only learns whether the check succeeded and never receives biometric data. While App Lock is on, the app switcher preview is covered."
+            "Data stored on your device",
+            [
+              "Imported comics: by default the app keeps a copy inside the app and never modifies the original file. Copies are excluded from iCloud and computer backups.",
+              "Read in place: only the file access permission provided by the system is stored; the original is not copied.",
+              "Library information: series and groups, reading progress, bookmarks, reader settings and import history are kept in the app’s local database.",
+              "Page cache: downsized images generated for faster page turns are kept in the system cache folder and may be cleared by the system when space is low.",
+              "This data is used only by the app on this device. You can delete comics in the app; deleting the app removes all of the data above."
+            ]
           ],
           [
-            "Backup and export",
-            "A light backup exports library records, reading positions, bookmarks and settings into one file, without the comic files themselves. You choose where to save it; if you save it to iCloud Drive or a similar service, that service handles it. Comic file copies are excluded from iOS device backups. Library records and settings may be included in your iOS device backup, which Apple handles under its own terms."
-          ],
-          [
-            "In-app purchase",
-            "LumiComic Pro is a one-time purchase through the App Store. Payment, refunds and account details are handled by Apple; the developer never sees your Apple ID or payment information. The app confirms purchase status on your device through Apple's StoreKit and does not send purchase records to the developer."
-          ],
-          [
-            "Diagnostics provided by Apple",
-            "If you choose to Share With App Developers in iOS settings, Apple may provide the developer with aggregated crash and performance reports through App Store Connect. This is your choice in system settings; the app collects nothing extra."
+            "System features",
+            [
+              "File access: the app can only read files you choose in the system file picker.",
+              "Face ID, Touch ID or device passcode (app lock): verification is handled by iOS. The app only learns whether it succeeded and cannot access your biometric data.",
+              "In-app purchase: purchases and restores are handled by Apple through the App Store. The app only reads from the system whether Pro is unlocked; the developer never receives your payment details or Apple Account information.",
+              "Crash reports: if you choose to share with app developers in iOS Settings → Privacy & Security → Analytics & Improvements, Apple may provide the developer with crash reports that do not identify you. Sharing is up to you."
+            ]
           ],
           [
             "When you contact us",
-            "If you email us, your email address, description, screenshots or files are used only to reply and resolve your issue, never for marketing, and are deleted once no longer needed. Please do not send copyrighted comic files or personal details unrelated to the issue; a screenshot of file names or folder structure is usually enough."
+            [
+              "If you email us, your email address, description, screenshots or files are used only to reply and resolve your issue, never for marketing, and are deleted once no longer needed. Please do not send copyrighted comic files or personal details unrelated to the issue; a screenshot of the file names is usually enough."
+            ]
           ],
           [
             "Support website",
-            "This website is static, with no analytics scripts, cookies, forms or third-party fonts. Our hosting provider, Cloudflare, may process access logs such as IP addresses and browser details for security and operations."
+            [
+              "This website is static, with no analytics scripts, cookies, forms or third-party fonts. Our hosting provider, Cloudflare, may process access logs such as IP addresses and browser details for security and operations."
+            ]
           ],
           [
             "Children",
-            "The app collects no personal information from anyone, and does not knowingly collect information from children."
+            [
+              "The app does not collect personal information from anyone, including children."
+            ]
           ],
           [
-            "Deleting your data",
-            "You can delete library entries and their file copies in the app, or delete the app to remove all local data. Exported backup files are yours to keep or delete."
-          ],
-          [
-            "Changes to this policy",
-            "If we ever add networking, sync, analytics or other data processing, we will update this policy and the App Store privacy details before that feature ships, and change the date on this page."
+            "Changes and contact",
+            [
+              "If this policy changes, the update will ship with an app update and the effective date above will change.",
+              "If you have questions, email <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a> or use the “App Support” link on the App Store product page."
+            ]
           ]
         ]
       }
@@ -125,7 +151,7 @@
           ],
           [
             "免费功能与 Pro",
-            "全部格式的导入与阅读、阅读模式、系列整理、进度、书签与备份永久免费，不做计时试用。公开上架时免费的功能，以后不会改为付费，也不会加次数限制。微光漫卷 Pro 为一次买断，不是订阅；购买后，后续加入 Pro 的功能免费获得。Pro 支持家人共享和恢复购买；退款由 Apple 按其规则处理。"
+            "导入与阅读所有支持的格式、单页/双页/条漫阅读模式、系列整理、分组、进度与书签永久免费，不做计时试用。公开上架时免费的功能，以后不会改为付费，也不会加次数限制。微光 Pro 为一次买断，不是订阅，解锁自动裁白边、应用锁与隐藏系列、原位阅读、批量整理、自动翻页和画面滤镜；购买后，后续加入 Pro 的功能免费获得。Pro 支持家人共享和恢复购买；退款由 Apple 按其规则处理。"
           ],
           [
             "失去 Pro 时",
@@ -133,11 +159,11 @@
           ],
           [
             "文件与数据",
-            "应用只读不写你的原文件，导入时会在应用内保存一份副本，删除书架条目时会单独询问是否删除这份副本。数据只保存在本机，开发者无法替你找回。请保留原文件，并定期导出轻量备份。"
+            "应用只读不写你的原文件。默认导入时会在应用内保存一份副本；使用 Pro 的原位阅读时，只保存系统提供的文件访问授权。从书架删除漫画会清除应用内副本、阅读位置和书签，不影响原文件。数据只保存在本机，1.0 不提供备份，开发者也无法替你找回，请保留原文件。"
           ],
           [
             "格式与兼容",
-            "首版支持 ZIP/CBZ、RAR/CBR、图片文件夹和固定版式的漫画 EPUB。加密或分卷的压缩包、受 DRM 保护的文件、损坏的页面可能无法打开或完整显示；文字 EPUB 和 PDF 请使用其他阅读器。实际支持以所装版本为准。"
+            "1.0 支持 ZIP、CBZ、PDF 和以图片为主的漫画 EPUB，暂不支持 RAR/CBR 和直接导入图片文件夹。加密或需要密码的文件、受 DRM 保护的文件和以文字为主的 EPUB 无法导入，损坏的页面可能无法完整显示。实际支持以所装版本为准。"
           ],
           [
             "免责与责任限制",
@@ -167,7 +193,7 @@
           ],
           [
             "Free features and Pro",
-            "Importing and reading every supported format, reading modes, series organisation, reading positions, bookmarks and backup are free forever, with no timed trial. Features that are free at public launch will never become paid or limited. LumiComic Pro is a one-time purchase, not a subscription; Pro features added later are included at no extra cost. Pro supports Family Sharing and Restore Purchases; refunds are handled by Apple under its rules."
+            "Importing and reading every supported format, Single, Spread and Scroll reading modes, series organisation, groups, reading positions and bookmarks are free forever, with no timed trial. Features that are free at public launch will never become paid or limited. LumiComic Pro is a one-time purchase, not a subscription. It unlocks auto-crop margins, App Lock and hidden series, Read in place, batch organising, auto page turning and image filters; Pro features added later are included at no extra cost. Pro supports Family Sharing and Restore Purchases; refunds are handled by Apple under its rules."
           ],
           [
             "If you lose Pro",
@@ -175,11 +201,11 @@
           ],
           [
             "Files and data",
-            "The app never writes to your original files. It keeps a copy inside the app when you import, and asks separately whether to delete that copy when you remove a library entry. Data stays only on your device, so the developer cannot recover it for you. Please keep your originals and export a light backup from time to time."
+            "The app never writes to your original files. By default it keeps a copy inside the app when you import; with Pro's Read in place it stores only the file access permission provided by the system. Deleting a comic from the library removes the in-app copy, reading position and bookmarks, never the original. Data stays only on your device; version 1.0 has no backup and the developer cannot recover it for you, so please keep your originals."
           ],
           [
             "Formats and compatibility",
-            "The first release supports ZIP/CBZ, RAR/CBR, image folders and fixed-layout comic EPUB. Encrypted or multi-volume archives, DRM-protected files and damaged pages may not open or display fully; please use another reader for text EPUB and PDF. Actual support depends on your installed version."
+            "Version 1.0 supports ZIP, CBZ, PDF and image-based comic EPUB; RAR/CBR and importing image folders directly are not supported yet. Encrypted or password-protected files, DRM-protected files and mostly-text EPUBs cannot be imported, and damaged pages may not display fully. Actual support depends on your installed version."
           ],
           [
             "Disclaimer and limitation of liability",
@@ -195,39 +221,39 @@
     "support": {
       "zh": {
         "title": "技术支持",
-        "summary": "导入、排序、阅读方向、乱码、空间与购买的常见问题。",
+        "summary": "导入、排序、阅读模式、乱码、空间与购买的常见问题。",
         "sections": [
           [
             "怎么导入漫画？",
-            "在书架点「导入漫画」，从「文件」选择一个或多个文件，也可以直接选整个文件夹；在其他 App 里用「分享」或「用微光漫卷打开」也可以导入。首版支持 ZIP/CBZ、RAR/CBR、图片文件夹和固定版式的漫画 EPUB。导入时会在应用内复制一份，原文件不会被修改。"
+            "在书架点「导入漫画」，从系统「文件」中选择一个或多个文件。1.0 支持 ZIP、CBZ、PDF 和以图片为主的漫画 EPUB。导入时会在应用内复制一份，原文件不会被修改；重复的文件会自动跳过。购买 Pro 后可以改用「原位阅读」，直接读取「文件」中的原件而不复制。暂不支持 RAR/CBR、直接导入图片文件夹，以及从其他 App 分享或「用…打开」导入；可以先把图片打包成 ZIP 或 CBZ 再导入。"
           ],
           [
             "系列或卷、话的顺序不对",
-            "应用会按文件夹和文件名识别卷与话，能识别「第十二话」「第 12 话」「Vol.3」「Ch.12」和全角数字，番外排在最后。如果顺序仍然不对，请把文件夹结构或文件名列表的截图发给我们，不需要发送漫画本身。"
+            "应用会按文件名识别系列、卷与话，并按自然顺序排好，例如「第 12 话」「Vol.3」「Ch.12」。如果顺序仍然不对，请把文件名列表的截图发给我们，不需要发送漫画本身。"
           ],
           [
-            "阅读方向、双页和条漫",
-            "阅读时点屏幕中间唤出菜单，可以切换从左往右或从右往左、翻页或竖向滚动。从右往左时，点左侧是下一页。iPad 横屏会自动双页并排；如果左右配对错了一页，用菜单里的「错开一页」纠正。检测到长条图时，应用会询问是否切换到竖向滚动。每本书的设置会被记住。"
+            "阅读模式、方向与缩放",
+            "阅读时轻点画面中间呼出工具栏，在阅读设置里可以选择单页、双页或条漫模式，以及从左向右或从右向左翻页；双页模式下可以设置封面单独显示或与第二页拼合。漫画包里带有日漫方向标记时，会自动设为从右向左。双击或双指捏合可以放大，目录与缩略图可以快速跳页。"
           ],
           [
-            "文件名或目录显示成乱码",
+            "文件名显示成乱码",
             "应用会自动识别 GBK、Big5 和 Shift_JIS 编码的压缩包文件名。如果仍然乱码，请告诉我们压缩包是用什么工具、在什么系统上打包的，并附一张乱码截图。"
           ],
           [
-            "文件打不开或某一页显示不了",
-            "首版不支持加密或分卷的压缩包，也不支持受 DRM 保护的文件，遇到时会给出提示。某一页损坏时会显示「此页无法显示」，其余页面可以继续阅读。如果整本都打不开，请告诉我们文件格式和大小。"
+            "文件打不开",
+            "暂不支持加密或需要密码的压缩包和 PDF，也不支持受 DRM 保护的文件；以文字为主的 EPUB 也无法导入。遇到这些情况时，应用会给出提示。如果其他文件整本打不开，请告诉我们文件格式和大小。"
           ],
           [
             "占用空间太大",
-            "导入的漫画会在应用内保存一份副本。在设置的存储管理里可以按系列查看占用并批量删除，也可以清理缩略图缓存；删除只影响应用内的副本，不影响你的原文件。"
+            "导入的漫画会在应用内保存一份副本。从书架删除漫画会同时清除应用内副本、阅读位置和书签，原文件不受影响。翻页用的缩小图片存放在系统缓存目录，空间不足时系统可能自动清理。使用 Pro 的原位阅读时不复制原件。"
           ],
           [
-            "换手机或重装后恢复进度",
-            "在旧设备上导出轻量备份（只包含书架记录、进度、书签和设置），在新设备导入这个备份，再重新导入原来的漫画文件。应用会按文件内容自动对上进度和书签，文件改名也没关系。"
+            "换手机或重装后",
+            "1.0 暂不提供备份与恢复。书架、阅读进度和书签只保存在本机，删除 App 会一并清除；换设备或重装后，需要重新导入漫画。请保留好原文件。"
           ],
           [
             "Pro、恢复购买与退款",
-            "Pro 是一次买断，不是订阅。换设备或重装后，在设置里点「恢复购买」即可。Pro 支持家人共享。退款请通过 Apple 的退款页面申请，开发者无法直接处理付款。"
+            "微光 Pro 是一次买断，不是订阅，解锁自动裁白边、应用锁与隐藏系列、原位阅读、批量整理、自动翻页和画面滤镜。入口在「设置 → 微光 Pro」。换设备或重装后，在同一页点「恢复购买」即可。Pro 支持家人共享。退款请通过 Apple 的退款页面申请，开发者无法直接处理付款。"
           ],
           [
             "联系我们",
@@ -237,39 +263,39 @@
       },
       "en": {
         "title": "Support",
-        "summary": "Answers about importing, ordering, reading direction, garbled names, storage and purchases.",
+        "summary": "Answers about importing, ordering, reading modes, garbled names, storage and purchases.",
         "sections": [
           [
             "How do I import comics?",
-            "Tap Import comics in the library and pick one or more files in Files, or choose a whole folder. You can also use Share or Open in LumiComic from another app. The first release supports ZIP/CBZ, RAR/CBR, image folders and fixed-layout comic EPUB. Importing keeps a copy inside the app; your original files are never changed."
+            "Tap Import comics in the library and pick one or more files in Files. Version 1.0 supports ZIP, CBZ, PDF and image-based comic EPUB. Importing keeps a copy inside the app and never changes your original files; duplicates are skipped automatically. With Pro you can use Read in place to open originals in Files without copying them. RAR/CBR, importing image folders directly, and importing via Share or Open in from other apps are not supported yet; you can zip the images into a ZIP or CBZ first."
           ],
           [
             "Series, volumes or chapters are in the wrong order",
-            "The app reads volumes and chapters from folder and file names, including Chinese numerals, full-width digits, Vol.3 and Ch.12, and puts extras last. If the order is still wrong, send us a screenshot of the folder structure or file names; there is no need to send the comics."
+            "The app reads series, volumes and chapters from file names and sorts them in natural order, for example Vol.3 or Ch.12. If the order is still wrong, send us a screenshot of the file names; there is no need to send the comics."
           ],
           [
-            "Reading direction, two-page spreads and webtoons",
-            "Tap the middle of the screen while reading to open the menu, where you can switch between left-to-right and right-to-left, and between paging and vertical scrolling. In right-to-left books, tapping the left side goes forward. In landscape on iPad, pages are shown side by side; if they pair up one page off, use Offset by one page in the menu. When the app detects long strips it offers vertical scrolling. Settings are remembered per book."
+            "Reading modes, direction and zoom",
+            "Tap the middle of the page to show the controls. In Reader settings you can choose Single, Spread or Scroll mode, and left-to-right or right-to-left; in spreads you can show the cover alone or pair it with page 2. When a comic file carries a manga direction flag, the book opens right-to-left automatically. Double-tap or pinch to zoom, and use Contents and thumbnails to jump between pages."
           ],
           [
-            "File or folder names look garbled",
+            "File names look garbled",
             "The app detects archive file names encoded in GBK, Big5 and Shift_JIS. If names still look garbled, tell us which tool and system created the archive and include a screenshot."
           ],
           [
-            "A file will not open or a page is missing",
-            "The first release does not open encrypted or multi-volume archives or DRM-protected files, and tells you when it meets one. A damaged page shows This page can't be displayed, and you can keep reading the rest. If a whole book will not open, tell us its format and size."
+            "A file will not open",
+            "Encrypted or password-protected archives and PDFs, DRM-protected files and mostly-text EPUBs are not supported, and the app tells you when it meets one. If another file will not open at all, tell us its format and size."
           ],
           [
             "The app takes up too much space",
-            "Imported comics are kept as a copy inside the app. In Settings, storage management shows space used per series, lets you delete in bulk and clears the thumbnail cache. Deleting only removes the in-app copy, never your original files."
+            "Imported comics are kept as a copy inside the app. Deleting a comic from the library removes the in-app copy, reading position and bookmarks, never your original file. Downsized page images live in the system cache and may be cleared by the system when space is low. Pro's Read in place does not copy originals."
           ],
           [
-            "Restore progress on a new device or after reinstalling",
-            "Export a light backup on the old device (library records, reading positions, bookmarks and settings only), import it on the new device, then import your original comic files again. The app matches progress and bookmarks by file content, even if files were renamed."
+            "New device or reinstalling",
+            "Version 1.0 does not offer backup or restore. Your library, reading positions and bookmarks are stored only on this device and are removed when you delete the app; on a new device or after reinstalling, import your comics again. Please keep your original files."
           ],
           [
             "Pro, Restore Purchases and refunds",
-            "Pro is a one-time purchase, not a subscription. On a new device or after reinstalling, tap Restore Purchases in Settings. Pro supports Family Sharing. To request a refund, use Apple's refund page; the developer cannot process payments directly."
+            "LumiComic Pro is a one-time purchase, not a subscription. It unlocks auto-crop margins, App Lock and hidden series, Read in place, batch organising, auto page turning and image filters. Find it in Settings → LumiComic Pro; on a new device or after reinstalling, tap Restore purchase there. Pro supports Family Sharing. To request a refund, use Apple's refund page; the developer cannot process payments directly."
           ],
           [
             "Contact us",

@@ -29,8 +29,8 @@ APPS = [
             "en": {"name":"LumiComic", "lang":"en", "other":"简体中文", "skip":"Skip to content", "toc":"On this page", "home":"Support & information", "updated":"Last updated and effective", "contact":"Contact the developer", "end":"Questions about this page? Contact", "footer":"Local comics · No account · No data collected", "alt":"微光漫卷"},
         },
         "home": {
-            "zh": {"headline":"安静地，看完一整卷。", "intro":"微光漫卷是一款本地漫画阅读器：导入你自己的 CBZ、ZIP、RAR 或整个图片文件夹，系列会自动按卷、话排好。漫画留在本机，无需账户、没有广告、不收集数据，即将在 App Store 推出。在这里查看技术支持、隐私政策与用户协议。", "facts":["无需注册","不收集数据","一次买断"]},
-            "en": {"headline":"Quiet pages.<br>Whole volumes.", "intro":"LumiComic is a local comic reader. Import your own CBZ, ZIP, RAR or whole image folders, and series are sorted by volume and chapter for you. Your comics stay on your device: no account, no ads, no data collected. Coming soon to the App Store. Find support, privacy information and terms here.", "facts":["No account","No data collected","One-time purchase"]},
+            "zh": {"headline":"安静地，看完一整卷。", "intro":"微光漫卷是一款本地漫画阅读器：导入你自己的 ZIP、CBZ、PDF 或图片漫画 EPUB，系列会自动按卷、话排好。漫画留在本机，无需账户、没有广告、不收集数据，即将在 App Store 推出。在这里查看技术支持、隐私政策与用户协议。", "facts":["无需注册","不收集数据","一次买断"]},
+            "en": {"headline":"Quiet pages.<br>Whole volumes.", "intro":"LumiComic is a local comic reader. Import your own ZIP, CBZ, PDF or image-based EPUB comics, and series are sorted by volume and chapter for you. Your comics stay on your device: no account, no ads, no data collected. Coming soon to the App Store. Find support, privacy information and terms here.", "facts":["No account","No data collected","One-time purchase"]},
         },
     },
 ]
@@ -84,6 +84,11 @@ def write(app, page, lang, html):
     target.write_text(html,encoding="utf-8")
 
 
+def paras(p):
+    """A section body is one paragraph (str) or several (list of str)."""
+    return ''.join(f'<p>{x}</p>' for x in ([p] if isinstance(p, str) else p))
+
+
 def build(app):
     data, email = app["data"], app["email"]
     assets = app["dir"] / app["base"].strip("/") / "assets"
@@ -98,7 +103,7 @@ def build(app):
             entry = translations[lang]
             page_updated = translations.get("updated", app["updated"])
             toc = ''.join(f'<li><a href="#section-{i}">{escape(h)}</a></li>' for i,(h,_) in enumerate(entry['sections'],1))
-            sections = ''.join(f'<section id="section-{i}" aria-labelledby="heading-{i}"><h2 id="heading-{i}">{i}. {escape(h)}</h2><p>{p}</p></section>' for i,(h,p) in enumerate(entry['sections'],1))
+            sections = ''.join(f'<section id="section-{i}" aria-labelledby="heading-{i}"><h2 id="heading-{i}">{i}. {escape(h)}</h2>{paras(p)}</section>' for i,(h,p) in enumerate(entry['sections'],1))
             ending = '。' if lang=='zh' else '.'
             body = f'<div class="document-header"><p class="eyebrow">{app["eyebrow"]} / {w["home"]}</p><h1>{escape(entry["title"])}</h1><p class="lead">{escape(entry["summary"])}</p><p class="meta">{w["updated"]} · {page_updated} / iOS</p></div><nav class="contents" aria-label="{w["toc"]}"><p>{w["toc"]}</p><ol>{toc}</ol></nav><article>{sections}</article><p class="document-end">{w["end"]} <a href="mailto:{email}">{email}</a>{ending}</p>'
             write(app,page,lang,layout(app,page,lang,entry['title'],entry['summary'],body))

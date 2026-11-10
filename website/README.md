@@ -27,3 +27,11 @@ wrangler pages deploy website/public --project-name lumicomic-support --branch m
 ## 2026-11-10 更名与正式图标
 
 中文名称改为「微光漫卷」，与 M3-05 的 App 更名一致；英文名称仍为 LumiComic。站点图标换成正式 App 图标。正文更新日期改为 2026-11-10。已于同日部署（`https://dadb759b.lumicomic-support.pages.dev`），正式域名 13 个文件与 `public/` 逐字节一致。
+
+## 2026-11-10 与 1.0（构建 11）对齐
+
+- 格式：首页、技术支持、用户协议改为 1.0 实际支持的 ZIP、CBZ、PDF 和图片漫画 EPUB，并写明暂不支持 RAR/CBR、图片文件夹导入、分享/「用…打开」导入（依据 `docs/APP_STORE_SUBMISSION.md`）。
+- 功能：去掉轻量备份与恢复、存储管理、「错开一页」、长条图提示等 1.0 没有的说法；补上 Pro 的 6 项功能和原位阅读。
+- 隐私政策：中间 4 节直接取自 `src/app/privacyPolicy.ts`（App 内与 `docs/PRIVACY_POLICY.md` 同源），网站额外保留开发者邮箱、邮件联系和支持网站 3 处说明。以后 App 隐私政策改了，这里要同步。
+- `build.py` 的正文段落支持多段（列表）。
+
