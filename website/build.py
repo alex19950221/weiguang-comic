@@ -60,7 +60,7 @@ APPS = [
                 "plans_note":"公开上架时免费的功能，以后不会改为付费，也不会加次数限制。",
                 "platforms_title":"在哪里用",
                 "ios_title":"iPhone 与 iPad", "ios_status":"已上架", "ios_text":"在 App Store 搜索「微光漫卷」，或点下面的按钮。需要 iOS 15 或更高版本，iPad 支持横屏双页。",
-                "android_title":"Android", "android_status":"测试版", "android_text":"首个离线测试版：支持 ZIP/CBZ、PDF 和图片 EPUB 的导入与阅读，同样不申请网络权限。需要 Android 7.0 或更高版本。Pro 暂未在安卓提供。", "apk_button":"下载安卓测试版", "apk_note":"APK", "apk_help":"安装时系统会询问是否允许浏览器或文件管理器「安装未知应用」，允许后即可安装。测试版的书架只保存在本机，卸载会一并清除，请保留原文件。",
+                "android_title":"Android", "android_status":"测试版", "android_text":"首个离线测试版：支持 ZIP/CBZ、PDF 和图片 EPUB 的导入与阅读，同样不申请网络权限。需要 Android 7.0 或更高版本。Pro 暂未在安卓提供。", "apk_button":"下载安卓测试版", "apk_note":"APK", "apk_help":"安装时系统会询问是否允许浏览器或文件管理器「安装未知应用」，允许后即可安装。这是测试签名的版本：以后正式版发布时需要先卸载再安装，卸载会清空书架和阅读进度，请保留原文件。",
                 "help_title":"支持与说明",
             },
             "en": {
@@ -91,7 +91,7 @@ APPS = [
                 "plans_note":"Features that are free at public launch will never become paid or limited.",
                 "platforms_title":"Where to read",
                 "ios_title":"iPhone and iPad", "ios_status":"Available", "ios_text":"Search for LumiComic on the App Store or use the button below. Requires iOS 15 or later; iPad supports two-page spreads in landscape.",
-                "android_title":"Android", "android_status":"Test build", "android_text":"The first offline test build imports and reads ZIP/CBZ, PDF and image EPUB, with no network permission. Requires Android 7.0 or later. Pro is not yet available on Android.", "apk_button":"Download Android test build", "apk_note":"APK", "apk_help":"When installing, Android asks whether your browser or file manager may install unknown apps; allow it to continue. The test build keeps your library on this device only and uninstalling removes it, so keep your original files.",
+                "android_title":"Android", "android_status":"Test build", "android_text":"The first offline test build imports and reads ZIP/CBZ, PDF and image EPUB, with no network permission. Requires Android 7.0 or later. Pro is not yet available on Android.", "apk_button":"Download Android test build", "apk_note":"APK", "apk_help":"When installing, Android asks whether your browser or file manager may install unknown apps; allow it to continue. This build uses a test signature: when the official version ships you will need to uninstall it first, which clears your library and reading progress, so keep your original files.",
                 "help_title":"Support and information",
             },
         },

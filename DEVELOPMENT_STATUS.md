@@ -5,7 +5,8 @@
 - 用户要求在安卓版入库后做产品官网。沿用已部署的 comic.spineapps.com 生成脚本与漫画风样式，只把首页从「支持与说明」入口页改为产品页；技术支持、隐私政策、用户协议正文未改。
 - 首页：主视觉（App Store 下载按钮链到 `apps.apple.com/cn/app/id6829142764`，已核实上架）、6 项功能、3 张 iPhone 与 1 张 iPad 截图（取自 `release/store-screenshots`，裁掉状态栏，原创样例《雾岛来信》）、免费与 Pro 对照、平台（iOS 已上架 / Android 测试版，带 APK 下载按钮与安装说明）、支持入口。导航加「下载」。中英文同步。
 - 检查（实际执行）：`python3 website/build.py` 生成 8 页；本地预览中文/英文首页，1280px 与 375px 无横向溢出，手机端截图横滑。隐私政策页新增「安卓版」一节（依据 `androidPrivacyPolicy.ts`），适用范围改为 iOS、安卓与网站。
-- 未部署，线上仍是 11-10 版本。用户决定官网只发正式签名 APK（Debug 包换签名需卸载，卸载会清空书架），APK 由 Windows 构建后上传 GitHub Release，步骤见 `docs/ANDROID.md` 末节；APK 不入库（`website/public/download/` 已忽略）。本机未装 wrangler，部署时需要 Cloudflare 登录。
+- 后续：用户改为先发布现有 Debug 测试包（`CN=Android Debug`，SHA-256 `b7c6c173…d280a7`，4.3 MB），下载区写明正式版需卸载重装、卸载清空书架。Mac 上 Cloudflare 登录的账号（liaoleo97）没有 `lumicomic-support` 项目，改为打包 `release/website-deploy-20261112.zip` 交给 Windows 部署；部署记录待 Windows 回填。
+- 原计划：用户决定官网只发正式签名 APK（Debug 包换签名需卸载，卸载会清空书架），APK 由 Windows 构建后上传 GitHub Release，步骤见 `docs/ANDROID.md` 末节；APK 不入库（`website/public/download/` 已忽略）。本机未装 wrangler，部署时需要 Cloudflare 登录。
 
 ## 最新检查点：安卓离线主流程与首个 APK（2026-11-12）
 
