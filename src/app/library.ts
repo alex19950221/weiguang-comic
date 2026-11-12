@@ -12,6 +12,8 @@ import { canPerform } from './proPolicy';
 export const importProgress = signal<Record<string, ImportProgress>>({});
 export const importError = signal<string | null>(null);
 export const pickingFiles = signal(false);
+/** 每收到一批「用…打开」的文件加一，书架据此回到书架页显示导入记录。 */
+export const openedFiles = signal(0);
 
 export const importQueue = new ImportQueue(
   database,
@@ -34,7 +36,13 @@ export async function initializeLibrary() {
     initializing = (async () => {
       void resetNativeDisplay();
       await openLibraryDatabase();
-      if (supportsImport()) await importQueue.recover();
+      if (supportsImport()) {
+        await importQueue.recover();
+        await ComicImport.addListener('filesOpened', () => {
+          void importOpenedFiles();
+        });
+        void importOpenedFiles();
+      }
       initialized = true;
     })().finally(() => {
       initializing = null;
@@ -68,6 +76,27 @@ export async function pickComics(location: Book['location'] = 'copy') {
       await ComicImport.releaseSources({ uris }).catch(() => undefined);
   } finally {
     pickingFiles.value = false;
+  }
+}
+
+/** 从其他 App「用…打开」或分享进来的文件按普通导入复制进书架，重复文件照常识别。 */
+export async function importOpenedFiles() {
+  let uris: string[] = [];
+  try {
+    const { items } = await ComicImport.takeOpenedFiles();
+    uris = items.map((item) => item.uri);
+    if (!items.length) return;
+    importError.value = null;
+    openedFiles.value += 1;
+    await importQueue.enqueue(
+      items,
+      'copy',
+      proStore().state.value.status === 'pro',
+    );
+  } catch {
+    importError.value = '暂时无法导入，请重新选择文件。';
+    if (uris.length)
+      await ComicImport.releaseSources({ uris }).catch(() => undefined);
   }
 }
 

@@ -13,9 +13,14 @@
 
 选择器返回的 `uri` 是当前原生进程持有的临时标识，不是文件 URL。当前不保存跨进程文件授权，也不从中断字节继续复制；重新选择后重新复制。
 
-尚未实现：系统分享/“用…打开”、图片文件夹导入、RAR、系列整理、封面网格、正式阅读器和阅读进度。安卓正式原生导入也未实现；没有所需原生插件时导入按钮禁用。
+尚未实现（M1 当时）：系统分享/“用…打开”（iOS 已于 2026-11-12 补上，见下节）、图片文件夹导入、RAR、系列整理、封面网格、正式阅读器和阅读进度。安卓正式原生导入也未实现；没有所需原生插件时导入按钮禁用。
 
-## 在 Mac 上验收
+## iOS「用…打开」/分享导入（2026-11-12）
+
+- `Info.plist` 声明 `CFBundleDocumentTypes`：CBZ（`dev.weiguang.comic.cbz`）、ZIP、PDF、EPUB，角色 Viewer、`LSHandlerRank = Alternate`（只进入「用…打开」和分享列表，不抢系统默认打开方式）；`LSSupportsOpeningDocumentsInPlace = NO`，系统先把文件复制到本应用 Inbox。
+- `SceneDelegate` 冷启动（`connectionOptions.urlContexts`，先于创建桥接视图）和运行中（`openURLContexts`）都交给 `ComicOpenedFiles`；`ComicImportPlugin.takeOpenedFiles` 换成与文件选择器相同的临时标识，网页 `importOpenedFiles()` 按普通复制导入，重复文件照常识别。标识释放时删除 Inbox 副本；只删本应用沙盒中 `Inbox`/`*-Inbox` 目录里的文件。插件加载时清理上次进程遗留、未导入的 Inbox 副本。
+- 收到文件后书架回到首页显示导入记录；正在阅读时不打断。不支持的扩展名不导入，Inbox 副本直接删除。
+- 微信、QQ 等 App 通常要先点「用其他应用打开」才会出现完整列表，这是它们的限制。
 
 复制完整工程，安装依赖后构建正式网页并打开已有 iOS 工程：
 

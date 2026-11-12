@@ -64,6 +64,7 @@ function fixture() {
     cancel: vi.fn(async () => undefined),
     removeCopy,
     releaseSources: vi.fn(async () => undefined),
+    takeOpenedFiles: async () => ({ items: [] }),
     addListener: async (_event, listener) => {
       progress = listener;
       return {

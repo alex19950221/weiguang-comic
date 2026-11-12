@@ -14,13 +14,39 @@ public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDel
         CAPPluginMethod(name: "linkToLibrary", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "cancel", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "removeCopy", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "releaseSources", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "releaseSources", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "takeOpenedFiles", returnType: CAPPluginReturnPromise)
     ]
     private var pickerCall: CAPPluginCall?
     // 以下状态只在主队列访问；Progress 的取消状态可跨线程读取。
     private var selected: [String: URL] = [:]
     private var jobs: [String: Progress] = [:]
+    /// 来自「用…打开」的标识；释放时删除系统放进 Inbox 的副本。
+    private var opened: Set<String> = []
     private let queue = DispatchQueue(label: "dev.weiguang.comic.library-import", qos: .userInitiated)
+
+    public override func load() {
+        ComicOpenedFiles.shared.sweepInbox()
+        NotificationCenter.default.addObserver(self, selector: #selector(filesOpened),
+                                               name: ComicOpenedFiles.didReceive, object: nil)
+    }
+
+    /// 只通知「有新文件」，网页再调用 takeOpenedFiles 取；网页尚未监听时事件保留到首个监听者。
+    @objc private func filesOpened() {
+        notifyListeners("filesOpened", data: [:], retainUntilConsumed: true)
+    }
+
+    @objc func takeOpenedFiles(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            let items: [[String: Any]] = ComicOpenedFiles.shared.take().map { url in
+                let token = UUID().uuidString
+                self.selected[token] = url
+                self.opened.insert(token)
+                return ["uri": token, "name": url.lastPathComponent, "size": 0, "isDirectory": false]
+            }
+            call.resolve(["items": items])
+        }
+    }
 
     @objc func pickFiles(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
@@ -202,7 +228,10 @@ public class ComicImportPlugin: CAPPlugin, CAPBridgedPlugin, UIDocumentPickerDel
     @objc func releaseSources(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
             for token in call.getArray("uris", String.self) ?? [] {
-                self.selected.removeValue(forKey: token)
+                let url = self.selected.removeValue(forKey: token)
+                if self.opened.remove(token) != nil, let url {
+                    self.queue.async { ComicOpenedFiles.discard(url) }
+                }
             }
             call.resolve()
         }

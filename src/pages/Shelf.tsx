@@ -7,7 +7,12 @@ import {
   type LibraryServices,
 } from '@/app/libraryServices';
 import { useShelf } from '@/app/useShelf';
-import { importError, pickingFiles, pickComics } from '@/app/library';
+import {
+  importError,
+  openedFiles,
+  pickingFiles,
+  pickComics,
+} from '@/app/library';
 import { supportsImport } from '@/native/comicImport';
 import { setStatusBarTone } from '@/native/systemBars';
 import { useAndroidBack } from '@/native/androidBack';
@@ -237,6 +242,13 @@ function ShelfContent() {
     setQuery('');
     setError('');
   }
+  // 从其他 App「用…打开」文件后回到书架首页，让导入记录可见；正在阅读时不打断。
+  const openedBatch = openedFiles.value;
+  useEffect(() => {
+    if (openedBatch === 0 || reading) return;
+    navigate('library');
+    window.scrollTo(0, 0);
+  }, [openedBatch]);
   async function saveSetting(setting: Setting) {
     try {
       await db.settings.put(setting);

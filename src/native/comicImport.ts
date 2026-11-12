@@ -27,9 +27,16 @@ export interface ComicImportPlugin {
   /** 仅清理指定 UUID 的应用副本、书签与临时文件，绝不删除源文件。 */
   removeCopy(options: { bookId: string }): Promise<void>;
   releaseSources(options: { uris: string[] }): Promise<void>;
+  /** 取走从其他 App「用…打开」进来的文件；标识释放时原生删除系统 Inbox 里的副本。 */
+  takeOpenedFiles(): Promise<{ items: ImportSource[] }>;
   addListener(
     event: 'progress',
     listener: (event: ImportProgress) => void,
+  ): Promise<PluginListenerHandle>;
+  /** 只表示有新文件到达，随后调用 takeOpenedFiles 取。 */
+  addListener(
+    event: 'filesOpened',
+    listener: () => void,
   ): Promise<PluginListenerHandle>;
 }
 

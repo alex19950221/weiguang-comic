@@ -1,5 +1,14 @@
 # 开发进度检查点
 
+## 最新检查点：iOS「用…打开」/分享导入（2026-11-12）
+
+- 用户反馈：已上线的 1.0 在其他 App 打开 PDF 等文件时，推荐列表里没有微光漫卷。原因是 1.0 未声明 `CFBundleDocumentTypes`，也没有把系统传入的文件接到导入流程（送审文档已列为 1.0 范围外）。安卓同样缺 `VIEW` intent-filter，本轮按用户选择只做 iOS。
+- 实现：`Info.plist` 声明 CBZ/ZIP/PDF/EPUB（Viewer、Alternate、`LSSupportsOpeningDocumentsInPlace = NO`）；新增 `ComicOpenedFiles`（暂存、自然排序、只删本应用 Inbox 副本、启动清理遗留）；`SceneDelegate` 冷/热启动登记；`ComicImportPlugin` 新增 `takeOpenedFiles` 与 `filesOpened` 事件，释放标识时删 Inbox 副本；网页 `importOpenedFiles()` 复用导入队列，书架回到首页显示导入记录（阅读中不打断）。说明见 `docs/IMPORT_M1.md`。
+- 自动检查（实际执行，通过）：ComicNative XCTest **35/35**（新增 3：Inbox 判定含路径穿越、接收排序与过滤、只删 Inbox 副本）；`pnpm test` **233/233**；`pnpm build:ios`；`pnpm check:ios --release`；`tsc`、改动文件 ESLint/Prettier；Debug 模拟器构建 BUILD SUCCEEDED。日志 `release/qa/openin-{native,vitest,web,static,debug}.log`。
+- 模拟器验收（实际执行）：iPhone 18 Pro 上 App 在后台时，Safari 打开 PDF →「共享」列表第一位出现「微光漫卷」→ 导入记录「已导入」，Inbox 副本已删除。iPhone 17 全新安装、从未启动时，同样从 Safari 分享 PDF 冷启动 → 首次打开即导入并显示封面，Inbox 为空。CBZ/ZIP/EPUB 走同一代码路径但未在界面上逐个点检；微信/QQ、真机未测。
+- 注意：验收期间 iPhone 18 Pro 模拟器同时被另一会话（帧感 FramePulse）操作，本会话一次误触在帧感的分享流程中点了「完成」，已停止在该设备上操作。
+- 未做：版本号仍为 1.0.0（11），未构建/上传 1.0.1；安卓未改。
+
 ## 最新检查点：官网首页改为产品页（2026-11-12）
 
 - 用户要求在安卓版入库后做产品官网。沿用已部署的 comic.spineapps.com 生成脚本与漫画风样式，只把首页从「支持与说明」入口页改为产品页；技术支持、隐私政策、用户协议正文未改。
