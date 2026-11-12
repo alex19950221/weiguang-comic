@@ -57,3 +57,18 @@ adb -s <test-emulator-serial> shell am instrument -w -e class dev.weiguang.comic
 Android 尚无购买权益提供方，默认不可购买 Pro。裁边、应用锁、原位阅读等付费功能不作为本轮交付；不模拟已购买，不把既有免费功能改为收费。下一轮先依据用户真机反馈修复主流程，再确定安卓发行渠道与一次买断方案。RAR/CBR、图片文件夹导入仍未实现。
 
 APK、测试日志、截图和 SDK 临时文件均留在已忽略的 `release/`，签名材料不入库。用户已授权将本轮安卓代码、测试与检查点提交并推送到 m0，真机测试由用户自行安装 APK 完成。
+
+## 待办：官网下载用的正式签名 APK（2026-11-12 用户决定）
+
+官网 comic.spineapps.com 首页已加「下载安卓测试版」按钮，链接 `/download/lumicomic-1.0.0-android.apk`。用户选择**只发正式签名包**：Debug 包换签名后无法覆盖安装，用户只能卸载重装，而安卓版关闭了备份，卸载会清空书架。所以官网在拿到正式签名包之前不部署。
+
+在 Windows 构建机上完成：
+
+1. 生成发行密钥（只做一次）：`keytool -genkeypair -v -keystore lumicomic-release.jks -alias lumicomic -keyalg RSA -keysize 4096 -validity 36500`。密钥文件和密码放在仓库外，并另做离线备份；**丢了就再也不能给已安装的用户发更新**。`*.jks`、`android/keystore.properties` 已在 `.gitignore`。
+2. `android/keystore.properties` 写 `storeFile`、`storePassword`、`keyAlias`、`keyPassword`；在 `android/app/build.gradle` 加 `signingConfigs.release`，读取该文件（文件不存在时跳过，保证没有密钥的机器仍能构建 Debug），并让 `buildTypes.release` 使用它。这部分 Gradle 改动可以入库，密钥和属性文件不入库。
+3. `pnpm build:android`，然后在 `android/` 运行 `./gradlew :app:clean :app:assembleRelease`。
+4. 用 `apksigner verify --print-certs` 确认 v2 签名、证书不是 Android Debug；核对包名 `dev.weiguang.comic`、版本 1.0.0（1）、无 INTERNET 权限。记录证书 SHA-256。
+5. 在真机或模拟器上安装一次并打开，确认能启动、能导入。
+6. 重命名为 `LumiComic-1.0.0-android.apk`，上传到 GitHub 仓库的 Release（建议标签 `android-v1.0.0`，标为 Pre-release）。
+
+之后在 Mac 上：把 APK 放到 `release/android/LumiComic-1.0.0-android.apk`，运行 `python3 website/build.py`（会复制到已忽略的 `website/public/download/`，并在按钮上显示文件大小），再部署官网。

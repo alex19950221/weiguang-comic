@@ -34,3 +34,4 @@ release/
 # Python 字节码缓存
 __pycache__/
 website/art/out/
+website/public/download/

@@ -1,14 +1,15 @@
-# 微光漫画官网（支持与法律页面）
+# 微光漫画官网（产品页、支持与法律页面）
 
 线上地址：https://comic.spineapps.com/ （Cloudflare Pages 项目 `lumicomic-support`，生产分支 `main`；DNSPod `comic` CNAME 到 `lumicomic-support.pages.dev`）。
 
-中英文各 4 页：主页、技术支持、隐私政策、用户协议。隐私政策和技术支持页对应 App Store Connect 的「隐私政策网址」「技术支持网址」。纯静态页面，没有运行时 JavaScript、表单、第三方字体或统计脚本。
+中英文各 4 页：产品首页、技术支持、隐私政策、用户协议。隐私政策和技术支持页对应 App Store Connect 的「隐私政策网址」「技术支持网址」。纯静态页面，没有运行时 JavaScript、表单、第三方字体或统计脚本。
 
 | 文件 | 作用 |
 | --- | --- |
 | `build.py` | 生成脚本，只用 Python 标准库 |
 | `content-lumicomic.json` | 页面正文、开发者、联系邮箱、正式域名、更新日期 |
 | `site.css` / `comic.css` | 基础样式 / 漫画风叠加样式 |
+| `shots/` | 首页截图（由 `release/store-screenshots` 裁掉状态栏后缩小，原创样例画面） |
 | `lumicomic-icon.png` | 站点图标，由正式 App 图标 `AppIcon-512@2x.png` 缩到 288px |
 | `public/` | 生成结果，即部署内容 |
 | `deployment-lumicomic.json` | 最近一次部署记录 |
@@ -38,3 +39,7 @@ wrangler pages deploy website/public --project-name lumicomic-support --branch m
 ## 原创审核样例
 
 `art/make_sample.py` 用 AppKit 自绘四页原创漫画《雾岛来信》，打包为 `art/out/fog-island.cbz`（已忽略，不进入 `public/`）。在仓库根目录运行 `python3 website/art/make_sample.py`。
+
+## 2026-11-12 首页改为产品页
+
+首页内容写在 `build.py` 的 `home` 字典里，由 `home_body()` 生成：主视觉与 App Store 下载按钮、6 项功能、截图、免费与 Pro 对照、平台（iOS 已上架、Android 测试中）、支持入口。导航新增「下载」，指向首页 `#download`。截图在 `shots/`，生成时复制到 `public/assets/shots/`。安卓测试版下载按钮指向 `/download/lumicomic-1.0.0-android.apk`：APK 不入库，`build.py` 从 `release/android/LumiComic-1.0.0-android.apk` 复制到已忽略的 `public/download/`，`_headers` 为该目录设置 APK 类型与附件下载。缺 APK 时构建会警告，此时不要部署。隐私政策页新增「安卓版」一节。本次未部署，等正式签名 APK。

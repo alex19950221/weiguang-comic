@@ -12,7 +12,7 @@
           [
             "适用范围与联系",
             [
-              "本政策适用于微光漫卷（英文名 LumiComic）iOS 应用及本支持网站，与 App 内「设置 → 隐私政策」一致。微光漫卷是一款只读取你自己文件的离线图片阅读器。开发者为 liaozhiliang，联系邮箱为 <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>。"
+              "本政策适用于微光漫卷（英文名 LumiComic）iOS 应用、安卓应用及本网站，iOS 部分与 App 内「设置 → 隐私政策」一致，安卓版的差异见「安卓版」一节。微光漫卷是一款只读取你自己文件的离线图片阅读器。开发者为 liaozhiliang，联系邮箱为 <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>。"
             ]
           ],
           [
@@ -54,6 +54,15 @@
             ]
           ],
           [
+            "安卓版",
+            [
+              "安卓版同样没有账号、广告、统计或跟踪工具，并且不申请网络权限、不发送网络请求。",
+              "App 只读取你在系统文件选择器中主动选择的文件，在 App 私有目录保存一份副本，不申请访问全部文件的权限，不扫描你的设备。如果你选择云盘文件，该文件提供方可能需要自行下载；App 本身不会联网。",
+              "书架信息与页面缓存的处理与上文相同。安卓版关闭了系统备份；清除 App 数据或卸载 App 会清除本地书架和导入副本，请自行保留原文件。",
+              "当前安卓版未接入购买、应用锁或生物识别服务。"
+            ]
+          ],
+          [
             "未成年人",
             [
               "App 不收集任何人的个人信息，包括未满 14 周岁的未成年人。"
@@ -75,7 +84,7 @@
           [
             "Scope and contact",
             [
-              "This policy covers the LumiComic (微光漫卷) iOS app and this support website, and matches Settings → Privacy Policy in the app. LumiComic is an offline image reader that only opens your own files. The developer is liaozhiliang; contact <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>."
+              "This policy covers the LumiComic (微光漫卷) iOS app, the Android app and this website. The iOS parts match Settings → Privacy Policy in the app; see “Android app” for how the Android version differs. LumiComic is an offline image reader that only opens your own files. The developer is liaozhiliang; contact <a href=\"mailto:support@surveykit.cc\">support@surveykit.cc</a>."
             ]
           ],
           [
@@ -117,6 +126,15 @@
             ]
           ],
           [
+            "Android app",
+            [
+              "The Android app likewise has no accounts, ads, analytics or tracking tools, and it does not request internet permission or send network requests.",
+              "It reads only files you select in the system file picker and saves a copy in its private directory. It does not request all-files access or scan your device. If you select a cloud file, its document provider may need to download it; the app itself does not connect to the internet.",
+              "Library information and the page cache are handled as described above. Android system backup is disabled; clearing app data or uninstalling removes the local library and imported copies, so keep your original files.",
+              "The current Android app does not include purchases, app locking or biometric authentication."
+            ]
+          ],
+          [
             "Children",
             [
               "The app does not collect personal information from anyone, including children."
@@ -130,7 +148,8 @@
             ]
           ]
         ]
-      }
+      },
+      "updated": "2026-11-12"
     },
     "terms": {
       "zh": {

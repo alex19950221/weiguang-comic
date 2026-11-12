@@ -5,3 +5,7 @@
   Referrer-Policy: no-referrer
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Cache-Control: public, max-age=300
+
+/download/*
+  Content-Type: application/vnd.android.package-archive
+  Content-Disposition: attachment
