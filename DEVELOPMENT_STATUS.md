@@ -1,5 +1,15 @@
 # 开发进度检查点
 
+## 最新检查点：1.0.1（12）归档与上传（2026-11-12）
+
+- 范围：用户要求把「用…打开」/分享导入（`9634653`）打包上传。版本 1.0.0→**1.0.1**，构建号 11→**12**（`a1f6daf`，`package.json` 同步；安卓未改动，仍 1.0.0）。沿用构建 10/11 的发行证书、描述文件与导出配置。
+- 顺带：`pnpm lint` 因 11-10 迁入的 `website/`（Python 生成的官网，含产物）未按 Prettier 格式而失败，与 App 无关；已把 `website` 加入 `.prettierignore`，未改官网文件，已发出的部署包不受影响。
+- 自动检查（实际执行，通过）：`pnpm install --frozen-lockfile`、`pnpm lint`、`pnpm test`（31 文件 **233/233**）、`pnpm build:ios`、`pnpm check:ios --release`；ComicNative XCTest（Weiguang QA Compact 模拟器）**35/35，0 失败**。日志 `release/qa/build12-*.log`。
+- Release 归档（成功）：与构建 10 相同命令，archivePath `release/LumiComic-build12.xcarchive`、derivedDataPath `release/archive-derived-build12`，**ARCHIVE SUCCEEDED**。
+- 成品核验（通过）：codesign 深度严格验证成功；1.0.1(12)、`dev.weiguang.comic`、`ITSAppUsesNonExemptEncryption` false；文档类型（Viewer/Alternate：CBZ/ZIP/PDF/EPUB）、CBZ 导入类型声明与 `LSSupportsOpeningDocumentsInPlace` false 均在包内；描述文件「LumiComic AppStore Build 6」，get-task-allow=false；dSYM 齐备、无 .storekit；包内网页资源与 `ios/App/App/public` 完全一致。
+- 上传（成功）：`xcodebuild -exportArchive -archivePath release/LumiComic-build12.xcarchive -exportOptionsPlist release/qa/build12-ExportOptions.plist -exportPath release/build12-upload -allowProvisioningUpdates`，**2026-11-12 20:03:46（UTC+8）Upload succeeded / EXPORT SUCCEEDED**。使用 Xcode Apple ID，未用旧 API Key。日志 `build12-upload.log`。
+- 未核验/未执行：App Store Connect 处理状态与出口合规答案；在 ASC 新建 1.0.1 版本、填写更新说明、选择构建；真机验证；送审（未点「提交审核」）。
+
 ## 最新检查点：iOS「用…打开」/分享导入（2026-11-12）
 
 - 用户反馈：已上线的 1.0 在其他 App 打开 PDF 等文件时，推荐列表里没有微光漫卷。原因是 1.0 未声明 `CFBundleDocumentTypes`，也没有把系统传入的文件接到导入流程（送审文档已列为 1.0 范围外）。安卓同样缺 `VIEW` intent-filter，本轮按用户选择只做 iOS。
