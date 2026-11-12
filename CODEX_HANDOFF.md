@@ -1,5 +1,9 @@
 # 微光漫卷最新交接摘要
 
+## 最新：1.0.0（11）与 Pro 已一起送审（2026-11-10）
+
+App Store Connect 已接收 iOS App 1.0.0（构建 11）与 LumiComic Pro `dev.weiguang.comic.pro` 的同一份审核单，两项均为「等待审核」。发布方式为手动发布。内容版权问卷、隐私标签和原创审核样例已按用户确认补齐。提交前 233/233 Vitest、lint、iOS 构建及静态检查均通过。详见 DEVELOPMENT_STATUS.md 顶部。
+
 ## 最新：上架表单交接（2026-11-10）
 
 准备在 App Store Connect 填写 1.0 上架表单时，先读 [docs/APP_STORE_SUBMISSION.md](./docs/APP_STORE_SUBMISSION.md)：其中有各表单的值、中英文案、截图要求、隐私/年龄分级/内购/审核备注、用户待办与禁止代办的操作（不点提交审核）。代码基线 `08e6d64`，待送审构建 1.0.0 (11)。

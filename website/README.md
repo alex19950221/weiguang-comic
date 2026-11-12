@@ -35,3 +35,6 @@ wrangler pages deploy website/public --project-name lumicomic-support --branch m
 - 隐私政策：中间 4 节直接取自 `src/app/privacyPolicy.ts`（App 内与 `docs/PRIVACY_POLICY.md` 同源），网站额外保留开发者邮箱、邮件联系和支持网站 3 处说明。以后 App 隐私政策改了，这里要同步。
 - `build.py` 的正文段落支持多段（列表）。
 
+## 原创审核样例
+
+`art/make_sample.py` 用 AppKit 自绘四页原创漫画《雾岛来信》，打包为 `art/out/fog-island.cbz`（已忽略，不进入 `public/`）。在仓库根目录运行 `python3 website/art/make_sample.py`。
