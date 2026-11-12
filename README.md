@@ -13,6 +13,7 @@
 - 进度检查点：[DEVELOPMENT_STATUS.md](./DEVELOPMENT_STATUS.md)
 - 交接说明：[CODEX_HANDOFF.md](./CODEX_HANDOFF.md)
 - iOS 原型构建与验收：[B1 操作说明](./docs/IOS_B1.md)
+- 安卓离线测试版、构建与验收：[Android 说明](./docs/ANDROID.md)
 - 正式 ZIP/CBZ 导入范围与验收：[M1 导入说明](./docs/IMPORT_M1.md)
 - 正式书架与原生封面/删除：[M1-05 说明](./docs/SHELF_M1.md)
 - 正式阅读器与进度：[阅读、目录、书签与进度](./docs/READING_M1.md)

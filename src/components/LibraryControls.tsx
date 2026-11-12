@@ -2,6 +2,7 @@ import type { ComponentChildren } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import { t } from '@/i18n';
 import { Icon, type IconName } from './Icon';
+import { useAndroidBack } from '@/native/androidBack';
 export function IconButton({
   icon,
   label,
@@ -43,6 +44,10 @@ export function LibraryDialog({
   wide?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  useAndroidBack(() => {
+    if (!busy) onClose();
+    return true;
+  }, 100);
   useEffect(() => {
     const dialog = ref.current;
     dialog?.showModal();

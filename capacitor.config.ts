@@ -8,7 +8,10 @@ const config: CapacitorConfig = {
   android: {
     // 构建产物已包含全部离线资源，无需远程加载
     allowMixedContent: false,
+    // 网页构建使用 ES2022；旧内核显示本地说明，避免启动后空白。
+    minWebViewVersion: 94,
   },
+  server: { errorPath: 'android-webview-error.html' },
 };
 
 export default config;

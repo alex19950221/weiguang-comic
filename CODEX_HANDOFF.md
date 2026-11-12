@@ -1,5 +1,9 @@
 # 微光漫卷最新交接摘要
 
+## 最新：安卓离线主流程首个测试包（2026-11-12）
+
+已同步 GitHub 最新 m0 `123ab62`，接入 Android 文件选择/副本导入、ZIP/ZIP64 与 PDF/图片 EPUB 原生渲染、缓存、全屏/常亮、返回键及安卓隐私政策，无新依赖、无 INTERNET 权限。`pnpm build:android`、233/233 Vitest、15/15 JVM 测试、API 24 模拟器 5/5 原生解码测试通过，Debug APK 签名验证通过；用户选择自行装包，本轮未在连接的个人手机安装。完整交互/SAF 端到端、真机、性能与 Pro 安卓接入未验收或未实现。全量 lint 的已有 CRLF/官网格式问题未批量改写；改动文件检查通过。成品 `release/android/LumiComic-1.0.0-android-preview.apk`，构建与点检说明见 `docs/ANDROID.md`。用户已授权将本轮安卓代码、测试与检查点提交并推送到 m0；APK 只留本地，由用户自行安装。
+
 ## 最新：1.0.0（11）与 Pro 已一起送审（2026-11-10）
 
 App Store Connect 已接收 iOS App 1.0.0（构建 11）与 LumiComic Pro `dev.weiguang.comic.pro` 的同一份审核单，两项均为「等待审核」。发布方式为手动发布。内容版权问卷、隐私标签和原创审核样例已按用户确认补齐。提交前 233/233 Vitest、lint、iOS 构建及静态检查均通过。详见 DEVELOPMENT_STATUS.md 顶部。

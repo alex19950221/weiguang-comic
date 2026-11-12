@@ -51,6 +51,7 @@ import { setNativeKeepAwake } from '@/native/comicReader';
 import { useFullscreen } from './useFullscreen';
 import { setStatusBarTone } from '@/native/systemBars';
 import { useAppDark } from './useAppDark';
+import { useAndroidBack } from '@/native/androidBack';
 import '@/styles/reader.css';
 
 interface ReaderProps {
@@ -72,6 +73,10 @@ export function Reader({ bookId, onBack, onOpen, backLabel }: ReaderProps) {
   const [reading, setReading] = useState<ReadingSession | null>(null);
   const [error, setError] = useState('');
   const [attempt, setAttempt] = useState(0);
+  useAndroidBack(() => {
+    void leaveReader();
+    return true;
+  }, 5);
   useEffect(() => {
     let cancelled = false;
     setReading(null);
@@ -703,6 +708,20 @@ function ReadingView({
       if (mounted.current) setClosing(false);
     }
   }
+  useAndroidBack(() => {
+    stopAutoplay();
+    if (guide) {
+      if (!guideBusy) void dismissGuide();
+    } else if (contents !== null) setContents(null);
+    else if (filtersOpen) setFiltersOpen(false);
+    else if (settings) {
+      if (!settingsBusy) {
+        setBrightnessPreview(null);
+        setSettings(false);
+      }
+    } else void leave();
+    return true;
+  }, 10);
   async function changePreferences(patch: Partial<ReaderDefaults>) {
     if (settingsBusy) return;
     syncScroll();

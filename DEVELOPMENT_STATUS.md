@@ -1,5 +1,14 @@
 # 开发进度检查点
 
+## 最新检查点：安卓离线主流程与首个 APK（2026-11-12）
+
+- 用户要求以已上线 iOS 为基准继续 Android，并提示 GitHub 有更新。m0 从 `025fe8c` 快进到 `123ab62`，新增送审记录与样例脚本，与本轮安卓代码无冲突；保留已有未跟踪图标素材。PRD/计划旧外链仍不可读取，本轮依据仓库说明及 iOS 实现，不声称读到外链原文。
+- 实现：新增 Java `ComicFiles`、`ZipDirectory`、`ComicStore` 和 `ComicImport`/`ComicArchive`/`ComicReader` 插件；系统文件选择、多选自然排序、临时来源标识、副本流式复制、进度与取消、安全清理；ZIP/ZIP64 的原始名字/索引与 CRC、PDF、图片 EPUB 元数据与原生降采样、JPEG EXIF 方向、500 MiB 页面缓存。网页复用书架/系列/阅读器，补安卓返回顺序、全屏常亮、专用离线隐私政策与旧 WebView 更新提示，使用正式图标启动主题。版本 1.0.0（1），无新依赖。
+- 自动检查（实际执行）：`pnpm build:android` 通过；233/233 Vitest 通过；15/15 JVM 测试通过（新增 14）；完整清理后 Debug APK 与 AndroidTest APK 构建通过。全量 ESLint 通过，修改文件的 ESLint/Prettier 通过；`pnpm lint` 因已有 CRLF/默认 LF 及官网格式提示未通过，未进行无关批量格式修改。
+- Android 运行检查（实际执行，隔离 API 24 x86_64 模拟器）：5/5 原生测试通过，覆盖真实 ZIP/图片 EPUB/PDF 解码、限尺寸缓存/重建、坏图/外部路径拒绝、EXIF 方向与原件指纹不变。旧版 WebView 启动时显示内置更新说明，截图 `release/android-webview-compatibility.png`。修正系统私有目录别名误拒绝；Windows 测试参数编码需 GBK，Java 源码保持 UTF-8；发现增量 DEX 包含旧类后清理重建，交付包来自清理后的构建。
+- 制品检查：Debug APK v2 签名有效，包名 `dev.weiguang.comic`、minSdk 24、targetSdk 36；无 INTERNET 或存储读取权限。文件 `release/android/LumiComic-1.0.0-android-preview.apk`，约 4.5 MB；日志 `release/android-{final-build,native-runtime,web-tests,web-lint}.log`。未签正式发行包、未上架。用户已授权将本轮安卓代码、测试与检查点提交并推送到 m0，APK 只留本地。
+- 用户选择自行安装 APK；未在连接的个人手机安装或操作。未完成完整交互、SAF 到入库的端到端点检、真机、厂商/云盘提供方、大文件性能、旋转/后台完整回归。官方较新模拟器镜像下载未完成，已停止下载；不把后端原生测试记作完整界面验收。Android 购买、裁边、应用锁、原位阅读等 Pro 接入待后续确定渠道。详见 `docs/ANDROID.md`。
+
 ## 最新检查点：1.0.0（11）与 Pro 已一起送审（2026-11-10）
 
 - 用户确认三项操作后，在 App Store Connect 保存内容版权问卷的「否」，发布「未收集数据」隐私答复，并上传原创《雾岛来信》`LumiComic-review-sample.zip`。审核备注补充中英文导入步骤。

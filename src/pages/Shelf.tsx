@@ -10,6 +10,7 @@ import { useShelf } from '@/app/useShelf';
 import { importError, pickingFiles, pickComics } from '@/app/library';
 import { supportsImport } from '@/native/comicImport';
 import { setStatusBarTone } from '@/native/systemBars';
+import { useAndroidBack } from '@/native/androidBack';
 import {
   buildShelf,
   selectShelf,
@@ -92,6 +93,18 @@ function ShelfContent() {
   const returnPosition = useRef(0);
   const [groupEditor, setGroupEditor] = useState<GroupEditor | null>(null);
   const [error, setError] = useState('');
+  useAndroidBack(() => {
+    if (reading || lockState.locked) return false;
+    if (seriesId) setSeriesId(null);
+    else if (section !== 'library') setSection('library');
+    else if (query) setQuery('');
+    else if (group !== 'all' || favorites || filter !== 'all') {
+      setGroup('all');
+      setFavorites(false);
+      setFilter('all');
+    } else return false;
+    return true;
+  });
   const [cleanupBusy, setCleanupBusy] = useState(false);
   const cleanup = useMemo(
     () => new FileCleanupQueue(db, archive),
